@@ -2,3 +2,9 @@
 /x64/
 *.user
 *.filters
+*.idb
+*.pdb
+*.obj
+*.tlog
+*.lastbuildstate
+*.CopyComplete
