@@ -1,4 +1,3 @@
-#pragma once
 
 #pragma once
 #include <vector>
@@ -6,20 +5,20 @@
 #include <SimpleMath.h>
 #include <string>
 #include <WICTextureLoader.h>
+#include "DxHandler.h"
+#include "ObjParser.h"
+#include "Vertex.h"
 
-struct Vertex
+/*struct Vertex
 {
 	float x, y, z = 0;
 	float r, g, b, a = 1; //Default to white for debug
 	float u, v = 0;
 	float nx, ny, nz = 0;
 	float tx, ty, tz = 0;
-};
+};*/
 
-struct Color //For entire mesh color, needed for mtl parsing
-{
-	float r, g, b, a = 1; //Between 0-1.
-};
+class ObjParser;
 
 class Mesh
 {
@@ -32,13 +31,14 @@ private:
 	DirectX::XMFLOAT3 translation;
 	DirectX::XMFLOAT3 scaling;
 
+	ObjParser parser;
+
 	ID3D11Resource* texture;
-	ID3D11ShaderResourceView* textureView = nullptr;
 	ID3D11Texture2D* pTexture = NULL;
 	D3D11_SAMPLER_DESC textureSamplerDesc;
 	D3D11_TEXTURE2D_DESC  imageSampleDesc = { 0 };
 
-	
+	void updateWorldMatrix();
 public:
 	DirectX::XMFLOAT4 ambientMeshColor;
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
@@ -58,8 +58,14 @@ public:
 	DirectX::XMFLOAT3 getRotation();
 	DirectX::XMFLOAT3 getTranslation();
 	DirectX::XMFLOAT3 getScaling();
+	DirectX::XMMATRIX& getWorldMatrix();
 
-	DirectX::XMMATRIX getWorldMatrix();
+	bool hasTexture = false;
+
+	ID3D11Buffer* createVertexBuffer();
+
+	void readMeshFromFile(std::string fileName);
+	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
 
 	~Mesh();
 };

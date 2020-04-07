@@ -27,6 +27,11 @@ ID3D11Texture2D* DxHandler::depthBuffer = nullptr;
 
 HWND* DxHandler::hWnd = nullptr;
 
+Mesh* DxHandler::fullscreenQuad = nullptr;
+
+ID3D11Buffer* DxHandler::constantVertexBuffer = nullptr;
+ID3D11Buffer* DxHandler::constantPixelBuffer = nullptr;
+
 void DxHandler::initalizeDeviceContextAndSwapChain()
 {
 	//Create device and initial DX11 interface.
@@ -101,6 +106,111 @@ void DxHandler::setupDepthBuffer()
 
 	devicePtr->CreateTexture2D(&depthDesc, NULL, &depthBuffer);
 	devicePtr->CreateDepthStencilView(DxHandler::depthBuffer, NULL, &depthStencil);
+}
+
+void DxHandler::generateFullScreenQuad()
+{
+	DxHandler::fullscreenQuad = new Mesh;	  //X  Y  Z   R	 G  B  A, U, V  nX nY nZ
+	fullscreenQuad->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
+	fullscreenQuad->vertices.push_back(Vertex{ 1, -1, 0.1f,    1, 1, 1, 1, 1, 1, 0, 0, -1 });
+	fullscreenQuad->vertices.push_back(Vertex{ -1,  -1, 0.1f,  1, 1, 1, 1, 0, 1, 0, 0, -1 });
+
+	fullscreenQuad->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
+	fullscreenQuad->vertices.push_back(Vertex{ 1,  1, 0.1f,   1, 1, 1, 1, 1, 0, 0, 0, -1 });
+	fullscreenQuad->vertices.push_back(Vertex{ 1,  -1, 0.1f, 1, 1, 1, 1, 1, 1, 0, 0, -1 });
+
+	fullscreenQuad->createVertexBuffer();
+}
+
+void DxHandler::drawFullscreenQuad()
+{
+	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
+	UINT offset = 0u;
+
+	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &fullscreenQuad->vertexBuffer,
+		&stride, &offset);
+
+	DxHandler::contextPtr->Draw(fullscreenQuad->vertices.size(), 0);
+}
+
+ID3D11Buffer* DxHandler::createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix)
+{
+	D3D11_BUFFER_DESC constBDesc;
+	constBDesc.ByteWidth = sizeof(matrix);
+	constBDesc.Usage = D3D11_USAGE_DEFAULT;
+	constBDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constBDesc.CPUAccessFlags = 0;
+	constBDesc.MiscFlags = 0;
+	constBDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = &matrix;
+	InitData.SysMemPitch = 0;
+	InitData.SysMemSlicePitch = 0;
+	ID3D11Buffer* constantBuffer = NULL;
+	HRESULT buffSucc = devicePtr->CreateBuffer(&constBDesc, &InitData,
+		&constantBuffer);
+	assert(SUCCEEDED(buffSucc));
+
+	//deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
+	DxHandler::contextPtr->VSSetConstantBuffers(PER_OBJECT_CBUFFER_SLOT, 1, &constantBuffer);
+
+	//loadedVSBuffers.push_back(constantBuffer);
+	this->constantVertexBuffer = constantBuffer;
+
+	return constantVertexBuffer;
+}
+
+ID3D11Buffer* DxHandler::createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix)
+{
+	D3D11_BUFFER_DESC constPixelDesc;
+	constPixelDesc.ByteWidth = sizeof(PS_CONSTANT_LIGHT_BUFFER);
+	constPixelDesc.Usage = D3D11_USAGE_DEFAULT;
+	constPixelDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constPixelDesc.CPUAccessFlags = 0;
+	constPixelDesc.MiscFlags = 0;
+	constPixelDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA InitDataPixel;
+	InitDataPixel.pSysMem = &matrix;
+	InitDataPixel.SysMemPitch = 0;
+	InitDataPixel.SysMemSlicePitch = 0;
+	ID3D11Buffer* constantPixelBuffer = NULL;
+	HRESULT buffPSucc = devicePtr->CreateBuffer(&constPixelDesc, &InitDataPixel,
+		&constantPixelBuffer);
+	assert(SUCCEEDED(buffPSucc));
+
+	contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &matrix, 0, 0);
+	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
+
+	//loadedPSBuffers.push_back(constantPixelBuffer);
+	this->constantPixelBuffer = constantPixelBuffer;
+
+	return constantPixelBuffer;
+}
+
+void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera)
+{
+	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
+	UINT offset = 0u;
+
+	VS_CONSTANT_MATRIX_BUFFER matrixBuff;
+	matrixBuff.worldViewProjectionMatrix = drawMesh->getWorldMatrix() * drawFromCamera.cameraView * drawFromCamera.cameraProjectionMatrix;
+	matrixBuff.worldMatrix = drawMesh->getWorldMatrix();
+	matrixBuff.viewMatrix = drawFromCamera.cameraView;
+	matrixBuff.projMatrix = drawFromCamera.cameraProjectionMatrix;
+
+	PS_CONSTANT_LIGHT_BUFFER lightBuff;
+
+	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
+	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);
+
+	//Set vertex buffer to the mesh you want to draw
+	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &drawMesh->vertexBuffer,
+		&stride, &offset);
+	//Draw it
+	DxHandler::contextPtr->Draw(drawMesh->vertices.size(), 0);
+
 }
 
 DxHandler::DxHandler(HWND hWnd)

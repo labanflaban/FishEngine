@@ -1,3 +1,4 @@
+
 Texture2D colorMap : register(t0);
 SamplerState mysampler;
 

@@ -1,3 +1,4 @@
+
 cbuffer VS_CONSTANT_BUFFER
 {
 	row_major float4x4 worldViewProjectionMatrix;

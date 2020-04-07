@@ -18,10 +18,11 @@
 #include <SimpleMath.h>
 #include <WICTextureLoader.h>
 #include <math.h>
+#include "Mesh.h"
+
 
 #include "VertexShader.h"
 #include "PixelShader.h"
-
 
 #pragma comment(lib, "gdi32")
 #pragma comment(lib, "d3d11") 
@@ -32,6 +33,59 @@ namespace wrl = Microsoft::WRL;
 
 const int PER_OBJECT_CBUFFER_SLOT = 0;
 const int CAMERA_CBUFFER_SLOT = 1;
+
+class Mesh;
+
+struct VS_CONSTANT_MATRIX_BUFFER
+{
+	DirectX::XMMATRIX worldViewProjectionMatrix;
+	DirectX::XMMATRIX worldMatrix;
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projMatrix;
+};
+
+struct PS_CONSTANT_LIGHT_BUFFER
+{
+	DirectX::XMVECTOR lightPos;
+	DirectX::XMFLOAT4 ambientMeshColor;
+	DirectX::XMFLOAT4 diffuseMeshColor;
+	DirectX::XMFLOAT4 specularMeshColor;
+	
+	DirectX::XMVECTOR camPos;
+	DirectX::XMMATRIX worldViewProjectionMatrix;
+
+	DirectX::XMMATRIX worldMatrix;
+	DirectX::XMMATRIX viewMatrix;
+	DirectX::XMMATRIX projMatrix;
+
+	BOOL hasTexture = false;
+};
+
+struct Camera //Put into its own class
+{
+	DirectX::XMMATRIX cameraProjectionMatrix; //Contains far plane, aspect ratio etc
+	DirectX::XMMATRIX cameraView;
+
+	DirectX::XMVECTOR cameraPosition = DirectX::XMVectorSet(0, 0, 0, 0);
+	DirectX::XMVECTOR cameraTarget = DirectX::XMVectorSet(0, 0, 1, 0);
+	DirectX::XMVECTOR cameraUp = DirectX::XMVectorSet(0, 1, 0, 0);
+
+	Camera(int WIDTH, int HEIGHT)
+	{
+		this->cameraProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH( //Creates projection space
+			0.35f * 3.14f,					//FovAngleY, height angle of perspective in radians
+			(float)WIDTH / (float)HEIGHT,	//AspectRatio, width/height of window
+			0.1f,							//NearZ, how close we render
+			10000.f							//FarZ how far we render
+		);
+	}
+
+	void updateCamera()
+	{
+		cameraView = DirectX::XMMatrixLookAtLH(Camera::cameraPosition, Camera::cameraTarget, Camera::cameraUp);
+
+	}
+};
 
 class DxHandler
 {
@@ -52,6 +106,8 @@ public:
 	static  HINSTANCE hInstance;
 	static	HWND* hWnd;
 
+	static Mesh* fullscreenQuad;
+
 	static float WIDTH;
 	static float HEIGHT;
 
@@ -61,13 +117,22 @@ public:
 
 	static ID3D11InputLayout* input_layout_ptr;
 
+	static ID3D11Buffer* constantVertexBuffer;
+	static ID3D11Buffer* constantPixelBuffer;
+
 	DxHandler(HWND hWnd);
 	void configureSwapChain(HWND& hWnd);
 	void initalizeDeviceContextAndSwapChain();
 	static void setupInputLayout();
 	void setupDepthBuffer();
 
-	
+	void generateFullScreenQuad();
+	void drawFullscreenQuad();
+
+	ID3D11Buffer* createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix);
+	ID3D11Buffer* createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix);
+
+	void draw(Mesh* drawMesh, Camera drawFromCamera);
 
  
 };

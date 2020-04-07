@@ -33,6 +33,11 @@ void Engine::initialSetup()
 
 	DxHandler::contextPtr->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DxHandler::contextPtr->IASetInputLayout((ID3D11InputLayout*)DxHandler::input_layout_ptr);
+
+	PS_CONSTANT_LIGHT_BUFFER ps_buff;
+	VS_CONSTANT_MATRIX_BUFFER vs_buff;
+	directXHandler->createPSConstBuffer(ps_buff);
+	directXHandler->createVSConstBuffer(vs_buff);
 }
 
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
@@ -72,10 +77,33 @@ void Engine::engineLoop()
 	directXHandler->contextPtr->RSSetViewports(1, &port);
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------//
-	
+	Mesh debugObject;
+	debugObject.readMeshFromFile("./Models/actualCube.obj");
+	debugObject.setTranslation(DirectX::XMFLOAT3(0, 0, 3));
+
+	Camera debugCam = Camera(WIDTH, HEIGHT);
+
 	MSG msg;
 	while (true)
 	{
+		//Clear RTVs again
+		directXHandler->contextPtr->ClearRenderTargetView(deferredBufferHandler.buffers[GBufferType::Position].renderTargetView, background_color);
+		directXHandler->contextPtr->ClearRenderTargetView(deferredBufferHandler.buffers[GBufferType::DiffuseColor].renderTargetView, background_color);
+		directXHandler->contextPtr->ClearRenderTargetView(deferredBufferHandler.buffers[GBufferType::Normal].renderTargetView, background_color);
+		directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
+
+		ID3D11RenderTargetView* arr[3] =
+		{
+			deferredBufferHandler.buffers[GBufferType::Position].renderTargetView,
+			deferredBufferHandler.buffers[GBufferType::DiffuseColor].renderTargetView,
+			deferredBufferHandler.buffers[GBufferType::Normal].renderTargetView,
+		};
+		directXHandler->contextPtr->OMSetRenderTargets(3, arr, DxHandler::depthStencil); //DEPTH
+		DxHandler::firstPassPixel->useThis(DxHandler::contextPtr);
+		DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
+
+		directXHandler->draw(&debugObject, debugCam);
+
 		currentTime = std::chrono::high_resolution_clock::now(); //Reset time
 		directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
 
