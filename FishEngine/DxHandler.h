@@ -24,6 +24,8 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
+#include "Camera.h"
+
 #pragma comment(lib, "gdi32")
 #pragma comment(lib, "d3d11") 
 #pragma comment(lib, "d3dcompiler.lib")
@@ -38,53 +40,27 @@ class Mesh;
 
 struct VS_CONSTANT_MATRIX_BUFFER
 {
-	DirectX::XMMATRIX worldViewProjectionMatrix;
-	DirectX::XMMATRIX worldMatrix;
-	DirectX::XMMATRIX viewMatrix;
-	DirectX::XMMATRIX projMatrix;
+	DirectX::XMMATRIX worldViewProjectionMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixIdentity();
 };
 
 struct PS_CONSTANT_LIGHT_BUFFER
 {
-	DirectX::XMVECTOR lightPos;
-	DirectX::XMFLOAT4 ambientMeshColor;
-	DirectX::XMFLOAT4 diffuseMeshColor;
-	DirectX::XMFLOAT4 specularMeshColor;
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 0, 0, 0);
+	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
+	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
+	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
 	
-	DirectX::XMVECTOR camPos;
-	DirectX::XMMATRIX worldViewProjectionMatrix;
+	DirectX::XMVECTOR camPos = DirectX::XMVectorSet(0, 0, 0, 0);
+	DirectX::XMMATRIX worldViewProjectionMatrix = DirectX::XMMatrixIdentity();
 
-	DirectX::XMMATRIX worldMatrix;
-	DirectX::XMMATRIX viewMatrix;
-	DirectX::XMMATRIX projMatrix;
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixIdentity();
 
 	BOOL hasTexture = false;
-};
-
-struct Camera //Put into its own class
-{
-	DirectX::XMMATRIX cameraProjectionMatrix; //Contains far plane, aspect ratio etc
-	DirectX::XMMATRIX cameraView;
-
-	DirectX::XMVECTOR cameraPosition = DirectX::XMVectorSet(0, 0, 0, 0);
-	DirectX::XMVECTOR cameraTarget = DirectX::XMVectorSet(0, 0, 1, 0);
-	DirectX::XMVECTOR cameraUp = DirectX::XMVectorSet(0, 1, 0, 0);
-
-	Camera(int WIDTH, int HEIGHT)
-	{
-		this->cameraProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH( //Creates projection space
-			0.35f * 3.14f,					//FovAngleY, height angle of perspective in radians
-			(float)WIDTH / (float)HEIGHT,	//AspectRatio, width/height of window
-			0.1f,							//NearZ, how close we render
-			10000.f							//FarZ how far we render
-		);
-	}
-
-	void updateCamera()
-	{
-		cameraView = DirectX::XMMatrixLookAtLH(Camera::cameraPosition, Camera::cameraTarget, Camera::cameraUp);
-
-	}
 };
 
 class DxHandler

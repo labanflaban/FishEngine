@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include "GBufferHandler.h"
+#include "Camera.h"
 
 
 const int WIDTH = 1920;
@@ -27,6 +28,8 @@ private:
 	std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 	
 	GBufferHandler deferredBufferHandler;
+
+	Camera primaryCamera;
 public:
 	Engine();
 	~Engine();
@@ -37,4 +40,8 @@ public:
 	void createDirectX();
 	void createInputHandler();
 	void engineLoop();
+
+	void renderFirstPass(std::vector<Mesh>* scene);
+	void renderSecondPass();
+	std::vector<Mesh> scene;
 };

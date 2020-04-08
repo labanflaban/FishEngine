@@ -39,5 +39,11 @@ VS_OUTPUT main(VS_INPUT input)
 	Output.vColour = input.vColour;
 	Output.vUV = float4(input.vUV, 1, 1);
 
+	/*Output.positionInWorldSpace = float4(input.vPosition, 1);
+	Output.vNormal = float4(input.vNormal, 0);
+	Output.vUV = float4(input.vUV, 0, 0);
+	Output.vPosition = float4(input.vPosition, 1);
+	Output.vTangent = float4(input.vTangent, 0);*/
+
 	return Output;
 }

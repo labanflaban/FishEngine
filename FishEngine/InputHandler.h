@@ -12,6 +12,7 @@
 #include "DXHandler.h"
 #include <Mouse.h>
 #include <Keyboard.h>
+#include "Camera.h"
 
 struct float2
 {
@@ -25,19 +26,12 @@ private:
 	static float2 lastMousePos;
 	static DIMOUSESTATE lastMouseState;
 	static IDirectInputDevice8* DIMouse;
-
+	static Camera* camera;
 	static LPDIRECTINPUT8 DirectInput;
 
 public:
-	static std::unique_ptr<DirectX::Mouse> mouse;
-	static std::unique_ptr<DirectX::Keyboard> keyboard;
-	static bool trackMouse;
-
-	static bool resetCursor;
-
-	InputHandler(HWND& primaryWindow);
 	InputHandler();
-
+	InputHandler(HWND& primaryWindow, Camera* camera);
 	void handleInput();
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

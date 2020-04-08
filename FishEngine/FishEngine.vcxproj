@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BaseShader.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DeferredRenderBuffer.h" />
     <ClInclude Include="DxHandler.h" />
     <ClInclude Include="Engine.h" />
@@ -165,6 +166,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseShader.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DeferredRenderBuffer.cpp" />
     <ClCompile Include="DxHandler.cpp" />
     <ClCompile Include="Engine.cpp" />

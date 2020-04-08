@@ -1,8 +1,8 @@
-﻿  DxHandler.cpp
+﻿  InputHandler.cpp
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\ObjParser.h(17,13): warning C4099: 'Vertex': type name first seen using 'struct' now seen using 'class'
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Vertex.h(2): message : see declaration of 'Vertex'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\DxHandler.cpp(98,20): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\DxHandler.cpp(99,21): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\DxHandler.cpp(133,64): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\DxHandler.cpp(212,58): warning C4267: 'argument': conversion from 'size_t' to 'UINT', possible loss of data
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\InputHandler.cpp(92,78): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\InputHandler.cpp(93,74): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\InputHandler.cpp(99,78): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\InputHandler.cpp(100,74): warning C4305: 'argument': truncation from 'double' to 'float'
   FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\x64\Debug\FishEngine.exe

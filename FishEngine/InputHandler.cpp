@@ -1,25 +1,17 @@
 #include "InputHandler.h"
-std::unique_ptr<DirectX::Mouse> InputHandler::mouse = nullptr;
-std::unique_ptr<DirectX::Keyboard> InputHandler::keyboard = nullptr;
 float2 InputHandler::lastMousePos;
 
 LPDIRECTINPUT8 InputHandler::DirectInput;
 DIMOUSESTATE InputHandler::lastMouseState;
 IDirectInputDevice8* InputHandler::DIMouse = nullptr;
-bool  InputHandler::trackMouse = true;
-
-bool InputHandler::resetCursor = false;
+Camera* InputHandler::camera = nullptr;
 using namespace DirectX;
 
-InputHandler::InputHandler(HWND& primaryWindow)
+InputHandler::InputHandler(HWND& primaryWindow, Camera* camera)
 {
 
-	keyboard = std::make_unique<DirectX::Keyboard>();
-	mouse = std::make_unique<DirectX::Mouse>();
 
 	assert(primaryWindow != nullptr);
-	assert(keyboard != nullptr);
-	mouse->SetWindow(primaryWindow);
 
 	HRESULT createInputSucc = DirectInput8Create(DxHandler::hInstance,
 		DIRECTINPUT_VERSION,
@@ -37,17 +29,20 @@ InputHandler::InputHandler(HWND& primaryWindow)
 	assert(SUCCEEDED(dataFormatMouseSucc));
 	HRESULT setCoopSucc = DIMouse->SetCooperativeLevel(primaryWindow, DISCL_EXCLUSIVE | DISCL_NOWINKEY | DISCL_FOREGROUND);
 	assert(SUCCEEDED(setCoopSucc));
+
+	this->camera = camera;
 }
 
 InputHandler::InputHandler()
 {
+	
 }
 
 void InputHandler::handleInput()
 {
-	//DIMOUSESTATE mouseState;
-	//DIMouse->Acquire();
-	//DIMouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
+	DIMOUSESTATE mouseState;
+	DIMouse->Acquire();
+	DIMouse->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState);
 
 	/*if (trackMouse)
 	{
@@ -60,17 +55,6 @@ void InputHandler::handleInput()
 
 LRESULT InputHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
-	float degToRad = (XM_PI * 2.f) / 380.f;
-	float deltaX = 0;
-	float deltaY = 0;
-
-	RECT windowRect;
-	float windowPosX = 0.f;
-	float windowPosY = 0.f;
-	POINT currentMousePosition;
-	POINT mouseResetPosition = { 0, 0 };
-
 	switch (message)
 	{
 
@@ -93,7 +77,36 @@ LRESULT InputHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 		DirectX::Mouse::ProcessMessage(message, wParam, lParam);
 		break;
 	case WM_KEYDOWN: //When a key is pushed down.
-		std::cout << "pressed" << std::endl;
+
+		if (wParam == 0x57) //W Button, virtual keycodes.
+		{
+			
+		}
+		if (wParam == 0x53) //S Button
+		{
+			
+		}
+
+		if (wParam == 0x41) //A Button
+		{
+			camera->cameraPosition = camera->cameraPosition - XMVectorSet(0.1, 0, 0, 0);
+			camera->cameraTarget = camera->cameraTarget - XMVectorSet(0.1, 0, 0, 0);
+			std::cout << "MOVED LEFT" << std::endl;
+		}
+
+		if (wParam == 0x44) //D Button
+		{
+			camera->cameraPosition = camera->cameraPosition + XMVectorSet(0.1, 0, 0, 0);
+			camera->cameraTarget = camera->cameraTarget + XMVectorSet(0.1, 0, 0, 0);
+			std::cout << "MOVED RIGHT" << std::endl;
+		}
+
+		if (wParam == VK_SPACE)
+		{
+
+		}
+			
+
 		if (wParam == VK_ESCAPE)
 			exit(1);
 
@@ -102,10 +115,10 @@ LRESULT InputHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 		DirectX::Keyboard::ProcessMessage(message, wParam, lParam);
 		break;
 	case WM_KILLFOCUS:
-		trackMouse = false;
+		//trackMouse = false;
 		break;
 	case WM_SETFOCUS:
-		trackMouse = true;
+		//trackMouse = true;
 		break;
 	default:
 		break;

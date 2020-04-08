@@ -3,7 +3,6 @@
 Texture2D ColorTexture : register(t0);
 Texture2D NormalTexture : register(t1);
 Texture2D PositionTexture : register(t2);
-Texture2D GlowTexture : register(t3);
 
 SamplerState mySampler;
 
@@ -42,7 +41,6 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float4 albedo = ColorTexture.Load(float3(input.vPosition.xy, 0), 0);
 	float4 normal = NormalTexture.Load(float3(input.vPosition.xy, 0), 0);
 	float4 position = PositionTexture.Load(float3(input.vPosition.xy, 0), 0);
-	float4 glow = GlowTexture.Load(float3(input.vPosition.xy, 0), 0);
 
 
 	//Calculate light
@@ -55,7 +53,6 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float specStrength = pow(clamp(dot(reflectionVec, lookVector), 0, 1), 32); // 32 being spec exponent
 	//
 
-	return ((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
-
+	return albedo;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
 
 }
