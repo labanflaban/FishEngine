@@ -9,6 +9,7 @@
 #include "ObjParser.h"
 #include "Vertex.h"
 
+
 /*struct Vertex
 {
 	float x, y, z = 0;
@@ -40,9 +41,9 @@ private:
 
 	void updateWorldMatrix();
 public:
-	DirectX::XMFLOAT4 ambientMeshColor;
+	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
-	DirectX::XMFLOAT4 specularMeshColor;
+	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	float shininess = 1.f;
 	float specularExponent = 10.f;
 
