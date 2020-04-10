@@ -1,0 +1,9 @@
+﻿  Engine.cpp
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\ObjParser.h(17,13): warning C4099: 'Vertex': type name first seen using 'struct' now seen using 'class'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Vertex.h(2): message : see declaration of 'Vertex'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(162,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
+          with
+          [
+              _Rep=double
+          ]
+  FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\FishEngine.exe

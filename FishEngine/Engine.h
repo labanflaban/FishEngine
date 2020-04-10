@@ -13,6 +13,9 @@
 #include "GBufferHandler.h"
 #include "Camera.h"
 
+//#include <btBulletDynamicsCommon.h>
+//#include <btBulletDynamics.h>
+#include "bullet\btBulletDynamicsCommon.h"
 
 const int WIDTH = 1920;
 const int HEIGHT = 1280;
@@ -30,6 +33,9 @@ private:
 	GBufferHandler deferredBufferHandler;
 
 	Camera primaryCamera;
+
+
+	
 public:
 	Engine();
 	~Engine();
