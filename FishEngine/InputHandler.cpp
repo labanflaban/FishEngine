@@ -89,15 +89,15 @@ LRESULT InputHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 
 		if (wParam == 0x41) //A Button
 		{
-			camera->cameraPosition = camera->cameraPosition - XMVectorSet(0.1, 0, 0, 0);
-			camera->cameraTarget = camera->cameraTarget - XMVectorSet(0.1, 0, 0, 0);
+			camera->cameraPosition = camera->cameraPosition - DirectX::XMVectorSet(0.5, 0, 0, 0);
+			camera->cameraTarget = camera->cameraTarget - DirectX::XMVectorSet(0.5, 0, 0, 0);
 			std::cout << "MOVED LEFT" << std::endl;
 		}
 
 		if (wParam == 0x44) //D Button
 		{
-			camera->cameraPosition = camera->cameraPosition + XMVectorSet(0.1, 0, 0, 0);
-			camera->cameraTarget = camera->cameraTarget + XMVectorSet(0.1, 0, 0, 0);
+			camera->cameraPosition = camera->cameraPosition + XMVectorSet(0.5, 0, 0, 0);
+			camera->cameraTarget = camera->cameraTarget + XMVectorSet(0.5, 0, 0, 0);
 			std::cout << "MOVED RIGHT" << std::endl;
 		}
 

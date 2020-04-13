@@ -9,7 +9,7 @@ class Camera
 private:
 
 public:
-	DirectX::XMVECTOR cameraPosition = DirectX::XMVectorSet(0, 0, -10, 0);
+	DirectX::XMVECTOR cameraPosition = DirectX::XMVectorSet(0, 0, -150, 0);
 	DirectX::XMVECTOR cameraTarget = DirectX::XMVectorSet(0, 0, 1, 0);
 	DirectX::XMVECTOR cameraUp = DirectX::XMVectorSet(0, 1, 0, 0);
 

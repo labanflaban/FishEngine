@@ -3,7 +3,7 @@
 
 void Mesh::updateWorldMatrix()
 {
-	this->worldMatrix = rotationMatrix * translationMatrix * scalingMatrix;
+	this->worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 }
 
 void Mesh::setRotation(DirectX::XMFLOAT3 rotation)
@@ -115,4 +115,6 @@ void Mesh::readTextureFromFile(std::wstring textureName)
 
 Mesh::~Mesh()
 {
+	//delete this->rigidBody;
+	//delete this->collider;
 }

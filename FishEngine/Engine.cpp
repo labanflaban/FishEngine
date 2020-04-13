@@ -86,11 +86,17 @@ void Engine::engineLoop()
 	directXHandler->contextPtr->RSSetViewports(1, &port);
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
-	Mesh debugObject;
+	Mesh debugObject; //Body
 	debugObject.readMeshFromFile("./Models/actualCube.obj");
 	debugObject.setTranslation(DirectX::XMFLOAT3(3, 0, 4));
 	debugObject.setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	this->scene.push_back(debugObject);
+	//this->scene.push_back(debugObject);
+
+	Mesh groundObject; //Ground
+	groundObject.readMeshFromFile("./Models/actualCube.obj");
+	groundObject.setTranslation(DirectX::XMFLOAT3(3, -25, 4));
+	groundObject.setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	//this->scene.push_back(groundObject);
 
 	//Camera primaryCamera = Camera(WIDTH, HEIGHT);
 	//--------------------------------------------------------------------------------------------------- physics 
@@ -99,13 +105,30 @@ void Engine::engineLoop()
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
 	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
-	btCollisionShape* collider = new btBoxShape(btVector3(btScalar(50.), btScalar(50.), btScalar(50.)));
+	//Ground stuff
+	btTransform groundTransform;
+	//groundTransform.setOrigin(btVector3(groundObject.getTranslation().x, groundObject.getTranslation().y, groundObject.getTranslation().z));
+    groundTransform.setIdentity();
+    groundTransform.setOrigin(btVector3(groundObject.getTranslation().x, groundObject.getTranslation().y, groundObject.getTranslation().z));
+	btCollisionShape* groundCollider = new btBoxShape(btVector3(btScalar(groundObject.getScaling().x), btScalar(groundObject.getScaling().y), btScalar(groundObject.getScaling().z)));
+	collisionShapes.push_back(groundCollider);
+
+	btDefaultMotionState* groundState = new btDefaultMotionState(groundTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo2(0, groundState, groundCollider, btVector3(0, 0, 0));
+	btRigidBody* groundBody = new btRigidBody(rbInfo2);
+	groundObject.rigidBody = groundBody;
+	dynamicsWorld->addRigidBody(groundBody);
+	
+
+	
+	btCollisionShape* collider = new btBoxShape(btVector3(btScalar(debugObject.getScaling().x), btScalar(debugObject.getScaling().y), btScalar(debugObject.getScaling().z)));
 	collisionShapes.push_back(collider);
 
 	btTransform startTransform;
-	startTransform.setOrigin(btVector3(2, 10, 0));
+	startTransform.setOrigin(btVector3(debugObject.getTranslation().x, debugObject.getTranslation().y, debugObject.getTranslation().z));
 
 	btScalar mass(1.f);
 	startTransform.setIdentity();
@@ -118,17 +141,16 @@ void Engine::engineLoop()
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, collider, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
+	debugObject.rigidBody = body;
+	    
 
-
-
-	dynamicsWorld->setGravity(btVector3(0, -1, 0));
+	dynamicsWorld->setGravity(btVector3(0, -4, 0));
 	dynamicsWorld->addRigidBody(body);
 
-	
-
+	this->scene.push_back(groundObject);
+	this->scene.push_back(debugObject);
 
 	//--------------------------------------------------------------------------------------------------- 
-
 
 	MSG msg;
 	while (true)
@@ -138,15 +160,12 @@ void Engine::engineLoop()
 		renderFirstPass(&scene);
 		renderSecondPass();
 
-		
-
 		//upp upp och iv‰‰‰‰g
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-
 
 		if (msg.message == WM_DESTROY)
 		{
@@ -155,6 +174,8 @@ void Engine::engineLoop()
 
 		std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
+
+		
 
 		///-----stepsimulation_start-----
 		for (int i = 0; i < 15; i++)
@@ -166,6 +187,7 @@ void Engine::engineLoop()
 			{
 				btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
 				btRigidBody* body = btRigidBody::upcast(obj);
+
 				btTransform trans;
 				if (body && body->getMotionState())
 				{
@@ -175,11 +197,26 @@ void Engine::engineLoop()
 				{
 					trans = obj->getWorldTransform();
 				}
-				printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-				scene.at(0).setTranslation(DirectX::XMFLOAT3(float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ())));
+				//printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
+
+				//if (j == 1)
+				//scene.at(0).setTranslation(DirectX::XMFLOAT3(float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()))); //Set visual position to the same
 				//primaryCamera.cameraPosition = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), DirectX::XMVectorGetZ(primaryCamera.cameraPosition), 0);
-				primaryCamera.cameraTarget = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), 1, 0);
+				//primaryCamera.cameraTarget = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), 1, 0);
 				primaryCamera.updateCamera();
+			}
+		}
+
+		for (int i = 0; i < scene.size(); i++)
+		{
+			bool check = scene.at(i).rigidBody != nullptr;
+
+			btTransform transform;
+			if (scene.at(i).rigidBody && scene.at(i).rigidBody->getMotionState())
+			{
+				std::cout << "Passed" << std::endl;
+				scene.at(i).setTranslation(DirectX::XMFLOAT3(scene.at(i).rigidBody->getWorldTransform().getOrigin().x(), scene.at(i).rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i).rigidBody->getWorldTransform().getOrigin().z()));
+
 			}
 		}
 
@@ -187,7 +224,47 @@ void Engine::engineLoop()
 		DxHandler::swapChainPtr->Present(1, 0); 
 	}
 
+	
+	/*
+		//remove the rigidbodies from the dynamics world and delete them
+	for (i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	{
+		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		if (body && body->getMotionState())
+		{
+			delete body->getMotionState();
+		}
+		dynamicsWorld->removeCollisionObject(obj);
+		delete obj;
+	}
 
+	//delete collision shapes
+	for (int j = 0; j < collisionShapes.size(); j++)
+	{
+		btCollisionShape* shape = collisionShapes[j];
+		collisionShapes[j] = 0;
+		delete shape;
+	}
+
+	//delete dynamics world
+	delete dynamicsWorld;
+
+	//delete solver
+	delete solver;
+
+	//delete broadphase
+	delete overlappingPairCache;
+
+	//delete dispatcher
+	delete dispatcher;
+
+	delete collisionConfiguration;
+
+	//next line is optional: it will be cleared by the destructor when the array goes out of scope
+	collisionShapes.clear();
+	
+	*/
 }
 
 void Engine::renderFirstPass(std::vector<Mesh>* scene)

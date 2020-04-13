@@ -53,6 +53,6 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float specStrength = pow(clamp(dot(reflectionVec, lookVector), 0, 1), 32); // 32 being spec exponent
 	//
 
-	return albedo;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
+	return normal;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
 
 }

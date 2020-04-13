@@ -21,6 +21,9 @@
 #include "Mesh.h"
 
 
+#define BT_NO_SIMD_OPERATOR_OVERLOADS
+#include "bullet\btBulletDynamicsCommon.h"
+
 #include "VertexShader.h"
 #include "PixelShader.h"
 

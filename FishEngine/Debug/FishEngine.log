@@ -1,9 +1,5 @@
-﻿  Engine.cpp
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\ObjParser.h(17,13): warning C4099: 'Vertex': type name first seen using 'struct' now seen using 'class'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Vertex.h(2): message : see declaration of 'Vertex'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(162,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
-          with
-          [
-              _Rep=double
-          ]
+﻿C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(47,9-56): warning X3206: implicit truncation of vector type
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(48,32-59): warning X3206: 'dot': implicit truncation of vector type
+  
+  compilation object save succeeded; see C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\SecondPassPixel.cso
   FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\FishEngine.exe

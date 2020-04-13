@@ -15,7 +15,7 @@
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
-#include "bullet\btBulletDynamicsCommon.h"
+
 
 const int WIDTH = 1920;
 const int HEIGHT = 1280;

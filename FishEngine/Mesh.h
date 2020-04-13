@@ -9,6 +9,8 @@
 #include "ObjParser.h"
 #include "Vertex.h"
 
+#define BT_NO_SIMD_OPERATOR_OVERLOADS
+#include "bullet\btBulletDynamicsCommon.h"
 
 /*struct Vertex
 {
@@ -46,6 +48,9 @@ public:
 	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	float shininess = 1.f;
 	float specularExponent = 10.f;
+
+	btRigidBody* rigidBody = nullptr;
+	btCollisionShape* collider = nullptr;
 
 	ID3D11ShaderResourceView* textureView = nullptr;
 
