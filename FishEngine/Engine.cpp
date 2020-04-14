@@ -1,4 +1,6 @@
 #include "Engine.h"
+#include "SimpleMath.h"
+using namespace DirectX;
 
 Engine::Engine()
 {
@@ -53,6 +55,11 @@ void Engine::initialSetup()
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 {
 	//game logic here thanks
+	updatePlayerMovement(deltaTime);
+
+	if (player->boostReserve < 10.f)
+		player->boostReserve += 0.1f;
+	std::cout << player->boostReserve << std::endl;
 }
 
 void Engine::createWindow()
@@ -71,8 +78,48 @@ void Engine::createInputHandler()
 	this->inputHandler = InputHandler(primaryWindow, &primaryCamera);
 }
 
+void Engine::updatePlayerMovement(double deltaTime)
+{
+	btVector3 movementVector(0,0,0);
+	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
+	{
+		//std::cout << "Space" << std::endl;
+		movementVector += btVector3(0, 40.f, 0);
+		player->boostReserve -= 10.f;
+	}
+	if (GetAsyncKeyState(0x41) != 0) //A-key
+	{
+		//std::cout << "A" << std::endl;
+		movementVector += btVector3(-30, 0, 0);
+	}
+	if(GetAsyncKeyState(0x44) != 0) // D-key
+	{
+		//std::cout << "D" << std::endl;
+		movementVector += btVector3(30, 0, 0);
+	}
+
+	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
+	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
+
+	XMFLOAT3 playerPos = player->model->getTranslation();
+	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
+	primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
+	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
+}
+
 void Engine::engineLoop()
 {
+	//--------------------------------------------------------------------------------------------------- physics 
+	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
+	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
+	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
+	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
+	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
+	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
+	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+	dynamicsWorld->setGravity(btVector3(0, -20, 0));
+	//--------------------------------------------------------------------------------------------------- physics 
+
 	RECT viewportRect;
 	GetClientRect(primaryWindow, &viewportRect);
 	D3D11_VIEWPORT port = {
@@ -86,75 +133,45 @@ void Engine::engineLoop()
 	directXHandler->contextPtr->RSSetViewports(1, &port);
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
-	Mesh debugObject; //Body
-	debugObject.readMeshFromFile("./Models/actualCube.obj");
-	debugObject.setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject.setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	Mesh* debugObject = new Mesh; //Body
+	debugObject->readMeshFromFile("./Models/actualCube.obj");
+	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
+	debugObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	this->player = new Player;
+	this->player->model = debugObject;
+	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
+	this->scene.push_back(debugObject);
 	//this->scene.push_back(debugObject);
 
-	Mesh groundObject; //Ground
-	groundObject.readMeshFromFile("./Models/actualCube.obj");
-	groundObject.setTranslation(DirectX::XMFLOAT3(3, -25, 4));
-	groundObject.setScaling(DirectX::XMFLOAT3(30, 10, 10));
-	//this->scene.push_back(groundObject);
-
-	//Camera primaryCamera = Camera(WIDTH, HEIGHT);
-	//--------------------------------------------------------------------------------------------------- physics 
-	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
-	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
-	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
-	btSequentialImpulseConstraintSolver* solver = new btSequentialImpulseConstraintSolver;
-	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
-	btAlignedObjectArray<btCollisionShape*> collisionShapes;
-
-	//Ground stuff
-	btTransform groundTransform;
-	//groundTransform.setOrigin(btVector3(groundObject.getTranslation().x, groundObject.getTranslation().y, groundObject.getTranslation().z));
-    groundTransform.setIdentity();
-    groundTransform.setOrigin(btVector3(groundObject.getTranslation().x, groundObject.getTranslation().y, groundObject.getTranslation().z));
-	btCollisionShape* groundCollider = new btBoxShape(btVector3(btScalar(groundObject.getScaling().x), btScalar(groundObject.getScaling().y), btScalar(groundObject.getScaling().z)));
-	collisionShapes.push_back(groundCollider);
-
-	btDefaultMotionState* groundState = new btDefaultMotionState(groundTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo2(0, groundState, groundCollider, btVector3(0, 0, 0));
-	btRigidBody* groundBody = new btRigidBody(rbInfo2);
-	groundObject.rigidBody = groundBody;
-	dynamicsWorld->addRigidBody(groundBody);
-	
-
-	
-	btCollisionShape* collider = new btBoxShape(btVector3(btScalar(debugObject.getScaling().x), btScalar(debugObject.getScaling().y), btScalar(debugObject.getScaling().z)));
-	collisionShapes.push_back(collider);
-
-	btTransform startTransform;
-	startTransform.setOrigin(btVector3(debugObject.getTranslation().x, debugObject.getTranslation().y, debugObject.getTranslation().z));
-
-	btScalar mass(1.f);
-	startTransform.setIdentity();
-	
-	bool isDynamic = (mass != 0.f);
-	btVector3 localInertia(0, 0, 0);
-		if (isDynamic)
-			collider->calculateLocalInertia(mass, localInertia);
-
-	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, collider, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-	debugObject.rigidBody = body;
-	    
-
-	dynamicsWorld->setGravity(btVector3(0, -4, 0));
-	dynamicsWorld->addRigidBody(body);
-
+	Mesh* groundObject = new Mesh; //Ground
+	groundObject->readMeshFromFile("./Models/actualCube.obj");
+	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
+	groundObject->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject);
-	this->scene.push_back(debugObject);
+
+	Mesh* groundObject2= new Mesh; //Ground
+	groundObject2->readMeshFromFile("./Models/actualCube.obj");
+	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
+	groundObject2->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject2);
+	
+	Mesh* groundObject3 = new Mesh; //Ground
+	groundObject3->readMeshFromFile("./Models/actualCube.obj");
+	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
+	groundObject3->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject3);
+	
 
 	//--------------------------------------------------------------------------------------------------- 
 
 	MSG msg;
 	while (true)
 	{
+		inputHandler.handleInput();
+
 		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top
 		primaryCamera.updateCamera();
 		renderFirstPass(&scene);
@@ -185,6 +202,7 @@ void Engine::engineLoop()
 			//print positions of all objects
 			for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
 			{
+				//std::cout << "Looping" << j << std::endl;
 				btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
 				btRigidBody* body = btRigidBody::upcast(obj);
 
@@ -203,20 +221,20 @@ void Engine::engineLoop()
 				//scene.at(0).setTranslation(DirectX::XMFLOAT3(float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()))); //Set visual position to the same
 				//primaryCamera.cameraPosition = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), DirectX::XMVectorGetZ(primaryCamera.cameraPosition), 0);
 				//primaryCamera.cameraTarget = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), 1, 0);
-				primaryCamera.updateCamera();
+				//primaryCamera.updateCamera();
 			}
 		}
 
 		for (int i = 0; i < scene.size(); i++)
 		{
-			bool check = scene.at(i).rigidBody != nullptr;
+			bool check = scene.at(i)->rigidBody != nullptr;
 
 			btTransform transform;
-			if (scene.at(i).rigidBody && scene.at(i).rigidBody->getMotionState())
+			if (scene.at(i)->rigidBody && scene.at(i)->rigidBody->getMotionState())
 			{
-				std::cout << "Passed" << std::endl;
-				scene.at(i).setTranslation(DirectX::XMFLOAT3(scene.at(i).rigidBody->getWorldTransform().getOrigin().x(), scene.at(i).rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i).rigidBody->getWorldTransform().getOrigin().z()));
-
+				scene.at(i)->setTranslation(DirectX::XMFLOAT3(scene.at(i)->rigidBody->getWorldTransform().getOrigin().x(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().z()));
+				XMFLOAT3 pos = DirectX::XMFLOAT3(scene.at(i)->rigidBody->getWorldTransform().getOrigin().x(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().z());
+				//std::cout << pos.x << " " << pos.y << " " << pos.z << " " << std::endl;
 			}
 		}
 
@@ -267,7 +285,7 @@ void Engine::engineLoop()
 	*/
 }
 
-void Engine::renderFirstPass(std::vector<Mesh>* scene)
+void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
 	DxHandler::firstPassPixel->useThis(DxHandler::contextPtr);
 	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
@@ -292,7 +310,7 @@ void Engine::renderFirstPass(std::vector<Mesh>* scene)
 
 	for (auto model : *scene) //Draw all meshes 
 	{
-		directXHandler->draw(&model, primaryCamera);
+		directXHandler->draw(model, primaryCamera);
 	}
 
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);

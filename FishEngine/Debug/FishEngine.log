@@ -1,5 +1,14 @@
-﻿C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(47,9-56): warning X3206: implicit truncation of vector type
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(48,32-59): warning X3206: 'dot': implicit truncation of vector type
-  
-  compilation object save succeeded; see C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\SecondPassPixel.cso
+﻿  Engine.cpp
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\ObjParser.h(17,13): warning C4099: 'Vertex': type name first seen using 'struct' now seen using 'class'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Vertex.h(2): message : see declaration of 'Vertex'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(136,30): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(146,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(153,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(160,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(200,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
+          with
+          [
+              _Rep=double
+          ]
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(228,21): warning C4018: '<': signed/unsigned mismatch
   FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\FishEngine.exe

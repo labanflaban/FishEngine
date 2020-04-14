@@ -14,8 +14,6 @@
 #include <Keyboard.h>
 #include "Camera.h"
 
-
-
 struct float2
 {
 	float x, y = 0;
@@ -32,9 +30,13 @@ private:
 	static LPDIRECTINPUT8 DirectInput;
 
 public:
+	static std::unique_ptr<DirectX::Mouse> mouse;
+	static std::unique_ptr<DirectX::Keyboard> keyboard;
+	static Mesh* playerModel;
 	InputHandler();
 	InputHandler(HWND& primaryWindow, Camera* camera);
 	void handleInput();
+	bool isKeyDown(int keyCode);
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };

@@ -51,7 +51,7 @@ struct VS_CONSTANT_MATRIX_BUFFER
 
 struct PS_CONSTANT_LIGHT_BUFFER
 {
-	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 0, 0, 0);
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 0, -60, 0);
 	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
 	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);

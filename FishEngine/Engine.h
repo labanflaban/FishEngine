@@ -12,6 +12,7 @@
 #include <vector>
 #include "GBufferHandler.h"
 #include "Camera.h"
+#include "Player.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -41,13 +42,17 @@ public:
 	~Engine();
 	void initialSetup();
 	void fixedUpdate(double deltaTime); //deltaTime being time in (seconds) since last frame
+	void updatePlayerMovement(double deltaTime);
 
 	void createWindow();
 	void createDirectX();
 	void createInputHandler();
 	void engineLoop();
 
-	void renderFirstPass(std::vector<Mesh>* scene);
+	//Mesh* playerMesh = nullptr;
+	Player* player = nullptr;
+
+	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();
-	std::vector<Mesh> scene;
+	std::vector<Mesh*> scene;
 };

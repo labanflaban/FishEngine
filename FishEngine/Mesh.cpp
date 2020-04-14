@@ -6,6 +6,31 @@ void Mesh::updateWorldMatrix()
 	this->worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 }
 
+void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass)
+{
+	//rigidBody stuff
+	btTransform rigidBodyTransform;
+
+	rigidBodyTransform.setIdentity();
+	rigidBodyTransform.setOrigin(btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z));
+	btCollisionShape* rigidBodyCollider = new btBoxShape(btVector3(btScalar(this->getScaling().x), btScalar(this->getScaling().y), btScalar(this->getScaling().z)));
+	collisionShapes->push_back(rigidBodyCollider);
+
+	bool isDynamic = (mass != 0.f);
+	btVector3 localInertia(0, 0, 0);
+	if (isDynamic)
+		rigidBodyCollider->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* myMotionState = new btDefaultMotionState(rigidBodyTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, rigidBodyCollider, localInertia);
+
+	btDefaultMotionState* rigidBodyState = new btDefaultMotionState(rigidBodyTransform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo2(mass, rigidBodyState, rigidBodyCollider, btVector3(0, 0, 0)); //First param is 0, ie its static
+	btRigidBody* rigidBodyBody = new btRigidBody(rbInfo2);
+	this->rigidBody = rigidBodyBody;
+	dynamicsWorld->addRigidBody(rigidBodyBody);
+}
+
 void Mesh::setRotation(DirectX::XMFLOAT3 rotation)
 {
 	this->rotation = rotation;
