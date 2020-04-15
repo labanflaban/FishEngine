@@ -27,6 +27,9 @@ void Engine::initialSetup()
 
 	DxHandler::secondPassPixel->compileShader(L"./SecondPassPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::secondPassVertex->compileShader(L"./SecondPassVertex.hlsl", DxHandler::devicePtr);
+
+	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
+	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
 	deferredBufferHandler.init(WIDTH, HEIGHT);
 
 	createInputHandler();
@@ -46,9 +49,7 @@ void Engine::initialSetup()
 	directXHandler->createPSConstBuffer(ps_buff);
 	directXHandler->createVSConstBuffer(vs_buff);
 
-	//physics
-
-	//
+	
 	this->primaryCamera = Camera(WIDTH, HEIGHT);
 }
 
@@ -59,7 +60,6 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
-	std::cout << player->boostReserve << std::endl;
 }
 
 void Engine::createWindow()
@@ -80,6 +80,15 @@ void Engine::createInputHandler()
 
 void Engine::updatePlayerMovement(double deltaTime)
 {
+	/*
+	#define ACTIVE_TAG 1
+	#define ISLAND_SLEEPING 2
+	#define WANTS_DEACTIVATION 3
+	#define DISABLE_DEACTIVATION 4
+	#define DISABLE_SIMULATION 5
+	*/
+	player->model->rigidBody->setActivationState(ACTIVE_TAG);
+
 	btVector3 movementVector(0,0,0);
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
 	{
@@ -87,12 +96,13 @@ void Engine::updatePlayerMovement(double deltaTime)
 		movementVector += btVector3(0, 40.f, 0);
 		player->boostReserve -= 10.f;
 	}
-	if (GetAsyncKeyState(0x41) != 0) //A-key
+	if (GetAsyncKeyState(0x41)) //A-key
 	{
+		//std::cout << GetAsyncKeyState(0x41) << std::endl;
 		//std::cout << "A" << std::endl;
 		movementVector += btVector3(-30, 0, 0);
 	}
-	if(GetAsyncKeyState(0x44) != 0) // D-key
+	if(GetAsyncKeyState(0x44)) // D-key
 	{
 		//std::cout << "D" << std::endl;
 		movementVector += btVector3(30, 0, 0);
@@ -102,8 +112,10 @@ void Engine::updatePlayerMovement(double deltaTime)
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
 
 	XMFLOAT3 playerPos = player->model->getTranslation();
-	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
+	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y-30, playerPos.z - 150, 0);
 	primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
+
+	//Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
 
@@ -163,9 +175,15 @@ void Engine::engineLoop()
 	groundObject3->setScaling(DirectX::XMFLOAT3(30, 10, 10));
 	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject3);
-	
 
+	Skybox::loadSkybox(DxHandler::devicePtr);
+	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
+	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 2500, 3000));
+	Skybox::sphereModel->isSky = true;
+	scene.push_back(Skybox::sphereModel);
 	//--------------------------------------------------------------------------------------------------- 
+	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
+	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 
 	MSG msg;
 	while (true)
@@ -189,15 +207,12 @@ void Engine::engineLoop()
 			PostQuitMessage(0);
 		}
 
-		std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
-		std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
-
-		
-
 		///-----stepsimulation_start-----
 		for (int i = 0; i < 15; i++)
 		{
-			dynamicsWorld->stepSimulation(frameTime.count(), 10);
+			dynamicsWorld->stepSimulation(frameTime.count(), 1);
+			//std::cout << frameTime.count() << std::endl;
+			//dynamicsWorld->stepSimulation(1/60, 10);
 
 			//print positions of all objects
 			for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
@@ -210,6 +225,7 @@ void Engine::engineLoop()
 				if (body && body->getMotionState())
 				{
 					body->getMotionState()->getWorldTransform(trans);
+					//printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
 				}
 				else
 				{
@@ -225,19 +241,23 @@ void Engine::engineLoop()
 			}
 		}
 
+		//XMFLOAT3 debugpos = DirectX::XMFLOAT3(scene.at(0)->rigidBody->getWorldTransform().getOrigin().x(), scene.at(0)->rigidBody->getWorldTransform().getOrigin().getY(), scene.at(0)->rigidBody->getWorldTransform().getOrigin().z());
+		//std::cout << debugpos.x << " " << debugpos.y << " " << debugpos.z << " " << std::endl;
 		for (int i = 0; i < scene.size(); i++)
 		{
 			bool check = scene.at(i)->rigidBody != nullptr;
 
 			btTransform transform;
-			if (scene.at(i)->rigidBody && scene.at(i)->rigidBody->getMotionState())
+			if (scene.at(i)->rigidBody != nullptr && scene.at(i)->rigidBody->getMotionState())
 			{
 				scene.at(i)->setTranslation(DirectX::XMFLOAT3(scene.at(i)->rigidBody->getWorldTransform().getOrigin().x(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().z()));
 				XMFLOAT3 pos = DirectX::XMFLOAT3(scene.at(i)->rigidBody->getWorldTransform().getOrigin().x(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().z());
-				//std::cout << pos.x << " " << pos.y << " " << pos.z << " " << std::endl;
 			}
 		}
 
+
+		newTime = std::chrono::high_resolution_clock::now(); //Set new time
+		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		fixedUpdate(frameTime.count());
 		DxHandler::swapChainPtr->Present(1, 0); 
 	}
@@ -287,8 +307,7 @@ void Engine::engineLoop()
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
-	DxHandler::firstPassPixel->useThis(DxHandler::contextPtr);
-	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
+	
 
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
 	//Clear RTVs again
@@ -297,7 +316,9 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	directXHandler->contextPtr->ClearRenderTargetView(deferredBufferHandler.buffers[GBufferType::Normal].renderTargetView, background_color);
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
+	//--------------------------------------
+	
+	DxHandler::contextPtr->PSSetShaderResources(1, 1, &Skybox::srv); //Skybox
 
 	ID3D11RenderTargetView* arr[3] =
 	{
@@ -307,10 +328,12 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	};
 	directXHandler->contextPtr->OMSetRenderTargets(3, arr, DxHandler::depthStencil); //DEPTH
 
+	DxHandler::firstPassPixel->useThis(DxHandler::contextPtr);
+	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
 
 	for (auto model : *scene) //Draw all meshes 
 	{
-		directXHandler->draw(model, primaryCamera);
+		directXHandler->draw(model, primaryCamera, model->isSky);
 	}
 
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
@@ -318,6 +341,14 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 
 void Engine::renderSecondPass()
 {
+
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
+
+	DxHandler::contextPtr->PSSetShaderResources(0, 1, &deferredBufferHandler.buffers[GBufferType::DiffuseColor].shaderResourceView); //Color
+	DxHandler::contextPtr->PSSetShaderResources(1, 1, &deferredBufferHandler.buffers[GBufferType::Normal].shaderResourceView); //Normal
+	DxHandler::contextPtr->PSSetShaderResources(2, 1, &deferredBufferHandler.buffers[GBufferType::Position].shaderResourceView); //Position
+
+
 	DxHandler::secondPassPixel->useThis(DxHandler::contextPtr);
 	DxHandler::secondPassVertex->useThis(DxHandler::contextPtr);
 

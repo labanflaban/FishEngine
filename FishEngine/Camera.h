@@ -3,7 +3,6 @@
 #include <SimpleMath.h>
 #include <math.h>
 
-
 class Camera
 {
 private:

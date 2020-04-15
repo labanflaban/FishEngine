@@ -1,14 +1,4 @@
-﻿  Engine.cpp
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\ObjParser.h(17,13): warning C4099: 'Vertex': type name first seen using 'struct' now seen using 'class'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Vertex.h(2): message : see declaration of 'Vertex'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(136,30): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(146,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(153,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(160,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(200,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
-          with
-          [
-              _Rep=double
-          ]
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(228,21): warning C4018: '<': signed/unsigned mismatch
+﻿C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\FirstPassPixel.hlsl(43,14-42): warning X3576: semantics in type overridden by variable/function or enclosing type
+  
+  compilation object save succeeded; see C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\FirstPassPixel.cso
   FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\FishEngine.exe

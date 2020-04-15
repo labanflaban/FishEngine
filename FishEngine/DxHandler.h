@@ -19,6 +19,7 @@
 #include <WICTextureLoader.h>
 #include <math.h>
 #include "Mesh.h"
+#include <DDSTextureLoader.h>
 
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
@@ -47,6 +48,7 @@ struct VS_CONSTANT_MATRIX_BUFFER
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixIdentity();
+	BOOL isSky = false;
 };
 
 struct PS_CONSTANT_LIGHT_BUFFER
@@ -64,6 +66,7 @@ struct PS_CONSTANT_LIGHT_BUFFER
 	DirectX::XMMATRIX projMatrix = DirectX::XMMatrixIdentity();
 
 	BOOL hasTexture = false;
+	BOOL isSky = false;
 };
 
 class DxHandler
@@ -79,6 +82,9 @@ public:
 
 	static VertexShader* secondPassVertex; //Reads a full screen quad
 	static PixelShader* secondPassPixel; //Fills full screen quad with data from textures in previous in first pass.
+
+	//static PixelShader* skyboxPixelShader;
+	//static VertexShader* skyboxVertexShader;
 
 	static  ID3D11Device* devicePtr;
 	static  ID3D11DeviceContext* contextPtr;
@@ -111,7 +117,7 @@ public:
 	ID3D11Buffer* createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix);
 	ID3D11Buffer* createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix);
 
-	void draw(Mesh* drawMesh, Camera drawFromCamera);
+	void draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky = false);
 
  
 };

@@ -16,6 +16,9 @@ PixelShader* DxHandler::firstPassPixel = new PixelShader();
 VertexShader* DxHandler::secondPassVertex = new VertexShader();
 PixelShader* DxHandler::secondPassPixel = new PixelShader();
 
+//VertexShader* DxHandler::skyboxVertexShader = new VertexShader();
+//PixelShader* DxHandler::skyboxPixelShader = new PixelShader();
+
 ID3D11InputLayout* DxHandler::input_layout_ptr = nullptr;
 
 IDXGISwapChain* DxHandler::swapChainPtr = nullptr;
@@ -189,7 +192,7 @@ ID3D11Buffer* DxHandler::createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix)
 	return constantPixelBuffer;
 }
 
-void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera)
+void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky)
 {
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
 	UINT offset = 0u;
@@ -199,8 +202,10 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera)
 	matrixBuff.worldMatrix = drawMesh->getWorldMatrix();
 	matrixBuff.viewMatrix = drawFromCamera.cameraView;
 	matrixBuff.projMatrix = drawFromCamera.cameraProjectionMatrix;
+	matrixBuff.isSky = isSky;
 
 	PS_CONSTANT_LIGHT_BUFFER lightBuff;
+	lightBuff.isSky = isSky;
 
 	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);

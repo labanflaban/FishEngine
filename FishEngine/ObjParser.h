@@ -20,5 +20,5 @@ struct Vertex;
 class ObjParser
 {
 public:
-	std::vector<Vertex> readFromObj(std::string fileName);
+	static std::vector<Vertex> readFromObj(std::string fileName);
 };

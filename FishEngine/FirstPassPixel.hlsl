@@ -1,5 +1,6 @@
 
 Texture2D colorMap : register(t0);
+TextureCube sky : register(t1);
 SamplerState mysampler;
 
 //From CPU to GPU. Sends whatever you need.
@@ -18,6 +19,7 @@ cbuffer PS_CONSTANT_BUFFER
 	row_major float4x4 projMatrix;
 
 	bool hasTexture;
+	bool isSky;
 }
 
 struct PS_INPUT //Output from geometry shader
@@ -51,6 +53,19 @@ PS_OUTPUT main(PS_INPUT input) : SV_Target
 	else
 	{
 		output.vColour = float4(0.8, 0.8, 0.8, 1);
+	}
+
+	if (isSky)
+	{
+		float3 camToPixelVec = (input.positionInWorldSpace.xyz - camPos.xyz);
+		float3 camToPixelReflected = normalize(reflect(camToPixelVec, input.vNormal.xyz));
+
+		output.vColour.w = 2;
+		//input.vUV = float4(input.vUV.x - 1, input.vUV.y, input.vUV.z, 0);
+		//output.vColour = sky.Sample(mysampler, input.vUV);
+		output.vColour = sky.Sample(mysampler, camToPixelVec);
+		//output.vColour = sky.Sample(mysampler, input.vPosition);
+		output.vColour.w = 2;
 	}
 
 	/*if (hasNormalMap)

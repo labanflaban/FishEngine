@@ -22,6 +22,7 @@ cbuffer PS_CONSTANT_BUFFER
 	row_major float4x4 projMatrix;
 
 	bool hasTexture;
+	bool isSky;
 }
 
 struct VS_OUTPUT //comes from deferredVShader
@@ -53,6 +54,8 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float specStrength = pow(clamp(dot(reflectionVec, lookVector), 0, 1), 32); // 32 being spec exponent
 	//
 
-	return (diffuseStrength + ambientStrength + specStrength) * albedo;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
-
+	if (albedo.w != 2)
+		return (diffuseStrength + ambientStrength + specStrength) * albedo;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
+	else
+		return albedo;
 }

@@ -74,5 +74,6 @@ public:
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
 
+	bool isSky = false;
 	~Mesh();
 };

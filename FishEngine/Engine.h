@@ -13,6 +13,8 @@
 #include "GBufferHandler.h"
 #include "Camera.h"
 #include "Player.h"
+#include <stdio.h>
+#include "Skybox.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
