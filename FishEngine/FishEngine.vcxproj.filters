@@ -135,9 +135,15 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Yse.dll" />
+    <None Include="portaudio_x86.dll" />
+    <None Include="libsndfile-1.dll" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="FirstPassVertex.hlsl">

@@ -112,7 +112,7 @@ LRESULT InputHandler::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPa
 			
 
 		if (wParam == VK_ESCAPE)
-			exit(1);
+			//exit(1);
 
 		break;
 	case WM_SYSKEYUP:

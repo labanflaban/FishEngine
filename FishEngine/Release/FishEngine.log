@@ -1,0 +1,5 @@
+﻿C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(48,9-56): warning X3206: implicit truncation of vector type
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(49,32-59): warning X3206: 'dot': implicit truncation of vector type
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\SecondPassPixel.hlsl(38,23-27): error X4502: Shader model ps_4_0_level_9_3 doesn't allow reading from position semantics.
+  
+  compilation failed; no code produced

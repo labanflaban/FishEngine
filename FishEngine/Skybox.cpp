@@ -11,6 +11,6 @@ void Skybox::loadSkybox(ID3D11Device* devicePtr)
 	//assert(SUCCEEDED(succ));
 
 	Skybox::sphereModel = new Mesh;
-	sphereModel->readMeshFromFile("./Models/actualCube.obj");
+	sphereModel->readMeshFromFile("./Models/sphere.obj");
 	sphereModel->setRotation(DirectX::XMFLOAT3(-3.14, 0, 0));
 }

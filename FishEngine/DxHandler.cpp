@@ -69,6 +69,9 @@ void DxHandler::initalizeDeviceContextAndSwapChain()
 	(swapChainPtr->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBufferPtr));
 	HRESULT rendertargetSucc = devicePtr->CreateRenderTargetView(backBufferPtr.Get(), nullptr, &renderTargetPtr);
 	assert(SUCCEEDED(rendertargetSucc));
+
+	spriteBatch = std::make_unique<DirectX::SpriteBatch>(contextPtr);
+	spriteFont = std::make_unique<DirectX::SpriteFont>(devicePtr, L"./Fonts/Arial.spritefont");
 }
 
 void DxHandler::setupInputLayout()
@@ -206,6 +209,7 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky)
 
 	PS_CONSTANT_LIGHT_BUFFER lightBuff;
 	lightBuff.isSky = isSky;
+	lightBuff.camPos = drawFromCamera.cameraPosition;
 
 	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);
@@ -216,6 +220,13 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky)
 	//Draw it
 	DxHandler::contextPtr->Draw(drawMesh->vertices.size(), 0);
 
+}
+
+void DxHandler::drawText()
+{
+	//this->spriteBatch->Begin();
+	//spriteFont->DrawString(spriteBatch.get(), L"YEET", DirectX::XMFLOAT2(0, 0), DirectX::Colors::Red, 0.0f, DirectX::XMFLOAT2(0,0), DirectX::XMFLOAT2(1.0f, 1.0f));
+	//this->spriteBatch->End();
 }
 
 DxHandler::DxHandler(HWND hWnd)

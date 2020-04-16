@@ -20,6 +20,8 @@
 #include <math.h>
 #include "Mesh.h"
 #include <DDSTextureLoader.h>
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
 
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
@@ -74,6 +76,9 @@ class DxHandler
 private:
 
 public:
+	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> spriteFont;
+
 	static ID3D11DepthStencilView* depthStencil;
 	static ID3D11Texture2D* depthBuffer;
 
@@ -119,6 +124,6 @@ public:
 
 	void draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky = false);
 
- 
+	void drawText();
 };
 

@@ -13,12 +13,16 @@ Engine::~Engine()
 
 	delete DxHandler::firstPassVertex;
 	delete DxHandler::secondPassVertex;
+
+	YSE::System().close();
 }
 
 void Engine::initialSetup()
 {
 	DxHandler::WIDTH = WIDTH;
 	DxHandler::HEIGHT = HEIGHT;
+
+	YSE::System().init();
 
 	this->createWindow();
 	createDirectX();
@@ -95,6 +99,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		//std::cout << "Space" << std::endl;
 		movementVector += btVector3(0, 40.f, 0);
 		player->boostReserve -= 10.f;
+		player->jumpSound.play();
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
 	{
@@ -112,10 +117,10 @@ void Engine::updatePlayerMovement(double deltaTime)
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
 
 	XMFLOAT3 playerPos = player->model->getTranslation();
-	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y-30, playerPos.z - 150, 0);
+	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
 	primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
 
-	//Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
+	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
 
@@ -146,9 +151,10 @@ void Engine::engineLoop()
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
 	Mesh* debugObject = new Mesh; //Body
-	debugObject->readMeshFromFile("./Models/actualCube.obj");
+	debugObject->readMeshFromFile("./Models/monkey.obj");
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
 	debugObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
 	this->player = new Player;
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
@@ -178,7 +184,7 @@ void Engine::engineLoop()
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
-	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 2500, 3000));
+	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 200));
 	Skybox::sphereModel->isSky = true;
 	scene.push_back(Skybox::sphereModel);
 	//--------------------------------------------------------------------------------------------------- 
@@ -258,6 +264,7 @@ void Engine::engineLoop()
 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
+		YSE::System().update();
 		fixedUpdate(frameTime.count());
 		DxHandler::swapChainPtr->Present(1, 0); 
 	}
@@ -307,7 +314,6 @@ void Engine::engineLoop()
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
-	
 
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
 	//Clear RTVs again
@@ -344,6 +350,12 @@ void Engine::renderSecondPass()
 
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 
+	//Draw Text
+	//directXHandler->drawText();
+	//directXHandler->spriteBatch->Begin();
+	//directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), L"Test", DirectX::XMFLOAT2(0, 0), DirectX::Colors::Red, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(4.0f, 4.0f));
+	//directXHandler->spriteBatch->End();
+
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &deferredBufferHandler.buffers[GBufferType::DiffuseColor].shaderResourceView); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &deferredBufferHandler.buffers[GBufferType::Normal].shaderResourceView); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &deferredBufferHandler.buffers[GBufferType::Position].shaderResourceView); //Position
@@ -358,7 +370,9 @@ void Engine::renderSecondPass()
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &deferredBufferHandler.buffers[GBufferType::Normal].shaderResourceView); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &deferredBufferHandler.buffers[GBufferType::Position].shaderResourceView); //Position
 
+	
 	directXHandler->drawFullscreenQuad();
-
+	
+	
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
 }

@@ -1,4 +1,6 @@
 #pragma once
+#include "yse.hpp"
+#include "Player.h"
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include "DXHandler.h"
@@ -12,13 +14,10 @@
 #include <vector>
 #include "GBufferHandler.h"
 #include "Camera.h"
-#include "Player.h"
 #include <stdio.h>
 #include "Skybox.h"
-
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
-
 
 const int WIDTH = 1920;
 const int HEIGHT = 1280;
