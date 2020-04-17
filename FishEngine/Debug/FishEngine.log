@@ -1,11 +1,11 @@
 ﻿  Engine.cpp
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\ObjParser.h(17,13): warning C4099: 'Vertex': type name first seen using 'struct' now seen using 'class'
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Vertex.h(2): message : see declaration of 'Vertex'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(153,30): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(157,59): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(164,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(171,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(178,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(152,30): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(156,59): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(163,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(170,31): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(177,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(219,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
           with
           [

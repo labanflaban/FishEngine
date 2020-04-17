@@ -50,6 +50,9 @@ public:
 	void createInputHandler();
 	void engineLoop();
 
+	ID3D11RenderTargetView* nullRTV = nullptr;
+	ID3D11ShaderResourceView* nullSRV = nullptr;
+
 	//Mesh* playerMesh = nullptr;
 	Player* player = nullptr;
 

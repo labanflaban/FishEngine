@@ -147,7 +147,6 @@ void Engine::engineLoop()
 	};
 	port.MinDepth = 0.0f; //Closest possible to screen Z depth
 	port.MaxDepth = 1.0f; //Furthest possible
-	directXHandler->contextPtr->RSSetViewports(1, &port);
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
 	Mesh* debugObject = new Mesh; //Body
@@ -194,6 +193,7 @@ void Engine::engineLoop()
 	MSG msg;
 	while (true)
 	{
+		directXHandler->contextPtr->RSSetViewports(1, &port);
 		inputHandler.handleInput();
 
 		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top
@@ -266,7 +266,15 @@ void Engine::engineLoop()
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		YSE::System().update();
 		fixedUpdate(frameTime.count());
+
+		directXHandler->spriteBatch->Begin();
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), L"jag_hatar_texthantering", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(4.0f, 4.0f));
+		directXHandler->spriteBatch->End();
+		
 		DxHandler::swapChainPtr->Present(1, 0); 
+		DxHandler::contextPtr->ClearState();
+
+		directXHandler->setDefaultState();
 	}
 
 	
@@ -342,37 +350,40 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		directXHandler->draw(model, primaryCamera, model->isSky);
 	}
 
+	//Set to null
+	ID3D11RenderTargetView* arrNull[1] =
+	{
+		nullRTV
+	};
+	directXHandler->contextPtr->OMSetRenderTargets(1, arrNull, DxHandler::depthStencil); //DEPTH
+	//
+
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
 }
 
 void Engine::renderSecondPass()
 {
-
-	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
-
-	//Draw Text
-	//directXHandler->drawText();
-	//directXHandler->spriteBatch->Begin();
-	//directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), L"Test", DirectX::XMFLOAT2(0, 0), DirectX::Colors::Red, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(4.0f, 4.0f));
-	//directXHandler->spriteBatch->End();
-
-	DxHandler::contextPtr->PSSetShaderResources(0, 1, &deferredBufferHandler.buffers[GBufferType::DiffuseColor].shaderResourceView); //Color
-	DxHandler::contextPtr->PSSetShaderResources(1, 1, &deferredBufferHandler.buffers[GBufferType::Normal].shaderResourceView); //Normal
-	DxHandler::contextPtr->PSSetShaderResources(2, 1, &deferredBufferHandler.buffers[GBufferType::Position].shaderResourceView); //Position
-
+	
+	//directXHandler->setDefaultState();
+	//--------------------------------------------------------
 
 	DxHandler::secondPassPixel->useThis(DxHandler::contextPtr);
 	DxHandler::secondPassVertex->useThis(DxHandler::contextPtr);
+	//--------------------------------------------------------
 
-	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL); //Application screen
 
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &deferredBufferHandler.buffers[GBufferType::DiffuseColor].shaderResourceView); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &deferredBufferHandler.buffers[GBufferType::Normal].shaderResourceView); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &deferredBufferHandler.buffers[GBufferType::Position].shaderResourceView); //Position
 
 	
-	directXHandler->drawFullscreenQuad();
+	directXHandler->drawFullscreenQuad(this->primaryCamera);
 	
+	DxHandler::contextPtr->PSSetShaderResources(0, 1, &nullSRV); //Color
+	DxHandler::contextPtr->PSSetShaderResources(1, 1, &nullSRV); //Normal
+	DxHandler::contextPtr->PSSetShaderResources(2, 1, &nullSRV); //Position
 	
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
+	//directXHandler->contextPtr->OMSetRenderTargets(1, &nullRTV, NULL); //Application screen
 }

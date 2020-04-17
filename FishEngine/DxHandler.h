@@ -80,6 +80,8 @@ public:
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 
 	static ID3D11DepthStencilView* depthStencil;
+	static ID3D11DepthStencilState* depthStencilState;
+
 	static ID3D11Texture2D* depthBuffer;
 
 	static VertexShader* firstPassVertex; //Contains geometry data, first pass in deferred
@@ -110,6 +112,8 @@ public:
 	static ID3D11Buffer* constantVertexBuffer;
 	static ID3D11Buffer* constantPixelBuffer;
 
+	static ID3D11RasterizerState* rasterizerState;
+
 	DxHandler(HWND hWnd);
 	void configureSwapChain(HWND& hWnd);
 	void initalizeDeviceContextAndSwapChain();
@@ -117,7 +121,9 @@ public:
 	void setupDepthBuffer();
 
 	void generateFullScreenQuad();
-	void drawFullscreenQuad();
+	void drawFullscreenQuad(Camera& drawFromCamera);
+
+	void setDefaultState();
 
 	ID3D11Buffer* createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix);
 	ID3D11Buffer* createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix);

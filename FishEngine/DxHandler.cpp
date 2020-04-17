@@ -21,6 +21,8 @@ PixelShader* DxHandler::secondPassPixel = new PixelShader();
 
 ID3D11InputLayout* DxHandler::input_layout_ptr = nullptr;
 
+ID3D11DepthStencilState* DxHandler::depthStencilState = nullptr;
+
 IDXGISwapChain* DxHandler::swapChainPtr = nullptr;
 ID3D11RenderTargetView* DxHandler::renderTargetPtr = nullptr;
 DXGI_SWAP_CHAIN_DESC DxHandler::swapDesc = DXGI_SWAP_CHAIN_DESC{ 0 };
@@ -31,6 +33,8 @@ ID3D11Texture2D* DxHandler::depthBuffer = nullptr;
 HWND* DxHandler::hWnd = nullptr;
 
 Mesh* DxHandler::fullscreenQuad = nullptr;
+
+ID3D11RasterizerState* DxHandler::rasterizerState = nullptr;
 
 ID3D11Buffer* DxHandler::constantVertexBuffer = nullptr;
 ID3D11Buffer* DxHandler::constantPixelBuffer = nullptr;
@@ -60,7 +64,6 @@ void DxHandler::initalizeDeviceContextAndSwapChain()
 	D3D11_RASTERIZER_DESC rasterizerDesc = {};
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_NONE; //No cull. Done in geometry shader.
-	ID3D11RasterizerState* rasterizerState;
 
 	devicePtr->CreateRasterizerState(&rasterizerDesc, &rasterizerState);
 	contextPtr->RSSetState(rasterizerState);
@@ -112,6 +115,10 @@ void DxHandler::setupDepthBuffer()
 
 	devicePtr->CreateTexture2D(&depthDesc, NULL, &depthBuffer);
 	devicePtr->CreateDepthStencilView(DxHandler::depthBuffer, NULL, &depthStencil);
+
+	D3D11_DEPTH_STENCIL_DESC depthStateDesc = { 0 };
+	devicePtr->CreateDepthStencilState(&depthStateDesc, &depthStencilState);
+	contextPtr->OMSetDepthStencilState(depthStencilState, 0);
 }
 
 void DxHandler::generateFullScreenQuad()
@@ -128,15 +135,34 @@ void DxHandler::generateFullScreenQuad()
 	fullscreenQuad->createVertexBuffer();
 }
 
-void DxHandler::drawFullscreenQuad()
+void DxHandler::drawFullscreenQuad(Camera& drawFromCamera)
 {
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
 	UINT offset = 0u;
+
+	PS_CONSTANT_LIGHT_BUFFER lightBuff;
+	lightBuff.camPos = drawFromCamera.cameraPosition;
+
+	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 
 	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &fullscreenQuad->vertexBuffer,
 		&stride, &offset);
 
 	DxHandler::contextPtr->Draw(fullscreenQuad->vertices.size(), 0);
+}
+
+void DxHandler::setDefaultState()
+{
+	DxHandler::contextPtr->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DxHandler::contextPtr->IASetInputLayout((ID3D11InputLayout*)DxHandler::input_layout_ptr);
+	//contextPtr->OMSetBlendState(NULL, NULL, NULL);
+	contextPtr->RSSetState(rasterizerState);
+	
+	VS_CONSTANT_MATRIX_BUFFER buff;
+	PS_CONSTANT_LIGHT_BUFFER lBuff;
+	DxHandler::contextPtr->VSSetConstantBuffers(PER_OBJECT_CBUFFER_SLOT, 1, &constantVertexBuffer);
+	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
 }
 
 ID3D11Buffer* DxHandler::createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix)
