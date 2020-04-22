@@ -1,15 +1,44 @@
-﻿  Engine.cpp
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(126,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(131,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(170,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(181,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(188,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(195,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(202,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(250,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
+﻿  BaseShader.cpp
+  Camera.cpp
+  DeferredRenderBuffer.cpp
+  DxHandler.cpp
+F:\Github\FishEngine\FishEngine\DxHandler.cpp(122,20): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+F:\Github\FishEngine\FishEngine\DxHandler.cpp(123,21): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+F:\Github\FishEngine\FishEngine\DxHandler.cpp(141,49): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+  Engine.cpp
+F:\Github\FishEngine\FishEngine\Engine.cpp(126,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+F:\Github\FishEngine\FishEngine\Engine.cpp(131,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+F:\Github\FishEngine\FishEngine\Engine.cpp(170,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+F:\Github\FishEngine\FishEngine\Engine.cpp(181,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+F:\Github\FishEngine\FishEngine\Engine.cpp(188,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+F:\Github\FishEngine\FishEngine\Engine.cpp(195,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+F:\Github\FishEngine\FishEngine\Engine.cpp(202,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+F:\Github\FishEngine\FishEngine\Engine.cpp(250,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
           with
           [
               _Rep=double
           ]
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Engine.cpp(283,21): warning C4018: '<': signed/unsigned mismatch
-  FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\Debug\FishEngine.exe
+F:\Github\FishEngine\FishEngine\Engine.cpp(283,21): warning C4018: '<': signed/unsigned mismatch
+  FishMain.cpp
+F:\Github\FishEngine\FishEngine\FishMain.cpp(12,1): warning C4007: 'WinMain': must be '__stdcall'
+  GBufferHandler.cpp
+  GeometryShader.cpp
+  InputHandler.cpp
+  Light.cpp
+F:\Github\FishEngine\FishEngine\Light.cpp(6,38): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+  Mesh.cpp
+  ObjParser.cpp
+F:\Github\FishEngine\FishEngine\ObjParser.cpp(200,27): warning C4018: '<': signed/unsigned mismatch
+  PixelShader.cpp
+  Player.cpp
+F:\Github\FishEngine\FishEngine\Player.cpp(6,25): warning C4305: 'argument': truncation from 'double' to 'Flt'
+  RenderWindow.cpp
+F:\Github\FishEngine\FishEngine\RenderWindow.cpp(6,1): warning C4005: 'D3D_COMPILE_STANDARD_FILE_INCLUDE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3dcompiler.h(211): message : see previous definition of 'D3D_COMPILE_STANDARD_FILE_INCLUDE'
+  Skybox.cpp
+F:\Github\FishEngine\FishEngine\Skybox.cpp(13,43): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+F:\Github\FishEngine\FishEngine\Skybox.cpp(15,56): warning C4305: 'argument': truncation from 'double' to 'float'
+  VertexShader.cpp
+  Generating Code...
+F:\Github\FishEngine\FishEngine\DxHandler.cpp(282): warning C4172: returning address of local variable or temporary: constantGeometryBuffer
+  FishEngine.vcxproj -> F:\Github\FishEngine\Debug\FishEngine.exe
