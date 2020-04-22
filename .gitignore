@@ -38,4 +38,5 @@
 *.opendb
 *.db
 
-!./FishEngine/Models/
+!FishEngine/Models/
+.vs/
