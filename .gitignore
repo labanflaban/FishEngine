@@ -15,6 +15,7 @@
 *.pdb
 *.tlog
 *.log
+*.obj
 
 # Compiled Dynamic libraries
 *.so
@@ -36,3 +37,5 @@
 
 *.opendb
 *.db
+
+!./FishEngine/Models/
