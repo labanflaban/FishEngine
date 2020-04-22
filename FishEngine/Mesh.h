@@ -5,13 +5,13 @@
 #include <SimpleMath.h>
 #include <string>
 #include <WICTextureLoader.h>
-#include "DxHandler.h"
 #include "ObjParser.h"
 #include "Vertex.h"
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "bullet\btBulletDynamicsCommon.h"
 
+const int FLOATS_PER_VERTEX = 15;
 /*struct Vertex
 {
 	float x, y, z = 0;
@@ -43,6 +43,8 @@ private:
 
 	void updateWorldMatrix();
 public:
+	ID3D11Device* device = nullptr;
+
 	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
@@ -75,5 +77,6 @@ public:
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
 
 	bool isSky = false;
+	Mesh(ID3D11Device* device);
 	~Mesh();
 };

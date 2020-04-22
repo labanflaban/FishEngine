@@ -10,7 +10,7 @@ void Skybox::loadSkybox(ID3D11Device* devicePtr)
 	HRESULT succ = DirectX::CreateDDSTextureFromFile(devicePtr, path.data(), &texture, &srv, NULL, NULL);
 	//assert(SUCCEEDED(succ));
 
-	Skybox::sphereModel = new Mesh;
-	sphereModel->readMeshFromFile("./Models/sphere.obj");
+	Skybox::sphereModel = new Mesh(devicePtr);
+	sphereModel->readMeshFromFile("./Models/skyboxMesh.obj");
 	sphereModel->setRotation(DirectX::XMFLOAT3(-3.14, 0, 0));
 }

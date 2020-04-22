@@ -14,7 +14,6 @@
 
 
 
-class Vertex;
 struct Vertex;
 
 class ObjParser

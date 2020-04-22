@@ -16,11 +16,15 @@
 #include "Camera.h"
 #include <stdio.h>
 #include "Skybox.h"
+#include "Light.h"
+#include <CommonStates.h>
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
 
 const int WIDTH = 1920;
 const int HEIGHT = 1280;
+
+class Light;
 
 class Engine
 {
@@ -50,6 +54,8 @@ public:
 	void createInputHandler();
 	void engineLoop();
 
+	std::unique_ptr<DirectX::CommonStates> states;
+
 	ID3D11RenderTargetView* nullRTV = nullptr;
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 
@@ -58,5 +64,8 @@ public:
 
 	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();
+	void renderLightVolumes();
 	std::vector<Mesh*> scene;
+	std::vector<Light*> lights;
+	std::vector<Mesh*> transparentSceneObjects;
 };

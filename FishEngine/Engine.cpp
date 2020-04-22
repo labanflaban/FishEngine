@@ -14,11 +14,14 @@ Engine::~Engine()
 	delete DxHandler::firstPassVertex;
 	delete DxHandler::secondPassVertex;
 
+	lights.clear();
+
 	YSE::System().close();
 }
 
 void Engine::initialSetup()
 {
+
 	DxHandler::WIDTH = WIDTH;
 	DxHandler::HEIGHT = HEIGHT;
 
@@ -31,6 +34,13 @@ void Engine::initialSetup()
 
 	DxHandler::secondPassPixel->compileShader(L"./SecondPassPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::secondPassVertex->compileShader(L"./SecondPassVertex.hlsl", DxHandler::devicePtr);
+
+	DxHandler::lightPixel->compileShader(L"./LightVolumeShader.hlsl", DxHandler::devicePtr);
+
+	DxHandler::transparencyPixel->compileShader(L"./ForwardTransparencyPixel.hlsl", DxHandler::devicePtr);
+	DxHandler::transparencyVertex->compileShader(L"./ForwardTransparencyVertex.hlsl", DxHandler::devicePtr);
+
+	DxHandler::backfaceCullShader->compileShader(L"./BackfaceCullerGeometry.hlsl", DxHandler::devicePtr);
 
 	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
 	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
@@ -52,9 +62,17 @@ void Engine::initialSetup()
 	VS_CONSTANT_MATRIX_BUFFER vs_buff;
 	directXHandler->createPSConstBuffer(ps_buff);
 	directXHandler->createVSConstBuffer(vs_buff);
+	directXHandler->createGSConstBuffer();
 
+	directXHandler->initAdditiveBlendState();
 	
 	this->primaryCamera = Camera(WIDTH, HEIGHT);
+
+	states = std::make_unique<DirectX::CommonStates>(DxHandler::devicePtr);
+	DxHandler::alphaBlendState = states->AlphaBlend();
+
+
+	
 }
 
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
@@ -97,7 +115,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
 	{
 		//std::cout << "Space" << std::endl;
-		movementVector += btVector3(0, 40.f, 0);
+		movementVector += btVector3(0, 20.f, 0);
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
 	}
@@ -105,12 +123,12 @@ void Engine::updatePlayerMovement(double deltaTime)
 	{
 		//std::cout << GetAsyncKeyState(0x41) << std::endl;
 		//std::cout << "A" << std::endl;
-		movementVector += btVector3(-30, 0, 0);
+		movementVector += btVector3(-30 * deltaTime * 60, 0, 0);
 	}
 	if(GetAsyncKeyState(0x44)) // D-key
 	{
 		//std::cout << "D" << std::endl;
-		movementVector += btVector3(30, 0, 0);
+		movementVector += btVector3(30 * deltaTime * 60, 0, 0);
 	}
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
@@ -134,7 +152,7 @@ void Engine::engineLoop()
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
-	dynamicsWorld->setGravity(btVector3(0, -20, 0));
+	dynamicsWorld->setGravity(btVector3(0, -3, 0));
 	//--------------------------------------------------------------------------------------------------- physics 
 
 	RECT viewportRect;
@@ -149,49 +167,61 @@ void Engine::engineLoop()
 	port.MaxDepth = 1.0f; //Furthest possible
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
-	Mesh* debugObject = new Mesh; //Body
-	debugObject->readMeshFromFile("./Models/monkey.obj");
+	Mesh* debugObject = new Mesh(DxHandler::devicePtr); //Body
+	debugObject->readMeshFromFile("./Models/sphere.obj");
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
+	debugObject->setScaling(DirectX::XMFLOAT3(4, 4, 4));
+	debugObject->setRotation(DirectX::XMFLOAT3(0, 0, 0));
 	this->player = new Player;
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->scene.push_back(debugObject);
 	//this->scene.push_back(debugObject);
 
-	Mesh* groundObject = new Mesh; //Ground
+	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject->readMeshFromFile("./Models/actualCube.obj");
 	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
 	groundObject->setScaling(DirectX::XMFLOAT3(30, 10, 10));
 	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject);
 
-	Mesh* groundObject2= new Mesh; //Ground
+	Mesh* groundObject2= new Mesh(DxHandler::devicePtr); //Ground
 	groundObject2->readMeshFromFile("./Models/actualCube.obj");
 	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
 	groundObject2->setScaling(DirectX::XMFLOAT3(30, 10, 10));
 	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject2);
 	
-	Mesh* groundObject3 = new Mesh; //Ground
+	Mesh* groundObject3 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject3->readMeshFromFile("./Models/actualCube.obj");
 	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
 	groundObject3->setScaling(DirectX::XMFLOAT3(30, 10, 10));
 	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject3);
 
+	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject4->readMeshFromFile("./Models/actualCube.obj");
+	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
+	groundObject4->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->transparentSceneObjects.push_back(groundObject4);
+
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
 	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 200));
 	Skybox::sphereModel->isSky = true;
 	scene.push_back(Skybox::sphereModel);
+
+	Light* light = new Light(DxHandler::devicePtr);
+	light->setPosition(XMFLOAT3(0, 0, -10));
+	this->lights.push_back(light);
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 
 	MSG msg;
-	while (true)
+	bool shutdown = false;
+	while (!shutdown)
 	{
 		directXHandler->contextPtr->RSSetViewports(1, &port);
 		inputHandler.handleInput();
@@ -200,6 +230,7 @@ void Engine::engineLoop()
 		primaryCamera.updateCamera();
 		renderFirstPass(&scene);
 		renderSecondPass();
+		renderLightVolumes();
 
 		//upp upp och ivääääg
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -261,16 +292,20 @@ void Engine::engineLoop()
 			}
 		}
 
+		YSE::System().update();
+		
+		
+
+		directXHandler->spriteBatch->Begin();
+		std::wstring string;
+		string = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(),	string.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		directXHandler->spriteBatch->End();
 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
-		YSE::System().update();
 		fixedUpdate(frameTime.count());
 
-		directXHandler->spriteBatch->Begin();
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), L"jag_hatar_texthantering", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(4.0f, 4.0f));
-		directXHandler->spriteBatch->End();
-		
 		DxHandler::swapChainPtr->Present(1, 0); 
 		DxHandler::contextPtr->ClearState();
 
@@ -322,6 +357,7 @@ void Engine::engineLoop()
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
+	DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
 	//Clear RTVs again
@@ -355,10 +391,12 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	{
 		nullRTV
 	};
-	directXHandler->contextPtr->OMSetRenderTargets(1, arrNull, DxHandler::depthStencil); //DEPTH
-	//
+	directXHandler->contextPtr->OMSetRenderTargets(1, arrNull, NULL); //DEPTH
+	// 
 
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
+
+	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 }
 
 void Engine::renderSecondPass()
@@ -380,10 +418,39 @@ void Engine::renderSecondPass()
 	
 	directXHandler->drawFullscreenQuad(this->primaryCamera);
 	
+	
+	
+	float background_color[4] = { 0.f, 0.f, 0.f, 0.f };
+	//directXHandler->contextPtr->OMSetRenderTargets(1, &nullRTV, NULL); //Application screen
+}
+
+void Engine::renderLightVolumes()
+{
+	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
+	DxHandler::lightPixel->useThis(DxHandler::contextPtr);
+
+	float blendingFactor[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
+	//DxHandler::contextPtr->OMSetBlendState(states->Additive(), blendingFactor, 0xFFFFFFFF);
+	DxHandler::contextPtr->OMSetBlendState(DxHandler::additiveBlendState, blendingFactor, 0xFFFFFFFF);
+	for (auto model : lights) //Draw all lights
+	{
+		directXHandler->draw(model->lightVolume, primaryCamera, false, model);
+	}
+	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
+
+	//Transparent stuff - move later.
+	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
+	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
+	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
+	for (auto model : transparentSceneObjects) //Draw transparent stuff
+	{
+		directXHandler->draw(model, primaryCamera, false);
+	}
+	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
+	//End of transparency 
+
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &nullSRV); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &nullSRV); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &nullSRV); //Position
-	
-	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
-	//directXHandler->contextPtr->OMSetRenderTargets(1, &nullRTV, NULL); //Application screen
 }

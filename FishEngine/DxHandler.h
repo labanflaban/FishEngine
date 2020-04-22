@@ -22,7 +22,8 @@
 #include <DDSTextureLoader.h>
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
-
+#include "GeometryShader.h"
+#include "Light.h"
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "bullet\btBulletDynamicsCommon.h"
@@ -36,13 +37,10 @@
 #pragma comment(lib, "d3d11") 
 #pragma comment(lib, "d3dcompiler.lib")
 
-const int FLOATS_PER_VERTEX = 15;
 namespace wrl = Microsoft::WRL;
 
 const int PER_OBJECT_CBUFFER_SLOT = 0;
 const int CAMERA_CBUFFER_SLOT = 1;
-
-class Mesh;
 
 struct VS_CONSTANT_MATRIX_BUFFER
 {
@@ -53,9 +51,15 @@ struct VS_CONSTANT_MATRIX_BUFFER
 	BOOL isSky = false;
 };
 
+struct GS_CONSTANT_MATRIX_BUFFER
+{
+	DirectX::XMVECTOR camPos;
+};
+
 struct PS_CONSTANT_LIGHT_BUFFER
 {
-	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 0, -60, 0);
+	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 50, -60, 0);
+	DirectX::XMVECTOR globalLightPos = DirectX::XMVectorSet(0, 7000, 50, 0);
 	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
 	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(0, 0, 0, 0);
@@ -74,13 +78,15 @@ struct PS_CONSTANT_LIGHT_BUFFER
 class DxHandler
 {
 private:
-
 public:
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 
 	static ID3D11DepthStencilView* depthStencil;
 	static ID3D11DepthStencilState* depthStencilState;
+
+	static ID3D11BlendState* additiveBlendState;
+	static ID3D11BlendState* alphaBlendState;
 
 	static ID3D11Texture2D* depthBuffer;
 
@@ -89,6 +95,12 @@ public:
 
 	static VertexShader* secondPassVertex; //Reads a full screen quad
 	static PixelShader* secondPassPixel; //Fills full screen quad with data from textures in previous in first pass.
+	static PixelShader* lightPixel;
+
+	static PixelShader* transparencyPixel;
+	static VertexShader* transparencyVertex;
+
+	static GeometryShader* backfaceCullShader;
 
 	//static PixelShader* skyboxPixelShader;
 	//static VertexShader* skyboxVertexShader;
@@ -111,8 +123,9 @@ public:
 
 	static ID3D11Buffer* constantVertexBuffer;
 	static ID3D11Buffer* constantPixelBuffer;
-
+	static ID3D11Buffer* GSConstBuff;
 	static ID3D11RasterizerState* rasterizerState;
+
 
 	DxHandler(HWND hWnd);
 	void configureSwapChain(HWND& hWnd);
@@ -124,11 +137,14 @@ public:
 	void drawFullscreenQuad(Camera& drawFromCamera);
 
 	void setDefaultState();
+	void initAdditiveBlendState();
 
 	ID3D11Buffer* createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix);
 	ID3D11Buffer* createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix);
 
-	void draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky = false);
+	ID3D11Buffer*& createGSConstBuffer();
+
+	void draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky = false, Light* light = nullptr);
 
 	void drawText();
 };

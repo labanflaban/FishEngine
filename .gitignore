@@ -11,6 +11,10 @@
 *.gch
 *.pch
 *.ipch
+*.ilk
+*.pdb
+*.tlog
+*.log
 
 # Compiled Dynamic libraries
 *.so
@@ -29,3 +33,5 @@
 *.exe
 *.out
 *.app
+
+*.opendb

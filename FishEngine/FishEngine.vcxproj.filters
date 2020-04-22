@@ -81,6 +81,12 @@
     <ClInclude Include="TextHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FishEngine.rc">
@@ -144,6 +150,12 @@
     <ClCompile Include="TextHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -162,6 +174,18 @@
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
     <FxCompile Include="SecondPassVertex.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="LightVolumeShader.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardTransparencyPixel.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="ForwardTransparencyVertex.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="BackfaceCullerGeometry.hlsl">
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
   </ItemGroup>

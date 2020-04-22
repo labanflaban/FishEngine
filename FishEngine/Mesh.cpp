@@ -89,7 +89,7 @@ ID3D11Buffer* Mesh::createVertexBuffer()
 	subResData.pSysMem = vertices.data();
 	subResData.SysMemPitch = FLOATS_PER_VERTEX * sizeof(float) * vertices.size();
 
-	HRESULT succ2 = DxHandler::devicePtr->CreateBuffer(&bufferDesc, &subResData, &vertexBufferPtr);
+	HRESULT succ2 = device->CreateBuffer(&bufferDesc, &subResData, &vertexBufferPtr);
 	assert(SUCCEEDED(succ2));
 
 	vertexBuffer = vertexBufferPtr;
@@ -105,7 +105,7 @@ void Mesh::readMeshFromFile(std::string fileName)
 
 void Mesh::readTextureFromFile(std::wstring textureName)
 {
-	HRESULT readTextureResult = DirectX::CreateWICTextureFromFile(DxHandler::devicePtr, textureName.data(), &texture, &textureView, 0);
+	HRESULT readTextureResult = DirectX::CreateWICTextureFromFile(device, textureName.data(), &texture, &textureView, 0);
 
 	//Check if file could be loaded
 	assert(SUCCEEDED(readTextureResult));
@@ -132,10 +132,15 @@ void Mesh::readTextureFromFile(std::wstring textureName)
 	res->Release();
 	pTextureInterface->Release();
 
-	HRESULT createTextureResult = DxHandler::devicePtr->CreateTexture2D(&desc, NULL, &pTexture);
+	HRESULT createTextureResult = device->CreateTexture2D(&desc, NULL, &pTexture);
 	assert(SUCCEEDED(createTextureResult));
 
 	hasTexture = true;
+}
+
+Mesh::Mesh(ID3D11Device* device)
+{
+	this->device = device;
 }
 
 Mesh::~Mesh()

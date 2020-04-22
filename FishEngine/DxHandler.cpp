@@ -16,6 +16,11 @@ PixelShader* DxHandler::firstPassPixel = new PixelShader();
 VertexShader* DxHandler::secondPassVertex = new VertexShader();
 PixelShader* DxHandler::secondPassPixel = new PixelShader();
 
+PixelShader* DxHandler::lightPixel = new PixelShader();
+
+PixelShader* DxHandler::transparencyPixel = new PixelShader();
+VertexShader* DxHandler::transparencyVertex = new VertexShader();
+
 //VertexShader* DxHandler::skyboxVertexShader = new VertexShader();
 //PixelShader* DxHandler::skyboxPixelShader = new PixelShader();
 
@@ -33,11 +38,16 @@ ID3D11Texture2D* DxHandler::depthBuffer = nullptr;
 HWND* DxHandler::hWnd = nullptr;
 
 Mesh* DxHandler::fullscreenQuad = nullptr;
+GeometryShader* DxHandler::backfaceCullShader = new GeometryShader;
 
 ID3D11RasterizerState* DxHandler::rasterizerState = nullptr;
 
 ID3D11Buffer* DxHandler::constantVertexBuffer = nullptr;
 ID3D11Buffer* DxHandler::constantPixelBuffer = nullptr;
+ID3D11BlendState* DxHandler::additiveBlendState = nullptr;
+ID3D11BlendState* DxHandler::alphaBlendState = nullptr;
+
+ID3D11Buffer* DxHandler::GSConstBuff = nullptr;
 
 void DxHandler::initalizeDeviceContextAndSwapChain()
 {
@@ -63,10 +73,15 @@ void DxHandler::initalizeDeviceContextAndSwapChain()
 
 	D3D11_RASTERIZER_DESC rasterizerDesc = {};
 	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-	rasterizerDesc.CullMode = D3D11_CULL_NONE; //No cull. Done in geometry shader.
+	rasterizerDesc.CullMode = D3D11_CULL_BACK; //No cull. Done in geometry shader.
 
 	devicePtr->CreateRasterizerState(&rasterizerDesc, &rasterizerState);
 	contextPtr->RSSetState(rasterizerState);
+
+	D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+	rtvDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT; //RGBA 4 lyf
+	rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D; //Means it'll be handled as a 2D array
+	rtvDesc.Texture2D.MipSlice = 0;
 
 	wrl::ComPtr<ID3D11Texture2D> backBufferPtr; //Create the original render target view for main output.
 	(swapChainPtr->GetBuffer(0, __uuidof(ID3D11Texture2D), &backBufferPtr));
@@ -123,7 +138,7 @@ void DxHandler::setupDepthBuffer()
 
 void DxHandler::generateFullScreenQuad()
 {
-	DxHandler::fullscreenQuad = new Mesh;	  //X  Y  Z   R	 G  B  A, U, V  nX nY nZ
+	DxHandler::fullscreenQuad = new Mesh(devicePtr);	  //X  Y  Z   R	 G  B  A, U, V  nX nY nZ
 	fullscreenQuad->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
 	fullscreenQuad->vertices.push_back(Vertex{ 1, -1, 0.1f,    1, 1, 1, 1, 1, 1, 0, 0, -1 });
 	fullscreenQuad->vertices.push_back(Vertex{ -1,  -1, 0.1f,  1, 1, 1, 1, 0, 1, 0, 0, -1 });
@@ -163,6 +178,29 @@ void DxHandler::setDefaultState()
 	DxHandler::contextPtr->VSSetConstantBuffers(PER_OBJECT_CBUFFER_SLOT, 1, &constantVertexBuffer);
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
+	contextPtr->GSSetConstantBuffers(0, 1, &GSConstBuff);
+}
+
+void DxHandler::initAdditiveBlendState()
+{
+	//states = std::make_unique<CommonStates>(device);
+	D3D11_BLEND_DESC additiveBlendDesc{ 0 };
+	//additiveBlendDesc.RenderTarget
+	additiveBlendDesc.IndependentBlendEnable = true;
+	additiveBlendDesc.RenderTarget[0].BlendEnable = true;
+	additiveBlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_COLOR;//D3D11_BLEND_SRC_COLOR;//D3D11_BLEND_ONE;//D3D11_BLEND_DEST_COLOR;
+	additiveBlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_COLOR;//D3D11_BLEND_SRC_COLOR;
+	additiveBlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_MAX; //Pick the max of the color values
+	additiveBlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
+	additiveBlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	additiveBlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	
+
+	HRESULT succ = devicePtr->CreateBlendState(&additiveBlendDesc, &additiveBlendState);
+	assert(SUCCEEDED(succ));
+	//DxHandler::additiveBlendDesc = additiveBlendDesc;
 }
 
 ID3D11Buffer* DxHandler::createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix)
@@ -221,7 +259,30 @@ ID3D11Buffer* DxHandler::createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix)
 	return constantPixelBuffer;
 }
 
-void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky)
+ID3D11Buffer*& DxHandler::createGSConstBuffer()
+{
+	D3D11_BUFFER_DESC constGeometryDesc;
+	constGeometryDesc.ByteWidth = sizeof(GS_CONSTANT_MATRIX_BUFFER);
+	constGeometryDesc.Usage = D3D11_USAGE_DEFAULT;
+
+	constGeometryDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constGeometryDesc.CPUAccessFlags = 0;
+	constGeometryDesc.MiscFlags = 0;
+	constGeometryDesc.StructureByteStride = 0;
+
+	ID3D11Buffer* constantGeometryBuffer = NULL;
+	HRESULT buffPSucc = devicePtr->CreateBuffer(&constGeometryDesc, NULL,
+		&constantGeometryBuffer);
+	assert(SUCCEEDED(buffPSucc));
+
+	contextPtr->GSSetConstantBuffers(0, 1, &constantGeometryBuffer);
+
+	GSConstBuff = constantGeometryBuffer;
+
+	return constantGeometryBuffer;
+}
+
+void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* light)
 {
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
 	UINT offset = 0u;
@@ -237,8 +298,16 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky)
 	lightBuff.isSky = isSky;
 	lightBuff.camPos = drawFromCamera.cameraPosition;
 
+	if (light != nullptr)
+		lightBuff.lightPos = DirectX::XMVectorSet(light->pos.x, light->pos.y, light->pos.z, 0);
+
+	GS_CONSTANT_MATRIX_BUFFER gBuff;
+	gBuff.camPos = drawFromCamera.cameraPosition;  
+	std::cout << DirectX::XMVectorGetX(gBuff.camPos) << " " << DirectX::XMVectorGetY(gBuff.camPos) << " " << DirectX::XMVectorGetZ(gBuff.camPos) << std::endl;
+
 	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);
+	DxHandler::contextPtr->UpdateSubresource(GSConstBuff, 0, NULL, &gBuff, 0, 0);
 
 	//Set vertex buffer to the mesh you want to draw
 	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &drawMesh->vertexBuffer,
