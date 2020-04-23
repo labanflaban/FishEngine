@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "SimpleMath.h"
+#include <Windows.h>
 using namespace DirectX;
 
 Engine::Engine()
@@ -79,6 +80,10 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 {
 	//game logic here thanks
 	updatePlayerMovement(deltaTime);
+	updatePlayerTools(deltaTime);
+	if (fishingRod->pullback < 10.f)
+	fishingRod->pullback += 0.1f;
+	//std::cout << fishingRod->pullback << std::endl;
 
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
@@ -130,6 +135,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		//std::cout << "D" << std::endl;
 		movementVector += btVector3(30 * deltaTime * 60, 0, 0);
 	}
+	player->updatePlayer(fishingRod);
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
@@ -141,7 +147,34 @@ void Engine::updatePlayerMovement(double deltaTime)
 	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
+void Engine::updatePlayerTools(double deltaTime)
+{
+	
+	XMFLOAT3 currentRotation = fishingRod->model->getRotation();
+	
+	if (GetAsyncKeyState(0x01) && currentRotation.z > -1 && pull == false && fishingRod->pullback >= 10.f)// left mouse buttom
+	{
+		XMFLOAT3 rotationRod(0, 0, currentRotation.z - 1);
+		fishingRod->model->setRotation(rotationRod);
+		fishingRod->pullback -= 10.f;
 
+	}
+	if (currentRotation.z <= -1)
+	{
+		pull = true;
+		fishingRod->slapSound.play();
+	}
+	if (currentRotation.z < 0 && fishingRod->pullback >= 1.f && pull == true)
+	{
+		//std::cout << "UPDATED" << std::endl;
+		fishingRod->model->setRotation(DirectX::XMFLOAT3(0,0, currentRotation.z + 0.5));
+		//fishingRod->pullback -= 3.f;
+	}
+	if (currentRotation.z >= 0)
+	{
+		pull = false;
+	}
+}
 void Engine::engineLoop()
 {
 	//--------------------------------------------------------------------------------------------------- physics 
@@ -168,43 +201,59 @@ void Engine::engineLoop()
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
 	Mesh* debugObject = new Mesh(DxHandler::devicePtr); //Body
-	debugObject->readMeshFromFile("./Models/sphere.obj");
+	debugObject->readMeshFromFile("./Models/character.obj");
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject->setScaling(DirectX::XMFLOAT3(4, 4, 4));
-	debugObject->setRotation(DirectX::XMFLOAT3(0, 0, 0));
+	debugObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
+	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
 	this->player = new Player;
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->scene.push_back(debugObject);
 	//this->scene.push_back(debugObject);
 
+	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
+	fishingRodObject->readMeshFromFile("./Models/rod.obj");
+	fishingRodObject->setTranslation(DirectX::XMFLOAT3(5, 0, 4));
+	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
+	this->fishingRod = new Tool;
+	this->fishingRod->model = fishingRodObject;
+	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(fishingRodObject);
+
 	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject->readMeshFromFile("./Models/actualCube.obj");
+	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
 	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
-	groundObject->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject);
 
 	Mesh* groundObject2= new Mesh(DxHandler::devicePtr); //Ground
-	groundObject2->readMeshFromFile("./Models/actualCube.obj");
+	groundObject2->readMeshFromFile("./Models/JellyFishObj.obj");
 	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
-	groundObject2->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject2->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject2);
 	
 	Mesh* groundObject3 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject3->readMeshFromFile("./Models/actualCube.obj");
+	groundObject3->readMeshFromFile("./Models/JellyFishObj.obj");
 	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
-	groundObject3->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject3->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject3);
 
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject4->readMeshFromFile("./Models/actualCube.obj");
+	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
 	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
-	groundObject4->setScaling(DirectX::XMFLOAT3(30, 10, 10));
+	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->transparentSceneObjects.push_back(groundObject4);
+
+	Mesh* groundObject5= new Mesh(DxHandler::devicePtr); //Ground
+	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject5->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
+	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
+	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->transparentSceneObjects.push_back(groundObject5);
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
@@ -221,12 +270,14 @@ void Engine::engineLoop()
 
 	MSG msg;
 	bool shutdown = false;
+
+	
+	
 	while (!shutdown)
 	{
 		directXHandler->contextPtr->RSSetViewports(1, &port);
 		inputHandler.handleInput();
-
-		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top
+		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top / limitFstd::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime) / limitFPS;
 		primaryCamera.updateCamera();
 		renderFirstPass(&scene);
 		renderSecondPass();
@@ -291,7 +342,7 @@ void Engine::engineLoop()
 				XMFLOAT3 pos = DirectX::XMFLOAT3(scene.at(i)->rigidBody->getWorldTransform().getOrigin().x(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), scene.at(i)->rigidBody->getWorldTransform().getOrigin().z());
 			}
 		}
-
+        		                				
 		YSE::System().update();
 		
 		

@@ -18,6 +18,7 @@
 #include "Skybox.h"
 #include "Light.h"
 #include <CommonStates.h>
+#include "Tool.h"
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
 
@@ -33,7 +34,8 @@ private:
 	RenderWindow window;
 	DxHandler* directXHandler;
 	HWND primaryWindow;
-
+	double limitFPS = 1.0 / 60.0;
+	
 	std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 	
 	GBufferHandler deferredBufferHandler;
@@ -48,6 +50,7 @@ public:
 	void initialSetup();
 	void fixedUpdate(double deltaTime); //deltaTime being time in (seconds) since last frame
 	void updatePlayerMovement(double deltaTime);
+	void updatePlayerTools(double deltaTime);
 
 	void createWindow();
 	void createDirectX();
@@ -61,6 +64,8 @@ public:
 
 	//Mesh* playerMesh = nullptr;
 	Player* player = nullptr;
+	Tool* fishingRod = nullptr;
+	bool pull = false;
 
 	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();

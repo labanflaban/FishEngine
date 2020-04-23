@@ -1,1 +1,25 @@
-﻿  FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\Debug\FishEngine.exe
+﻿  DxHandler.cpp
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\DxHandler.cpp(122,20): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\DxHandler.cpp(123,21): warning C4244: '=': conversion from 'float' to 'UINT', possible loss of data
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\DxHandler.cpp(141,49): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+  Engine.cpp
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(131,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(136,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(170,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(203,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(207,57): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(214,57): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(223,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(230,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(237,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(244,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(251,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(301,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
+          with
+          [
+              _Rep=double
+          ]
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(334,21): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\DxHandler.cpp(282): warning C4172: returning address of local variable or temporary: constantGeometryBuffer
+  FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\Debug\FishEngine.exe
