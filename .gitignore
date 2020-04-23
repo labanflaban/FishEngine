@@ -40,3 +40,4 @@
 *.obj
 !FishEngine/Models/*
 .vs/
+*.suo
