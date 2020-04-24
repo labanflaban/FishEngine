@@ -14,3 +14,4 @@ public:
 
 	void setPosition(DirectX::XMFLOAT3 pos);
 };
+

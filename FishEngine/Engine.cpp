@@ -71,8 +71,6 @@ void Engine::initialSetup()
 
 	states = std::make_unique<DirectX::CommonStates>(DxHandler::devicePtr);
 	DxHandler::alphaBlendState = states->AlphaBlend();
-
-
 	
 }
 
@@ -115,6 +113,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 	#define DISABLE_SIMULATION 5
 	*/
 	player->model->rigidBody->setActivationState(ACTIVE_TAG);
+	fishingRod->model->rigidBody->setActivationState(ACTIVE_TAG);
 
 	btVector3 movementVector(0,0,0);
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
@@ -128,12 +127,12 @@ void Engine::updatePlayerMovement(double deltaTime)
 	{
 		//std::cout << GetAsyncKeyState(0x41) << std::endl;
 		//std::cout << "A" << std::endl;
-		movementVector += btVector3(-30 * deltaTime * 60, 0, 0);
+		movementVector += btVector3(-30 * deltaTime * 40, 0, 0);
 	}
 	if(GetAsyncKeyState(0x44)) // D-key
 	{
 		//std::cout << "D" << std::endl;
-		movementVector += btVector3(30 * deltaTime * 60, 0, 0);
+		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
 	}
 	player->updatePlayer(fishingRod);
 
@@ -254,6 +253,20 @@ void Engine::engineLoop()
 	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->transparentSceneObjects.push_back(groundObject5);
+
+	Mesh* groundObject6 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject6->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject6->setTranslation(DirectX::XMFLOAT3(200, 0, 4));
+	groundObject6->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	groundObject6->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject6);
+
+	Mesh* groundObject7 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject7->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject7->setTranslation(DirectX::XMFLOAT3(250, -25, 4));
+	groundObject7->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	groundObject7->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject7);
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
@@ -494,10 +507,12 @@ void Engine::renderLightVolumes()
 	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
+	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	for (auto model : transparentSceneObjects) //Draw transparent stuff
 	{
 		directXHandler->draw(model, primaryCamera, false);
 	}
+	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 	//End of transparency 
 

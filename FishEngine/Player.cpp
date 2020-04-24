@@ -10,6 +10,12 @@ Player::Player()
 void Player::updatePlayer(Tool* tool)
 {
 	
+
 	fishingRodPos = XMFLOAT3(model->getTranslation().x + 3, model->getTranslation().y+10, model->getTranslation().z);
+
+	btTransform transform;
+	transform.setOrigin(btVector3(fishingRodPos.x, fishingRodPos.y, fishingRodPos.z));
+
 	tool->model->setTranslation(fishingRodPos);
+	tool->model->rigidBody->setWorldTransform(transform);
 }
