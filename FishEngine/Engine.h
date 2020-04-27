@@ -19,6 +19,8 @@
 #include "Light.h"
 #include <CommonStates.h>
 #include "Tool.h"
+#include "Enemy.h"
+
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
 
@@ -73,4 +75,5 @@ public:
 	std::vector<Mesh*> scene;
 	std::vector<Light*> lights;
 	std::vector<Mesh*> transparentSceneObjects;
+	std::vector<Enemy*> enemies;
 };

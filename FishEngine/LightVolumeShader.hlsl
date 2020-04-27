@@ -12,6 +12,7 @@ const static float3 attenuation = float3(1, 0, 0.0006); //lower c value is, the 
 cbuffer PS_CONSTANT_BUFFER
 {
 	float4 lightPos;
+	float4 lightColor;
 	float4 globalLightPos;
 	float4 ambientMeshColor;
 	float4 diffuseMeshColor;
@@ -63,7 +64,7 @@ float4 main(VS_OUTPUT input) : SV_Target0
 
 	if (albedo.w != 2)
 	{
-		float4 col = (diffuseStrength + ambientStrength + specStrength) * albedo * attenuationFactor;
+		float4 col = (diffuseStrength + ambientStrength + specStrength) * albedo * lightColor * attenuationFactor;
 		col.w = 1;
 		return col;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
 	}	

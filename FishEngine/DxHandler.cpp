@@ -46,6 +46,7 @@ ID3D11Buffer* DxHandler::constantVertexBuffer = nullptr;
 ID3D11Buffer* DxHandler::constantPixelBuffer = nullptr;
 ID3D11BlendState* DxHandler::additiveBlendState = nullptr;
 ID3D11BlendState* DxHandler::alphaBlendState = nullptr;
+ID3D11SamplerState* DxHandler::standardSampler = nullptr;
 
 ID3D11Buffer* DxHandler::GSConstBuff = nullptr;
 
@@ -179,6 +180,9 @@ void DxHandler::setDefaultState()
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
 	contextPtr->GSSetConstantBuffers(0, 1, &GSConstBuff);
+
+	
+	DxHandler::contextPtr->PSSetSamplers(0, 1, &standardSampler);
 }
 
 void DxHandler::initAdditiveBlendState()
@@ -299,7 +303,11 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 	lightBuff.camPos = drawFromCamera.cameraPosition;
 
 	if (light != nullptr)
+	{
 		lightBuff.lightPos = DirectX::XMVectorSet(light->pos.x, light->pos.y, light->pos.z, 0);
+		lightBuff.lightColor = light->lightColor;
+	}
+		
 
 	GS_CONSTANT_MATRIX_BUFFER gBuff;
 	gBuff.camPos = drawFromCamera.cameraPosition;  
@@ -342,7 +350,7 @@ void DxHandler::configureSwapChain(HWND& hWnd)
 	DxHandler::swapDesc.BufferDesc.Height = 0;
 	DxHandler::swapDesc.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;// doesnt work with 32 for some reason
 	DxHandler::swapDesc.BufferDesc.RefreshRate.Numerator = 60;//can be set to 0 for no max
-	DxHandler::swapDesc.BufferDesc.RefreshRate.Denominator = 0;
+	DxHandler::swapDesc.BufferDesc.RefreshRate.Denominator = 1;
 	DxHandler::swapDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	DxHandler::swapDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 

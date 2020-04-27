@@ -63,6 +63,7 @@ public:
 	void setRotation(DirectX::XMFLOAT3 rotation);
 	void setTranslation(DirectX::XMFLOAT3 translation);
 	void setScaling(DirectX::XMFLOAT3 scaling);
+	void move(DirectX::XMFLOAT3 deltaTranslation);
 
 	DirectX::XMFLOAT3 getRotation();
 	DirectX::XMFLOAT3 getTranslation();

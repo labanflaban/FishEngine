@@ -171,6 +171,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DeferredRenderBuffer.h" />
     <ClInclude Include="DxHandler.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GBufferHandler.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DeferredRenderBuffer.cpp" />
     <ClCompile Include="DxHandler.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FishMain.cpp" />
     <ClCompile Include="GBufferHandler.cpp" />

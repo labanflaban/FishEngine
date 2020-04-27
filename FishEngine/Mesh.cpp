@@ -55,6 +55,13 @@ void Mesh::setScaling(DirectX::XMFLOAT3 scaling)
 	updateWorldMatrix();
 }
 
+void Mesh::move(DirectX::XMFLOAT3 deltaTranslation)
+{
+	DirectX::XMFLOAT3 currPos = this->getTranslation();
+
+	this->setTranslation(DirectX::XMFLOAT3(currPos.x + deltaTranslation.x, currPos.y + deltaTranslation.y, currPos.z + deltaTranslation.z));
+}
+
 DirectX::XMFLOAT3 Mesh::getRotation()
 {
 	return this->rotation;
@@ -145,6 +152,10 @@ Mesh::Mesh(ID3D11Device* device)
 
 Mesh::~Mesh()
 {
+	if (this->vertexBuffer)
+	{
+		this->vertexBuffer->Release();
+	}
 	//delete this->rigidBody;
 	//delete this->collider;
 }

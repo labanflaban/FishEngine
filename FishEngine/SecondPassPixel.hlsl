@@ -10,6 +10,7 @@ SamplerState mySampler;
 cbuffer PS_CONSTANT_BUFFER
 {
 	float4 lightPos;
+	float4 lightColor;
 	float4 globalLightPos;
 	float4 ambientMeshColor;
 	float4 diffuseMeshColor;

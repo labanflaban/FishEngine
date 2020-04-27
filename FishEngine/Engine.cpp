@@ -71,7 +71,8 @@ void Engine::initialSetup()
 
 	states = std::make_unique<DirectX::CommonStates>(DxHandler::devicePtr);
 	DxHandler::alphaBlendState = states->AlphaBlend();
-	
+
+	DxHandler::standardSampler = states->LinearWrap();
 }
 
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
@@ -268,6 +269,13 @@ void Engine::engineLoop()
 	groundObject7->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject7);
 
+	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject8->readMeshFromFile("./Models/actualCube.obj");
+	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
+	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
+	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject8);
+
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
 	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 200));
@@ -277,6 +285,17 @@ void Engine::engineLoop()
 	Light* light = new Light(DxHandler::devicePtr);
 	light->setPosition(XMFLOAT3(0, 0, -10));
 	this->lights.push_back(light);
+
+	Enemy* enemy = new Enemy(DxHandler::devicePtr);
+	this->enemies.push_back(enemy);
+	this->scene.push_back(enemy->model);
+	this->lights.push_back(enemy->light);
+
+	Enemy* enemy2 = new Enemy(DxHandler::devicePtr);
+	this->enemies.push_back(enemy2);
+	this->scene.push_back(enemy2->model);
+	this->lights.push_back(enemy2->light);
+	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
@@ -374,6 +393,11 @@ void Engine::engineLoop()
 		DxHandler::contextPtr->ClearState();
 
 		directXHandler->setDefaultState();
+
+		for (auto enemy : enemies)
+		{
+			enemy->update(player);
+		}
 	}
 
 	
