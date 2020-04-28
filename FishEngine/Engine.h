@@ -20,6 +20,7 @@
 #include <CommonStates.h>
 #include "Tool.h"
 #include "Enemy.h"
+#include "Particle.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -72,8 +73,10 @@ public:
 	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();
 	void renderLightVolumes();
+	void renderParticles();
 	std::vector<Mesh*> scene;
 	std::vector<Light*> lights;
 	std::vector<Mesh*> transparentSceneObjects;
 	std::vector<Enemy*> enemies;
+	std::vector<Particle*> particles;
 };

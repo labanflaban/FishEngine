@@ -73,6 +73,14 @@ void Engine::initialSetup()
 	DxHandler::alphaBlendState = states->AlphaBlend();
 
 	DxHandler::standardSampler = states->LinearWrap();
+
+	for (int i = 0; i < 5; i++)
+	{
+		Particle* particlePtr = new Particle(DxHandler::devicePtr);
+		particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+		particlePtr->setScaling(DirectX::XMFLOAT3(2, 2, 2));
+		particles.push_back(particlePtr);
+	}
 }
 
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
@@ -314,6 +322,7 @@ void Engine::engineLoop()
 		renderFirstPass(&scene);
 		renderSecondPass();
 		renderLightVolumes();
+		renderParticles();
 
 		//upp upp och ivääääg
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -543,4 +552,24 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &nullSRV); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &nullSRV); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &nullSRV); //Position
+}
+
+void Engine::renderParticles()
+{
+	float blendingFactor[4] = { 0.5f, 0.5f, 0.5f, 0.5f };
+
+	//Transparent stuff - move later.
+	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
+	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
+	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
+	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
+	DxHandler::contextPtr->PSSetShaderResources(0, 1, &particles.at(0)->textureView);
+	for (auto model : particles) //Draw transparent stuff
+	{
+		model->setTranslation(DirectX::XMFLOAT3(0, 65, 0));
+		directXHandler->draw(model, primaryCamera, false);
+	}
+	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
+	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }

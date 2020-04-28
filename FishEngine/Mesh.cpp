@@ -6,6 +6,7 @@ void Mesh::updateWorldMatrix()
 	this->worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 }
 
+
 void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass)
 {
 	//rigidBody stuff
