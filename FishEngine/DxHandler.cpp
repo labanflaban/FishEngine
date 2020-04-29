@@ -17,6 +17,7 @@ VertexShader* DxHandler::secondPassVertex = new VertexShader();
 PixelShader* DxHandler::secondPassPixel = new PixelShader();
 
 PixelShader* DxHandler::lightPixel = new PixelShader();
+PixelShader* DxHandler::particlePixel = new PixelShader();
 
 PixelShader* DxHandler::transparencyPixel = new PixelShader();
 VertexShader* DxHandler::transparencyVertex = new VertexShader();
@@ -311,7 +312,7 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 
 	GS_CONSTANT_MATRIX_BUFFER gBuff;
 	gBuff.camPos = drawFromCamera.cameraPosition;  
-	std::cout << DirectX::XMVectorGetX(gBuff.camPos) << " " << DirectX::XMVectorGetY(gBuff.camPos) << " " << DirectX::XMVectorGetZ(gBuff.camPos) << std::endl;
+	//std::cout << DirectX::XMVectorGetX(gBuff.camPos) << " " << DirectX::XMVectorGetY(gBuff.camPos) << " " << DirectX::XMVectorGetZ(gBuff.camPos) << std::endl;
 
 	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);

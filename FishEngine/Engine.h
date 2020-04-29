@@ -21,6 +21,7 @@
 #include "Tool.h"
 #include "Enemy.h"
 #include "Particle.h"
+#include <random>
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -54,6 +55,7 @@ public:
 	void fixedUpdate(double deltaTime); //deltaTime being time in (seconds) since last frame
 	void updatePlayerMovement(double deltaTime);
 	void updatePlayerTools(double deltaTime);
+	void updateParticles();
 
 	void createWindow();
 	void createDirectX();
@@ -74,6 +76,8 @@ public:
 	void renderSecondPass();
 	void renderLightVolumes();
 	void renderParticles();
+
+	
 	std::vector<Mesh*> scene;
 	std::vector<Light*> lights;
 	std::vector<Mesh*> transparentSceneObjects;

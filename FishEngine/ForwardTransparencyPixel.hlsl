@@ -33,9 +33,6 @@ struct PS_INPUT //Output from geometry shader
 
 float4 main(PS_INPUT input) : SV_Target
 {
-	float4 val = colorMap.Sample(mysampler, input.vUV.xy);
-	//val.w = 0.2f;
-	return val;
-	//return float4(1.f,0.f,0.f,0.0f); //Change last value to change opacity
+	return float4(1.f,0.f,0.f,0.0f); //Change last value to change opacity
 
 }

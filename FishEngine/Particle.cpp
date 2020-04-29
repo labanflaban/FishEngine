@@ -14,5 +14,10 @@ Particle::Particle(ID3D11Device* device)
 	this->createVertexBuffer();
 }
 
+void Particle::updateParticle()
+{
+	this->move(velocity);
+}
+
 
 

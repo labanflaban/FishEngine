@@ -43,6 +43,8 @@ void Engine::initialSetup()
 
 	DxHandler::backfaceCullShader->compileShader(L"./BackfaceCullerGeometry.hlsl", DxHandler::devicePtr);
 
+	DxHandler::particlePixel->compileShader(L"./ForwardParticlePixel.hlsl", DxHandler::devicePtr);
+
 	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
 	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
 	deferredBufferHandler.init(WIDTH, HEIGHT);
@@ -74,11 +76,12 @@ void Engine::initialSetup()
 
 	DxHandler::standardSampler = states->LinearWrap();
 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		Particle* particlePtr = new Particle(DxHandler::devicePtr);
 		particlePtr->readTextureFromFile(L"./Textures/bubble.png");
 		particlePtr->setScaling(DirectX::XMFLOAT3(2, 2, 2));
+		particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
 		particles.push_back(particlePtr);
 	}
 }
@@ -128,20 +131,39 @@ void Engine::updatePlayerMovement(double deltaTime)
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
 	{
 		//std::cout << "Space" << std::endl;
-		movementVector += btVector3(0, 20.f, 0);
+		movementVector += btVector3(0, 10.f, 0);
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
+
+		//for (Particle* p : particles)
+
+		for(int i = 0; i < particles.size(); i++)
+		{
+			std::cout << "Looped over particle?" << std::endl;
+			std::random_device randomSeed;
+			std::mt19937 numberGenerator(randomSeed());
+			std::uniform_real_distribution<> randomNum(-1.f, 1.f); //Between -1 - 1
+			std::uniform_real_distribution<> randomNumPlus(0.8f, 1.f); //Between 0.8 - 1
+
+			particles.at(i)->setTranslation(player->model->getTranslation());
+			float rNum = randomNum(numberGenerator);
+			float rNumY = randomNumPlus(numberGenerator);
+			particles.at(i)->velocity = DirectX::XMFLOAT3(rNum * 0.5, 0.5*rNumY, 0);
+
+			std::cout << "Placed at plr" << std::endl;
+			std::cout << particles.at(i)->getTranslation().x << " " << particles.at(i)->getTranslation().y << " " << particles.at(i)->getTranslation().z << " " << std::endl;
+		}
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
 	{
 		//std::cout << GetAsyncKeyState(0x41) << std::endl;
 		//std::cout << "A" << std::endl;
-		movementVector += btVector3(-30 * deltaTime * 40, 0, 0);
+		movementVector += btVector3(-10 * deltaTime * 40, 0, 0);
 	}
 	if(GetAsyncKeyState(0x44)) // D-key
 	{
 		//std::cout << "D" << std::endl;
-		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
+		movementVector += btVector3(10 * deltaTime * 40, 0, 0);
 	}
 	player->updatePlayer(fishingRod);
 
@@ -183,6 +205,13 @@ void Engine::updatePlayerTools(double deltaTime)
 		pull = false;
 	}
 }
+void Engine::updateParticles()
+{
+	for (Particle* p : particles)
+	{
+		p->updateParticle();
+	}
+}
 void Engine::engineLoop()
 {
 	//--------------------------------------------------------------------------------------------------- physics 
@@ -193,7 +222,7 @@ void Engine::engineLoop()
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
-	dynamicsWorld->setGravity(btVector3(0, -3, 0));
+	dynamicsWorld->setGravity(btVector3(0, -1.5, 0));
 	//--------------------------------------------------------------------------------------------------- physics 
 
 	RECT viewportRect;
@@ -339,7 +368,7 @@ void Engine::engineLoop()
 		///-----stepsimulation_start-----
 		for (int i = 0; i < 15; i++)
 		{
-			dynamicsWorld->stepSimulation(frameTime.count(), 1);
+			dynamicsWorld->stepSimulation(1/60.f);
 			//std::cout << frameTime.count() << std::endl;
 			//dynamicsWorld->stepSimulation(1/60, 10);
 
@@ -394,10 +423,6 @@ void Engine::engineLoop()
 		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(),	string.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 		directXHandler->spriteBatch->End();
 
-		newTime = std::chrono::high_resolution_clock::now(); //Set new time
-		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
-		fixedUpdate(frameTime.count());
-
 		DxHandler::swapChainPtr->Present(1, 0); 
 		DxHandler::contextPtr->ClearState();
 
@@ -407,6 +432,12 @@ void Engine::engineLoop()
 		{
 			enemy->update(player);
 		}
+
+		updateParticles();
+
+		newTime = std::chrono::high_resolution_clock::now(); //Set new time
+		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
+		fixedUpdate(frameTime.count());
 	}
 
 	
@@ -539,8 +570,8 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
 	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
-	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
-	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);// , DxHandler::depthStencil); //Application screen
+	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	for (auto model : transparentSceneObjects) //Draw transparent stuff
 	{
 		directXHandler->draw(model, primaryCamera, false);
@@ -556,18 +587,17 @@ void Engine::renderLightVolumes()
 
 void Engine::renderParticles()
 {
-	float blendingFactor[4] = { 0.5f, 0.5f, 0.5f, 0.5f };
+	float blendingFactor[4] = { 0.f, 1.0f, 0.0f, 1.f };
 
 	//Transparent stuff - move later.
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
-	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
+	DxHandler::particlePixel->useThis(DxHandler::contextPtr);
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
 	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &particles.at(0)->textureView);
-	for (auto model : particles) //Draw transparent stuff
+	for (Particle* model : particles) //Draw transparent stuff
 	{
-		model->setTranslation(DirectX::XMFLOAT3(0, 65, 0));
 		directXHandler->draw(model, primaryCamera, false);
 	}
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);

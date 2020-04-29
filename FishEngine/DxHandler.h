@@ -101,6 +101,8 @@ public:
 	static PixelShader* transparencyPixel;
 	static VertexShader* transparencyVertex;
 
+	static PixelShader* particlePixel;
+
 	static GeometryShader* backfaceCullShader;
 
 	//static PixelShader* skyboxPixelShader;

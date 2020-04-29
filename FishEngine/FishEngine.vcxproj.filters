@@ -206,5 +206,8 @@
     <FxCompile Include="BackfaceCullerGeometry.hlsl">
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
+    <FxCompile Include="ForwardParticlePixel.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

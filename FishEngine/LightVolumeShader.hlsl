@@ -6,7 +6,8 @@ Texture2D PositionTexture : register(t2);
 
 SamplerState mySampler;
 
-const static float3 attenuation = float3(1, 0, 0.0006); //lower c value is, the farther light travels. a, b, c = x, y, z
+//const static float3 attenuation = float3(1, 0, 0.0006); //lower c value is, the farther light travels. a, b, c = x, y, z
+const static float3 attenuation = float3(0.5, 0, 0.0006);
 
 //From CPU to GPU. Sends whatever you need.
 cbuffer PS_CONSTANT_BUFFER
