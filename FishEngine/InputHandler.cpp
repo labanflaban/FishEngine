@@ -48,6 +48,24 @@ void InputHandler::handleInput()
 {
 }
 
+float InputHandler::getMousePosX()
+{
+	if (GetCursorPos(&p))
+	{
+		float xPos = p.x;
+		return xPos;
+	}
+}
+
+float InputHandler::getMousePosY()
+{
+	if (GetCursorPos(&p))
+	{	
+		float yPos = p.y;
+		return yPos;
+	}
+}
+
 bool InputHandler::isKeyDown(int keyCode)
 {
 

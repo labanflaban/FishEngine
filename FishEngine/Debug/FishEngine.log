@@ -1,5 +1,121 @@
 ﻿  Enemy.cpp
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Enemy.cpp(5,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Enemy.cpp(9,33): warning C4316: 'Light': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Enemy.cpp(41,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\Debug\FishEngine.exe
+C:\GitHub\FishEngine\FishEngine\Enemy.cpp(5,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Enemy.cpp(9,33): warning C4316: 'Light': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Enemy.cpp(41,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Engine.cpp
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(131,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(136,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(176,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(180,57): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(187,57): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(195,51): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(204,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(211,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(218,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(225,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(232,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(239,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(246,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(253,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(266,48): warning C4316: 'Light': object allocated on the heap may not be aligned 16
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(314,49): warning C4244: 'argument': conversion from '_Rep' to 'btScalar', possible loss of data
+          with
+          [
+              _Rep=double
+          ]
+C:\GitHub\FishEngine\FishEngine\Engine.cpp(347,21): warning C4018: '<': signed/unsigned mismatch
+  FishMain.cpp
+C:\GitHub\FishEngine\FishEngine\FishMain.cpp(12,1): warning C4007: 'WinMain': must be '__stdcall'
+  InputHandler.cpp
+C:\GitHub\FishEngine\FishEngine\InputHandler.cpp(55,14): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+C:\GitHub\FishEngine\FishEngine\InputHandler.cpp(64,14): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+  Player.cpp
+C:\GitHub\FishEngine\FishEngine\Player.cpp(7,25): warning C4305: 'argument': truncation from 'double' to 'Flt'
+C:\GitHub\FishEngine\FishEngine\Player.cpp(49,69): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  RenderWindow.cpp
+C:\GitHub\FishEngine\FishEngine\RenderWindow.cpp(6,1): warning C4005: 'D3D_COMPILE_STANDARD_FILE_INCLUDE': macro redefinition
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3dcompiler.h(211): message : see previous definition of 'D3D_COMPILE_STANDARD_FILE_INCLUDE'
+  Tool.cpp
+C:\GitHub\FishEngine\FishEngine\Tool.cpp(6,25): warning C4305: 'argument': truncation from 'double' to 'Flt'
+  Generating Code...
+C:\GitHub\FishEngine\FishEngine\InputHandler.cpp(67): warning C4715: 'InputHandler::getMousePosY': not all control paths return a value
+C:\GitHub\FishEngine\FishEngine\InputHandler.cpp(58): warning C4715: 'InputHandler::getMousePosX': not all control paths return a value
+  LINK : C:\GitHub\FishEngine\Debug\FishEngine.exe not found or not built by the last incremental link; performing full link
+LinearMath_Debug.lib(btAlignedAllocator.obj) : warning LNK4099: PDB 'LinearMath.pdb' was not found with 'LinearMath_Debug.lib(btAlignedAllocator.obj)' or at 'C:\GitHub\FishEngine\Debug\LinearMath.pdb'; linking object as if no debug info
+BulletDynamics_Debug.lib(btConeTwistConstraint.obj) : warning LNK4099: PDB 'BulletDynamics.pdb' was not found with 'BulletDynamics_Debug.lib(btConeTwistConstraint.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletDynamics.pdb'; linking object as if no debug info
+BulletDynamics_Debug.lib(btGeneric6DofConstraint.obj) : warning LNK4099: PDB 'BulletDynamics.pdb' was not found with 'BulletDynamics_Debug.lib(btGeneric6DofConstraint.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletDynamics.pdb'; linking object as if no debug info
+BulletDynamics_Debug.lib(btSequentialImpulseConstraintSolver.obj) : warning LNK4099: PDB 'BulletDynamics.pdb' was not found with 'BulletDynamics_Debug.lib(btSequentialImpulseConstraintSolver.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletDynamics.pdb'; linking object as if no debug info
+BulletDynamics_Debug.lib(btTypedConstraint.obj) : warning LNK4099: PDB 'BulletDynamics.pdb' was not found with 'BulletDynamics_Debug.lib(btTypedConstraint.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletDynamics.pdb'; linking object as if no debug info
+BulletDynamics_Debug.lib(btDiscreteDynamicsWorld.obj) : warning LNK4099: PDB 'BulletDynamics.pdb' was not found with 'BulletDynamics_Debug.lib(btDiscreteDynamicsWorld.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletDynamics.pdb'; linking object as if no debug info
+BulletDynamics_Debug.lib(btRigidBody.obj) : warning LNK4099: PDB 'BulletDynamics.pdb' was not found with 'BulletDynamics_Debug.lib(btRigidBody.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletDynamics.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btDbvt.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btDbvt.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btDbvtBroadphase.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btDbvtBroadphase.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btDispatcher.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btDispatcher.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btOverlappingPairCache.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btOverlappingPairCache.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btQuantizedBvh.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btQuantizedBvh.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btActivatingCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btActivatingCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btBoxBoxCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btBoxBoxCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btBoxBoxDetector.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btBoxBoxDetector.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCollisionDispatcher.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCollisionDispatcher.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCollisionObject.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCollisionObject.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCollisionWorld.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCollisionWorld.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCompoundCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCompoundCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCompoundCompoundCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCompoundCompoundCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btConvexConcaveCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexConcaveCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btConvexConvexAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexConvexAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btConvexPlaneCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexPlaneCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btDefaultCollisionConfiguration.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btDefaultCollisionConfiguration.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btEmptyCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btEmptyCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btHashedSimplePairCache.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btHashedSimplePairCache.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btManifoldResult.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btManifoldResult.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btSimulationIslandManager.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btSimulationIslandManager.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btSphereSphereCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btSphereSphereCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btSphereTriangleCollisionAlgorithm.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btSphereTriangleCollisionAlgorithm.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btUnionFind.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btUnionFind.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(SphereTriangleDetector.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(SphereTriangleDetector.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btBoxShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btBoxShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btBvhTriangleMeshShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btBvhTriangleMeshShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btCollisionShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btCollisionShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btConcaveShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConcaveShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btConvexInternalShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexInternalShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btConvexPolyhedron.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexPolyhedron.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btConvexShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btHeightfieldTerrainShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btHeightfieldTerrainShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btMiniSDF.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btMiniSDF.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btOptimizedBvh.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btOptimizedBvh.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btPolyhedralConvexShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btPolyhedralConvexShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btSdfCollisionShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btSdfCollisionShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btSphereShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btSphereShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btTriangleCallback.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btTriangleCallback.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btTriangleMeshShape.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btTriangleMeshShape.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btContinuousConvexCollision.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btContinuousConvexCollision.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btConvexCast.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btConvexCast.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btGjkConvexCast.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btGjkConvexCast.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btGjkEpa2.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btGjkEpa2.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btGjkEpaPenetrationDepthSolver.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btGjkEpaPenetrationDepthSolver.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btGjkPairDetector.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btGjkPairDetector.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btMinkowskiPenetrationDepthSolver.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btMinkowskiPenetrationDepthSolver.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btPersistentManifold.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btPersistentManifold.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btRaycastCallback.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btRaycastCallback.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btSubSimplexConvexCast.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btSubSimplexConvexCast.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): warning MSB4220: Waiting for the currently executing task "Link" to cancel.
+BulletCollision_Debug.lib(btVoronoiSimplexSolver.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btVoronoiSimplexSolver.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+BulletCollision_Debug.lib(btPolyhedralContactClipping.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btPolyhedralContactClipping.obj)' or at 'C:\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(854,5): error MSB6006: "link.exe" exited with code 1.

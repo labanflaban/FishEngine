@@ -28,6 +28,7 @@ private:
 	static IDirectInputDevice8* DIMouse;
 	static Camera* camera;
 	static LPDIRECTINPUT8 DirectInput;
+	POINT p;
 
 public:
 	static std::unique_ptr<DirectX::Mouse> mouse;
@@ -36,6 +37,8 @@ public:
 	InputHandler();
 	InputHandler(HWND& primaryWindow, Camera* camera);
 	void handleInput();
+	float getMousePosX();
+	float getMousePosY();
 	bool isKeyDown(int keyCode);
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

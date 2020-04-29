@@ -6,3 +6,8 @@ Tool::Tool()
 	slapSound.setVolume(0.1);
 	assert(slapSound.isValid());
 }
+
+void Tool::throwHook(Tool* hook)
+{
+	std::cout << inputhandler.getMousePosX() << std::endl;
+}

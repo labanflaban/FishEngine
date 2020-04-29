@@ -79,7 +79,7 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 {
 	//game logic here thanks
 	updatePlayerMovement(deltaTime);
-	updatePlayerTools(deltaTime);
+	player->updatePlayerTools(fishingRod,hook, deltaTime);
 	if (fishingRod->pullback < 10.f)
 	fishingRod->pullback += 0.1f;
 	//std::cout << fishingRod->pullback << std::endl;
@@ -135,7 +135,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		//std::cout << "D" << std::endl;
 		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
 	}
-	player->updatePlayer(fishingRod);
+	player->updatePlayer(fishingRod,hook);
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
@@ -147,34 +147,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
-void Engine::updatePlayerTools(double deltaTime)
-{
-	
-	XMFLOAT3 currentRotation = fishingRod->model->getRotation();
-	
-	if (GetAsyncKeyState(0x01) && currentRotation.z > -1 && pull == false && fishingRod->pullback >= 10.f)// left mouse buttom
-	{
-		XMFLOAT3 rotationRod(0, 0, currentRotation.z - 1);
-		fishingRod->model->setRotation(rotationRod);
-		fishingRod->pullback -= 10.f;
 
-	}
-	if (currentRotation.z <= -1)
-	{
-		pull = true;
-		fishingRod->slapSound.play();
-	}
-	if (currentRotation.z < 0 && fishingRod->pullback >= 1.f && pull == true)
-	{
-		//std::cout << "UPDATED" << std::endl;
-		fishingRod->model->setRotation(DirectX::XMFLOAT3(0,0, currentRotation.z + 0.5));
-		//fishingRod->pullback -= 3.f;
-	}
-	if (currentRotation.z >= 0)
-	{
-		pull = false;
-	}
-}
 void Engine::engineLoop()
 {
 	//--------------------------------------------------------------------------------------------------- physics 
@@ -213,12 +186,20 @@ void Engine::engineLoop()
 
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
-	fishingRodObject->setTranslation(DirectX::XMFLOAT3(5, 0, 4));
 	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	this->fishingRod = new Tool;
 	this->fishingRod->model = fishingRodObject;
 	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(fishingRodObject);
+
+	Mesh* hookObject = new Mesh(DxHandler::devicePtr); //Hook
+	hookObject->readMeshFromFile("./Models/actualCube.obj");
+	hookObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
+	hookObject->setRotation(DirectX::XMFLOAT3(0, 0, 0.5));
+	this->hook = new Tool;
+	this->hook->model = hookObject;
+	hookObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(hookObject);
 
 	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
