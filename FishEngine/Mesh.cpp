@@ -105,6 +105,12 @@ ID3D11Buffer* Mesh::createVertexBuffer()
 	return vertexBufferPtr;
 }
 
+void Mesh::readMeshFromFID(std::string fileName)
+{
+	this->vertices = fidParser.readFromFID(fileName);
+	createVertexBuffer();
+}
+
 void Mesh::readMeshFromFile(std::string fileName)
 {
 	this->vertices = parser.readFromObj(fileName);

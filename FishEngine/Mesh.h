@@ -7,7 +7,7 @@
 #include <WICTextureLoader.h>
 #include "ObjParser.h"
 #include "Vertex.h"
-
+#include "FIDParser.h"
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
 
@@ -21,7 +21,7 @@ const int FLOATS_PER_VERTEX = 15;
 	float tx, ty, tz = 0;
 };*/
 
-class ObjParser;
+//class ObjParser;
 
 class Mesh
 {
@@ -35,6 +35,7 @@ private:
 	DirectX::XMFLOAT3 scaling;
 
 	ObjParser parser;
+	FIDParser fidParser;
 
 	ID3D11Resource* texture;
 	ID3D11Texture2D* pTexture = NULL;
@@ -74,8 +75,10 @@ public:
 
 	ID3D11Buffer* createVertexBuffer();
 
+	void readMeshFromFID(std::string fileName);
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
+	
 
 	bool isSky = false;
 	Mesh(ID3D11Device* device);

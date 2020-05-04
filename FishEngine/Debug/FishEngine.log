@@ -1,29 +1,24 @@
-﻿  Enemy.cpp
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Enemy.cpp(5,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Enemy.cpp(9,33): warning C4316: 'Light': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Enemy.cpp(40,44): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Engine.cpp
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(81,61): warning C4316: 'Particle': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(140,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(149,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(150,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(151,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(151,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(161,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(166,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(200,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(240,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(244,57): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(251,57): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(260,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(267,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(274,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(281,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(288,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(295,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(302,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(309,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(322,48): warning C4316: 'Light': object allocated on the heap may not be aligned 16
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Engine.cpp(404,21): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  FishEngine.vcxproj -> C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\Debug\FishEngine.exe
+﻿  Engine.cpp
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(81,61): warning C4316: 'Particle': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(140,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(149,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(150,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(151,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(151,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(161,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(166,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(200,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(240,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(245,66): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(254,57): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(263,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(270,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(277,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(284,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(291,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(298,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(305,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(312,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(325,48): warning C4316: 'Light': object allocated on the heap may not be aligned 16
+C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(407,21): warning C4018: '<': signed/unsigned mismatch
+  FishEngine.vcxproj -> C:\Users\DaveM\Documents\GitHub\FishEngine\Debug\FishEngine.exe

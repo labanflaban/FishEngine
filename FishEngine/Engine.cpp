@@ -238,14 +238,17 @@ void Engine::engineLoop()
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
 	Mesh* debugObject = new Mesh(DxHandler::devicePtr); //Body
-	debugObject->readMeshFromFile("./Models/character.obj");
+	//debugObject->readMeshFromFile("./Models/character.obj");
+	debugObject->readMeshFromFID("./Models/SUSAN.FID");
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
-	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
+	debugObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	debugObject->setRotation(DirectX::XMFLOAT3(-3.14 / 2, 3.14 / 2,0));
 	this->player = new Player;
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->scene.push_back(debugObject);
+	//debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
+
 	//this->scene.push_back(debugObject);
 
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
