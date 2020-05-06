@@ -10,6 +10,7 @@
 #include "FIDParser.h"
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
+#include "Keyframes.h"
 
 const int FLOATS_PER_VERTEX = 15;
 /*struct Vertex

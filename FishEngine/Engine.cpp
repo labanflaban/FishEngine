@@ -343,7 +343,12 @@ void Engine::engineLoop()
 	MSG msg;
 	bool shutdown = false;
 
-	
+	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
+	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
+	Keyframes targets;
+	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
+	targets.appendStructuredBuffer(arr, 2);
+	targets.createStructuredBuffer(DxHandler::devicePtr);
 	
 	while (!shutdown)
 	{

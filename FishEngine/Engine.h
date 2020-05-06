@@ -22,6 +22,7 @@
 #include "Enemy.h"
 #include "Particle.h"
 #include <random>
+#include "ObjParser.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>

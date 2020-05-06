@@ -24,6 +24,7 @@
 #include <SpriteFont.h>
 #include "GeometryShader.h"
 #include "Light.h"
+#include "AnimatedMesh.h"
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
@@ -150,6 +151,7 @@ public:
 	ID3D11Buffer*& createGSConstBuffer();
 
 	void draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky = false, Light* light = nullptr);
+	void draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light = nullptr);
 
 	void drawText();
 };

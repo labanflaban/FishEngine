@@ -302,6 +302,12 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 	PS_CONSTANT_LIGHT_BUFFER lightBuff;
 	lightBuff.isSky = isSky;
 	lightBuff.camPos = drawFromCamera.cameraPosition;
+	lightBuff.hasTexture = drawMesh->hasTexture;
+
+	if (lightBuff.hasTexture)
+	{
+		contextPtr->PSSetShaderResources(0, 1, &drawMesh->textureView);
+	}
 
 	if (light != nullptr)
 	{
@@ -324,6 +330,48 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 	//Draw it
 	DxHandler::contextPtr->Draw(drawMesh->vertices.size(), 0);
 
+}
+
+void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light)
+{
+	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
+	UINT offset = 0u;
+
+	VS_CONSTANT_MATRIX_BUFFER matrixBuff;
+	matrixBuff.worldViewProjectionMatrix = drawMesh->getWorldMatrix() * drawFromCamera.cameraView * drawFromCamera.cameraProjectionMatrix;
+	matrixBuff.worldMatrix = drawMesh->getWorldMatrix();
+	matrixBuff.viewMatrix = drawFromCamera.cameraView;
+	matrixBuff.projMatrix = drawFromCamera.cameraProjectionMatrix;
+
+	PS_CONSTANT_LIGHT_BUFFER lightBuff;
+	lightBuff.camPos = drawFromCamera.cameraPosition;
+	lightBuff.hasTexture = drawMesh->hasTexture;
+
+	if (lightBuff.hasTexture)
+	{
+		contextPtr->PSSetShaderResources(0, 1, &drawMesh->textureView);
+	}
+
+	if (light != nullptr)
+	{
+		lightBuff.lightPos = DirectX::XMVectorSet(light->pos.x, light->pos.y, light->pos.z, 0);
+		lightBuff.lightColor = light->lightColor;
+	}
+
+
+	GS_CONSTANT_MATRIX_BUFFER gBuff;
+	gBuff.camPos = drawFromCamera.cameraPosition;
+	//std::cout << DirectX::XMVectorGetX(gBuff.camPos) << " " << DirectX::XMVectorGetY(gBuff.camPos) << " " << DirectX::XMVectorGetZ(gBuff.camPos) << std::endl;
+
+	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
+	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);
+	DxHandler::contextPtr->UpdateSubresource(GSConstBuff, 0, NULL, &gBuff, 0, 0);
+
+	//Set vertex buffer to the mesh you want to draw
+	DxHandler::contextPtr->IASetVertexBuffers(0, 1, nullptr, //BIND NOTHING FOR VERTEX PULLING
+		&stride, &offset);
+	//Draw it
+	DxHandler::contextPtr->Draw(drawMesh->vertices.size(), 0);
 }
 
 void DxHandler::drawText()

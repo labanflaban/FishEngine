@@ -99,6 +99,12 @@
     <ClInclude Include="FIDParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Keyframes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatedMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FishEngine.rc">
@@ -180,6 +186,12 @@
     <ClCompile Include="FIDParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Keyframes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatedMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -213,6 +225,9 @@
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
     <FxCompile Include="ForwardParticlePixel.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="AnimatedVertexShader.hlsl">
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
   </ItemGroup>
