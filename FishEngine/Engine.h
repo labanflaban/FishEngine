@@ -22,6 +22,7 @@
 #include "Enemy.h"
 #include "Particle.h"
 #include <random>
+#include "Level.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -83,4 +84,6 @@ public:
 	std::vector<Mesh*> transparentSceneObjects;
 	std::vector<Enemy*> enemies;
 	std::vector<Particle*> particles;
+
+	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes);
 };

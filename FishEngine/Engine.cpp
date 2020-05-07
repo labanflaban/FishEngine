@@ -260,27 +260,6 @@ void Engine::engineLoop()
 	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(fishingRodObject);
 
-	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
-	groundObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject);
-
-	Mesh* groundObject2= new Mesh(DxHandler::devicePtr); //Ground
-	groundObject2->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
-	groundObject2->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject2);
-	
-	Mesh* groundObject3 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject3->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
-	groundObject3->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject3);
-
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
 	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
@@ -295,19 +274,6 @@ void Engine::engineLoop()
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->transparentSceneObjects.push_back(groundObject5);
 
-	Mesh* groundObject6 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject6->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject6->setTranslation(DirectX::XMFLOAT3(200, 0, 4));
-	groundObject6->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject6->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject6);
-
-	Mesh* groundObject7 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject7->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject7->setTranslation(DirectX::XMFLOAT3(250, -25, 4));
-	groundObject7->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject7->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject7);
 
 	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject8->readMeshFromFile("./Models/actualCube.obj");
@@ -316,26 +282,26 @@ void Engine::engineLoop()
 	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->scene.push_back(groundObject8);
 
+
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
 	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 200));
 	Skybox::sphereModel->isSky = true;
 	scene.push_back(Skybox::sphereModel);
 
+
 	Light* light = new Light(DxHandler::devicePtr);
 	light->setPosition(XMFLOAT3(0, 0, -10));
 	this->lights.push_back(light);
 
-	Enemy* enemy = new Enemy(DxHandler::devicePtr);
-	this->enemies.push_back(enemy);
-	this->scene.push_back(enemy->model);
-	this->lights.push_back(enemy->light);
-
-	Enemy* enemy2 = new Enemy(DxHandler::devicePtr);
+	/*Enemy* enemy2 = new Enemy(DxHandler::devicePtr);
 	this->enemies.push_back(enemy2);
 	this->scene.push_back(enemy2->model);
 	this->lights.push_back(enemy2->light);
-	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));
+	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));*/
+
+	createLevel(dynamicsWorld, collisionShapes);
+
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
@@ -605,4 +571,60 @@ void Engine::renderParticles()
 	}
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
+}
+
+void Engine::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes)
+{
+	Level* level = new Level();
+	level->readFromeFile(level->levelMeshVector);
+
+	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
+	{
+		
+		if (level->levelMeshVector.at(i).tag == "platform")
+		{
+			cout << "platform" << endl;
+			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->readMeshFromFID("./Models/JellyFish.FID");
+			//groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
+
+			groundObject->setTranslation(level->levelMeshVector.at(i).getTranslation());
+			groundObject->setRotation(level->levelMeshVector.at(i).getRotation());
+			//groundObject->setScaling(level->levelMeshVector.at(i).getScale());
+
+			groundObject->setScaling(DirectX::XMFLOAT3(10,10,10));
+			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+			this->scene.push_back(groundObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "background")
+		{
+			cout << "background" << endl;
+
+			Mesh* background = new Mesh(DxHandler::devicePtr);
+			background->readMeshFromFID("./Models/JellyFish.FID");
+			background->setTranslation(level->levelMeshVector.at(i).getTranslation());
+			background->setRotation(level->levelMeshVector.at(i).getRotation());
+			//background->setScaling(level->levelMeshVector.at(i).getScale());
+			background->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+			this->scene.push_back(background);
+
+		}
+		else if (level->levelMeshVector.at(i).tag == "enemy")
+		{
+			cout << "enemy" << endl;
+			Enemy* enemy = new Enemy(DxHandler::devicePtr);
+			enemy->model->setTranslation(level->levelMeshVector.at(i).getTranslation());
+			enemy->model->setRotation(level->levelMeshVector.at(i).getRotation());
+			//enemy->model->setScaling(level->levelMeshVector.at(i).getScale());
+			this->enemies.push_back(enemy);
+			this->scene.push_back(enemy->model);
+			this->lights.push_back(enemy->light);
+
+		}
+		else if (level->levelMeshVector.at(i).tag == "character")
+		{
+			cout << "character" << endl;
+
+		}
+	}
 }
