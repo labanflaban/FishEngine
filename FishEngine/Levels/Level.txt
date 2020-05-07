@@ -1,0 +1,4 @@
+background1 0.0 0.0 -6.0 0.0 0.0 0.0 1.0 1.0 1.0 1 background 
+platform1 0.0 14.2271970992 0.0 0.0 0.0 0.0 1.0 1.0 1.0 0 platform 
+enemy1 0.0 0.0 4.0 0.0 0.0 0.0 1.0 1.0 1.0 0 enemy 
+character1 0.0 0.0 10.0 0.0 0.0 0.0 1.0 1.0 1.0 0 character 
