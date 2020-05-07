@@ -19,11 +19,11 @@ cbuffer VS_CONSTANT_ANIM_BUFFER : register(b1)
 
 struct VS_INPUT
 {
-	float3 vPosition : POSITION;
-	float4 vColour : COLOR;
-	float2 vUV : UV;
-	float3 vNormal : NORMAL;
-	float3 vTangent : TANGENT;
+	float3 vPosition;
+	float4 vColour;
+	float2 vUV;
+	float3 vNormal;
+	float3 vTangent;
 };
 
 StructuredBuffer<VS_INPUT> poses : register(t0);
@@ -38,21 +38,18 @@ struct VS_OUTPUT //Outputs to ordinary first pass pixel shader.
 	float4 vTangent : TANGENT;
 };
 
-VS_OUTPUT main(VS_INPUT input)
+VS_OUTPUT main(uint vertexID : SV_VertexID)
 {
+	VS_INPUT input = poses[vertexID];
+
 	VS_OUTPUT Output; 
 
 	Output.vNormal = normalize(mul(float4(normalize(input.vNormal), 0), worldMatrix));
 	Output.vTangent = normalize(mul(float4(normalize(input.vTangent), 0), worldMatrix));
 	Output.vPosition = mul(float4(input.vPosition, 1), worldViewProjectionMatrix);
 
-	if (!isSky)
-		Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix);
-	else
-	{
-		Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix).xyww;
-		Output.vUV = float4(input.vPosition, 1);
-	}
+	Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix).xyww;
+	Output.vUV = float4(input.vPosition, 1);
 
 
 	Output.vColour = input.vColour;

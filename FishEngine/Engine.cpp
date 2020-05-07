@@ -41,6 +41,8 @@ void Engine::initialSetup()
 	DxHandler::transparencyPixel->compileShader(L"./ForwardTransparencyPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::transparencyVertex->compileShader(L"./ForwardTransparencyVertex.hlsl", DxHandler::devicePtr);
 
+	DxHandler::animVertex->compileShader(L"./AnimatedVertexShader.hlsl", DxHandler::devicePtr);
+
 	DxHandler::backfaceCullShader->compileShader(L"./BackfaceCullerGeometry.hlsl", DxHandler::devicePtr);
 
 	DxHandler::particlePixel->compileShader(L"./ForwardParticlePixel.hlsl", DxHandler::devicePtr);
@@ -63,8 +65,10 @@ void Engine::initialSetup()
 
 	PS_CONSTANT_LIGHT_BUFFER ps_buff;
 	VS_CONSTANT_MATRIX_BUFFER vs_buff;
+	VS_CONSTANT_ANIM_BUFFER vs_anim_buff;
 	directXHandler->createPSConstBuffer(ps_buff);
 	directXHandler->createVSConstBuffer(vs_buff);
+	directXHandler->createVSAnimBuffer(vs_anim_buff);
 	directXHandler->createGSConstBuffer();
 
 	directXHandler->initAdditiveBlendState();
@@ -345,10 +349,14 @@ void Engine::engineLoop()
 
 	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
 	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
-	Keyframes targets;
+	
+	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
 	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
-	targets.appendStructuredBuffer(arr, 2);
-	targets.createStructuredBuffer(DxHandler::devicePtr);
+	animMesh->appendStructuredBuffer(arr, 2);
+	animMesh->createStructuredBuffer(DxHandler::devicePtr);
+	animMesh->setScaling(XMFLOAT3(10, 10, 10));
+	animMesh->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
+	animatedMeshes.push_back(animMesh);
 	
 	while (!shutdown)
 	{
@@ -357,6 +365,8 @@ void Engine::engineLoop()
 		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top / limitFstd::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime) / limitFPS;
 		primaryCamera.updateCamera();
 		renderFirstPass(&scene);
+		
+
 		renderSecondPass();
 		renderLightVolumes();
 		renderParticles();
@@ -520,6 +530,16 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	for (auto model : *scene) //Draw all meshes 
 	{
 		directXHandler->draw(model, primaryCamera, model->isSky);
+	}
+
+	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
+	auto rot = animatedMeshes.at(0)->getRotation();
+	rot = XMFLOAT3(rot.x, rot.y + 0.01, 0);
+	animatedMeshes.at(0)->setRotation(rot);
+	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
+	for (auto animMesh : animatedMeshes) //Draw all meshes 
+	{
+		directXHandler->draw(animMesh, primaryCamera);
 	}
 
 	//Set to null

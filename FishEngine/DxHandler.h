@@ -57,6 +57,14 @@ struct GS_CONSTANT_MATRIX_BUFFER
 	DirectX::XMVECTOR camPos;
 };
 
+struct VS_CONSTANT_ANIM_BUFFER
+{
+	int vertexOffsetPerModel = 0;
+	double time = 0.0;
+	double animSpeed = 0.0;
+	int currentTargetIndex = 0;
+};
+
 struct PS_CONSTANT_LIGHT_BUFFER
 {
 	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 50, -60, 0);
@@ -99,6 +107,8 @@ public:
 	static PixelShader* secondPassPixel; //Fills full screen quad with data from textures in previous in first pass.
 	static PixelShader* lightPixel;
 
+	static VertexShader* animVertex; //´handles morph anims
+
 	static PixelShader* transparencyPixel;
 	static VertexShader* transparencyVertex;
 
@@ -128,6 +138,7 @@ public:
 	static ID3D11InputLayout* input_layout_ptr;
 
 	static ID3D11Buffer* constantVertexBuffer;
+	static ID3D11Buffer* constantAnimBuffer;
 	static ID3D11Buffer* constantPixelBuffer;
 	static ID3D11Buffer* GSConstBuff;
 	static ID3D11RasterizerState* rasterizerState;
@@ -146,6 +157,7 @@ public:
 	void initAdditiveBlendState();
 
 	ID3D11Buffer* createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix);
+	ID3D11Buffer* createVSAnimBuffer(VS_CONSTANT_ANIM_BUFFER& matrix);
 	ID3D11Buffer* createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix);
 
 	ID3D11Buffer*& createGSConstBuffer();

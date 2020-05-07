@@ -15,6 +15,7 @@ void Keyframes::createStructuredBuffer(ID3D11Device* device)
 	buffDesc.ByteWidth = sizeof(Vertex)*vertices.size();
 	buffDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; //Try to change to 0.
 	buffDesc.Usage = D3D11_USAGE_DEFAULT;
+	buffDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 	buffDesc.StructureByteStride = sizeof(Vertex);
 
 	D3D11_SUBRESOURCE_DATA initData;
@@ -43,6 +44,6 @@ void Keyframes::appendStructuredBuffer(std::vector<Vertex>* vertVectorsToMerge[]
 		vertices.insert(vertices.end(), vertVectorsToMerge[i]->begin(), vertVectorsToMerge[i]->end());
 	}
 
-	this->nrOfVertices = vertices.size();
 	this->nrOfPoses += nrOfVectorsToMerge;
+	this->nrOfVertices = vertices.size() / nrOfPoses;
 }

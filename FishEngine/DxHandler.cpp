@@ -22,6 +22,8 @@ PixelShader* DxHandler::particlePixel = new PixelShader();
 PixelShader* DxHandler::transparencyPixel = new PixelShader();
 VertexShader* DxHandler::transparencyVertex = new VertexShader();
 
+VertexShader* DxHandler::animVertex = new VertexShader; //´handles morph anims
+
 //VertexShader* DxHandler::skyboxVertexShader = new VertexShader();
 //PixelShader* DxHandler::skyboxPixelShader = new PixelShader();
 
@@ -45,6 +47,8 @@ ID3D11RasterizerState* DxHandler::rasterizerState = nullptr;
 
 ID3D11Buffer* DxHandler::constantVertexBuffer = nullptr;
 ID3D11Buffer* DxHandler::constantPixelBuffer = nullptr;
+ID3D11Buffer* DxHandler::constantAnimBuffer = nullptr;
+
 ID3D11BlendState* DxHandler::additiveBlendState = nullptr;
 ID3D11BlendState* DxHandler::alphaBlendState = nullptr;
 ID3D11SamplerState* DxHandler::standardSampler = nullptr;
@@ -178,8 +182,10 @@ void DxHandler::setDefaultState()
 	VS_CONSTANT_MATRIX_BUFFER buff;
 	PS_CONSTANT_LIGHT_BUFFER lBuff;
 	DxHandler::contextPtr->VSSetConstantBuffers(PER_OBJECT_CBUFFER_SLOT, 1, &constantVertexBuffer);
+	contextPtr->PSSetConstantBuffers(1, 1, &constantAnimBuffer);
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
+	
 	contextPtr->GSSetConstantBuffers(0, 1, &GSConstBuff);
 
 	
@@ -232,6 +238,34 @@ ID3D11Buffer* DxHandler::createVSConstBuffer(VS_CONSTANT_MATRIX_BUFFER& matrix)
 
 	//loadedVSBuffers.push_back(constantBuffer);
 	this->constantVertexBuffer = constantBuffer;
+
+	return constantVertexBuffer;
+}
+
+ID3D11Buffer* DxHandler::createVSAnimBuffer(VS_CONSTANT_ANIM_BUFFER& matrix)
+{
+	D3D11_BUFFER_DESC constBDesc;
+	constBDesc.ByteWidth = sizeof(matrix);
+	constBDesc.Usage = D3D11_USAGE_DEFAULT;
+	constBDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constBDesc.CPUAccessFlags = 0;
+	constBDesc.MiscFlags = 0;
+	constBDesc.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = &matrix;
+	InitData.SysMemPitch = 0;
+	InitData.SysMemSlicePitch = 0;
+	ID3D11Buffer* constantBuffer = NULL;
+	HRESULT buffSucc = devicePtr->CreateBuffer(&constBDesc, &InitData,
+		&constantBuffer);
+	assert(SUCCEEDED(buffSucc));
+
+	//deviceContext->VSSetConstantBuffers(0, 1, &constantBuffer);
+	DxHandler::contextPtr->VSSetConstantBuffers(1, 1, &constantBuffer); //Bind to slot 1
+
+	//loadedVSBuffers.push_back(constantBuffer);
+	this->constantAnimBuffer = constantBuffer;
 
 	return constantVertexBuffer;
 }
@@ -332,6 +366,8 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 
 }
 
+double t = 0.0;
+int target = 0;
 void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light)
 {
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
@@ -358,6 +394,26 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 		lightBuff.lightColor = light->lightColor;
 	}
 
+	t += 0.01;
+	if (t > 1)
+	{
+		if (target == 0)
+			target = 1;
+		else
+			target = 0;
+
+		std::cout << "Switch target" << std::endl;
+		t = 0;
+	}
+
+
+
+	VS_CONSTANT_ANIM_BUFFER animBuff;
+	animBuff.time = t;
+	animBuff.currentTargetIndex = target;
+
+	contextPtr->VSSetShaderResources(0, 1, &drawMesh->srv);
+
 
 	GS_CONSTANT_MATRIX_BUFFER gBuff;
 	gBuff.camPos = drawFromCamera.cameraPosition;
@@ -365,13 +421,14 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 
 	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 	DxHandler::contextPtr->UpdateSubresource(constantVertexBuffer, 0, NULL, &matrixBuff, 0, 0);
+	DxHandler::contextPtr->UpdateSubresource(constantAnimBuffer, 0, NULL, &animBuff, 0, 0);
 	DxHandler::contextPtr->UpdateSubresource(GSConstBuff, 0, NULL, &gBuff, 0, 0);
 
 	//Set vertex buffer to the mesh you want to draw
-	DxHandler::contextPtr->IASetVertexBuffers(0, 1, nullptr, //BIND NOTHING FOR VERTEX PULLING
+	DxHandler::contextPtr->IASetVertexBuffers(0, 0, nullptr, //BIND NOTHING FOR VERTEX PULLING
 		&stride, &offset);
 	//Draw it
-	DxHandler::contextPtr->Draw(drawMesh->vertices.size(), 0);
+	DxHandler::contextPtr->Draw(drawMesh->nrOfVertices, 0);
 }
 
 void DxHandler::drawText()

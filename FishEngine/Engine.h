@@ -80,6 +80,7 @@ public:
 
 	
 	std::vector<Mesh*> scene;
+	std::vector<AnimatedMesh*> animatedMeshes;
 	std::vector<Light*> lights;
 	std::vector<Mesh*> transparentSceneObjects;
 	std::vector<Enemy*> enemies;
