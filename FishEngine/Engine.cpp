@@ -79,10 +79,16 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 {
 	//game logic here thanks
 	updatePlayerMovement(deltaTime);
-	player->updatePlayerTools(fishingRod,hook, deltaTime);
+	player->updatePlayerTools(fishingRod,hook,rope, deltaTime);
 	if (fishingRod->pullback < 10.f)
 	fishingRod->pullback += 0.1f;
-	//std::cout << fishingRod->pullback << std::endl;
+
+	if (hook->ableToThrowHook < 10.f)
+		hook->ableToThrowHook += 0.1f;
+	
+	
+	if (hook->ropeZipBack < 10.f)
+		hook->ropeZipBack += 0.1f;
 
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
@@ -106,36 +112,26 @@ void Engine::createInputHandler()
 
 void Engine::updatePlayerMovement(double deltaTime)
 {
-	/*
-	#define ACTIVE_TAG 1
-	#define ISLAND_SLEEPING 2
-	#define WANTS_DEACTIVATION 3
-	#define DISABLE_DEACTIVATION 4
-	#define DISABLE_SIMULATION 5
-	*/
+	
 	player->model->rigidBody->setActivationState(ACTIVE_TAG);
 	fishingRod->model->rigidBody->setActivationState(ACTIVE_TAG);
 
 	btVector3 movementVector(0,0,0);
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
 	{
-		//std::cout << "Space" << std::endl;
 		movementVector += btVector3(0, 20.f, 0);
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
 	{
-		//std::cout << GetAsyncKeyState(0x41) << std::endl;
-		//std::cout << "A" << std::endl;
 		movementVector += btVector3(-30 * deltaTime * 40, 0, 0);
 	}
 	if(GetAsyncKeyState(0x44)) // D-key
 	{
-		//std::cout << "D" << std::endl;
 		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
 	}
-	player->updatePlayer(fishingRod,hook);
+	player->updatePlayer(fishingRod,hook, rope);
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
@@ -184,22 +180,33 @@ void Engine::engineLoop()
 	this->scene.push_back(debugObject);
 	//this->scene.push_back(debugObject);
 
-	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
-	fishingRodObject->readMeshFromFile("./Models/rod.obj");
-	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
-	this->fishingRod = new Tool;
-	this->fishingRod->model = fishingRodObject;
-	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(fishingRodObject);
-
 	Mesh* hookObject = new Mesh(DxHandler::devicePtr); //Hook
 	hookObject->readMeshFromFile("./Models/actualCube.obj");
 	hookObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	hookObject->setRotation(DirectX::XMFLOAT3(0, 0, 0.5));
 	this->hook = new Tool;
 	this->hook->model = hookObject;
-	hookObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	hookObject->initRigidbody(dynamicsWorld, &collisionShapes, 5);
 	this->scene.push_back(hookObject);
+
+	Mesh* rope = new Mesh(DxHandler::devicePtr); //Rope
+	rope->readMeshFromFile("./Models/actualCube.obj");
+	rope->setRotation(DirectX::XMFLOAT3(0, 0, 8));
+	this->rope = new Tool;
+	this->rope->model = rope;
+	rope->initRigidbody(dynamicsWorld, &collisionShapes, 5);
+	this->scene.push_back(rope);
+
+
+	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
+	fishingRodObject->readMeshFromFile("./Models/rod.obj");
+	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
+	this->fishingRod = new Tool;
+	this->fishingRod->model = fishingRodObject;
+	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1);
+	this->scene.push_back(fishingRodObject);
+
+	
 
 	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
@@ -313,7 +320,7 @@ void Engine::engineLoop()
 		{
 			dynamicsWorld->stepSimulation(frameTime.count(), 1);
 			//std::cout << frameTime.count() << std::endl;
-			//dynamicsWorld->stepSimulation(1/60, 10);
+			//dynamicsWorld->stepSimulation(1/60, 1);
 
 			//print positions of all objects
 			for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
@@ -361,9 +368,16 @@ void Engine::engineLoop()
 		
 
 		directXHandler->spriteBatch->Begin();
-		std::wstring string;
-		string = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(),	string.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		std::wstring string1;
+		std::wstring string2;
+		std::wstring string3;
+		string1 = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
+		string2 = std::to_wstring((int)hook->ableToThrowHook) + L" \nhook recharge remaining";
+		string3 = std::to_wstring((int)hook->ropeZipBack) + L" \nRope zipback ";
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string2.data(), DirectX::XMFLOAT2(0, 50), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string3.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+
 		directXHandler->spriteBatch->End();
 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
