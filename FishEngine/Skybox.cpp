@@ -6,7 +6,7 @@ ID3D11ShaderResourceView* Skybox::srv = nullptr;
 
 void Skybox::loadSkybox(ID3D11Device* devicePtr)
 {
-	std::wstring path = L"./Textures/skymap.dds";
+	std::wstring path = L"./Textures/Background.dds";
 	HRESULT succ = DirectX::CreateDDSTextureFromFile(devicePtr, path.data(), &texture, &srv, NULL, NULL);
 	//assert(SUCCEEDED(succ));
 

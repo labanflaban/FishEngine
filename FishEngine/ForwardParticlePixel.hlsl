@@ -33,5 +33,5 @@ struct PS_INPUT //Output from geometry shader
 
 float4 main(PS_INPUT input) : SV_Target
 {
-	return colorMap.Sample(mysampler, input.vUV.xy);
+	return colorMap.Sample(mysampler, input.vUV.xy)*0.6f;
 }

@@ -33,6 +33,6 @@ struct PS_INPUT //Output from geometry shader
 
 float4 main(PS_INPUT input) : SV_Target
 {
-	return float4(1.f,0.f,0.f,0.0f); //Change last value to change opacity
+	return float4(1.f,0.f,0.f,0.0f)*0.5; //Change last value to change opacity
 
 }

@@ -23,8 +23,8 @@ Engine::~Engine()
 void Engine::initialSetup()
 {
 
-	DxHandler::WIDTH = WIDTH;
-	DxHandler::HEIGHT = HEIGHT;
+	//DxHandler::WIDTH = WIDTH;
+	//DxHandler::HEIGHT = HEIGHT;
 
 	YSE::System().init();
 
@@ -49,7 +49,7 @@ void Engine::initialSetup()
 
 	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
 	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
-	deferredBufferHandler.init(WIDTH, HEIGHT);
+	deferredBufferHandler.init(clientWidth, clientHeight);
 
 	createInputHandler();
 
@@ -94,10 +94,16 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 {
 	//game logic here thanks
 	updatePlayerMovement(deltaTime);
-	updatePlayerTools(deltaTime);
+	player->updatePlayerTools(fishingRod,hook,rope, deltaTime);
 	if (fishingRod->pullback < 10.f)
 	fishingRod->pullback += 0.1f;
-	//std::cout << fishingRod->pullback << std::endl;
+
+	if (hook->ableToThrowHook < 10.f)
+		hook->ableToThrowHook += 0.1f;
+	
+	
+	if (hook->ropeZipBack < 10.f)
+		hook->ropeZipBack += 0.1f;
 
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
@@ -112,6 +118,19 @@ void Engine::createWindow()
 void Engine::createDirectX()
 {
 	this->directXHandler = new DxHandler(primaryWindow);
+	RECT rect;
+
+	GetClientRect(primaryWindow, &rect);
+	int myWidth = rect.right - rect.left;
+	int myHeight = rect.bottom - rect.top;
+
+	std::cout << "WINDOW SIZE: " << myWidth << " " << myHeight << std::endl;
+
+	clientWidth = myWidth;
+	clientHeight = myHeight;
+
+	DxHandler::WIDTH = myWidth;
+	DxHandler::HEIGHT = myHeight;
 }
 
 void Engine::createInputHandler()
@@ -121,21 +140,19 @@ void Engine::createInputHandler()
 
 void Engine::updatePlayerMovement(double deltaTime)
 {
-	/*
-	#define ACTIVE_TAG 1
-	#define ISLAND_SLEEPING 2
-	#define WANTS_DEACTIVATION 3
-	#define DISABLE_DEACTIVATION 4
-	#define DISABLE_SIMULATION 5
-	*/
+	
 	player->model->rigidBody->setActivationState(ACTIVE_TAG);
 	fishingRod->model->rigidBody->setActivationState(ACTIVE_TAG);
 
 	btVector3 movementVector(0,0,0);
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
 	{
+
 		//std::cout << "Space" << std::endl;
 		movementVector += btVector3(0, 10.f, 0);
+
+		movementVector += btVector3(0, 20.f, 0);
+
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
 
@@ -160,6 +177,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
 	{
+
 		//std::cout << GetAsyncKeyState(0x41) << std::endl;
 		//std::cout << "A" << std::endl;
 		movementVector += btVector3(-10 * deltaTime * 40, 0, 0);
@@ -168,8 +186,15 @@ void Engine::updatePlayerMovement(double deltaTime)
 	{
 		//std::cout << "D" << std::endl;
 		movementVector += btVector3(10 * deltaTime * 40, 0, 0);
+
+		movementVector += btVector3(-30 * deltaTime * 40, 0, 0);
 	}
-	player->updatePlayer(fishingRod);
+	if(GetAsyncKeyState(0x44)) // D-key
+	{
+		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
+
+	}
+	player->updatePlayer(fishingRod,hook, rope);
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
@@ -179,18 +204,10 @@ void Engine::updatePlayerMovement(double deltaTime)
 	primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
 
 	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
+	player->playerLight->setPosition(XMFLOAT3(playerPos.x, playerPos.y + 25, playerPos.z));
+	
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
-void Engine::updatePlayerTools(double deltaTime)
-{
-	
-	XMFLOAT3 currentRotation = fishingRod->model->getRotation();
-	
-	if (GetAsyncKeyState(0x01) && currentRotation.z > -1 && pull == false && fishingRod->pullback >= 10.f)// left mouse buttom
-	{
-		XMFLOAT3 rotationRod(0, 0, currentRotation.z - 1);
-		fishingRod->model->setRotation(rotationRod);
-		fishingRod->pullback -= 10.f;
 
 	}
 	if (currentRotation.z <= -1)
@@ -216,6 +233,7 @@ void Engine::updateParticles()
 		p->updateParticle();
 	}
 }
+
 void Engine::engineLoop()
 {
 	//--------------------------------------------------------------------------------------------------- physics 
@@ -251,18 +269,65 @@ void Engine::engineLoop()
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->scene.push_back(debugObject);
+
+	player->playerLight = new Light(DxHandler::devicePtr);
+	player->playerLight->lightColor = XMVectorSet(1.f, 249 / 255.f, 10 / 255.f, 0.f);
+	lights.push_back(player->playerLight);
+
 	//debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
 
 	//this->scene.push_back(debugObject);
 
+	Mesh* hookObject = new Mesh(DxHandler::devicePtr); //Hook
+	hookObject->readMeshFromFile("./Models/actualCube.obj");
+	hookObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
+	hookObject->setRotation(DirectX::XMFLOAT3(0, 0, 0.5));
+	this->hook = new Tool;
+	this->hook->model = hookObject;
+	hookObject->initRigidbody(dynamicsWorld, &collisionShapes, 5);
+	this->scene.push_back(hookObject);
+
+	Mesh* rope = new Mesh(DxHandler::devicePtr); //Rope
+	rope->readMeshFromFile("./Models/actualCube.obj");
+	rope->setRotation(DirectX::XMFLOAT3(0, 0, 8));
+	this->rope = new Tool;
+	this->rope->model = rope;
+	rope->initRigidbody(dynamicsWorld, &collisionShapes, 5);
+	this->scene.push_back(rope);
+
+
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
-	fishingRodObject->setTranslation(DirectX::XMFLOAT3(5, 0, 4));
 	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	this->fishingRod = new Tool;
 	this->fishingRod->model = fishingRodObject;
-	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1);
 	this->scene.push_back(fishingRodObject);
+
+
+	
+
+	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
+	groundObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject);
+
+	Mesh* groundObject2= new Mesh(DxHandler::devicePtr); //Ground
+	groundObject2->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
+	groundObject2->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject2);
+	
+	Mesh* groundObject3 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject3->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
+	groundObject3->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject3);
+
 
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
@@ -287,7 +352,7 @@ void Engine::engineLoop()
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
-	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 200));
+	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 3000));
 	Skybox::sphereModel->isSky = true;
 	scene.push_back(Skybox::sphereModel);
 
@@ -297,8 +362,6 @@ void Engine::engineLoop()
 
 	Level* level = new Level();
 	level->createLevel(dynamicsWorld, collisionShapes, scene, enemies, lights);
-
-	//createLevel(dynamicsWorld, collisionShapes);
 
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
@@ -310,13 +373,15 @@ void Engine::engineLoop()
 	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
 	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
 	
-	/*AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
+	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
 	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
 	animMesh->appendStructuredBuffer(arr, 2);
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
-	animatedMeshes.push_back(animMesh);*/
+
+	animMesh->targetPoseIndex = 1;
+	animatedMeshes.push_back(animMesh);
 	
 	while (!shutdown)
 	{
@@ -348,7 +413,7 @@ void Engine::engineLoop()
 		{
 			dynamicsWorld->stepSimulation(1/60.f);
 			//std::cout << frameTime.count() << std::endl;
-			//dynamicsWorld->stepSimulation(1/60, 10);
+			//dynamicsWorld->stepSimulation(1/60, 1);
 
 			//print positions of all objects
 			for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
@@ -396,9 +461,16 @@ void Engine::engineLoop()
 		
 
 		directXHandler->spriteBatch->Begin();
-		std::wstring string;
-		string = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(),	string.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		std::wstring string1;
+		std::wstring string2;
+		std::wstring string3;
+		string1 = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
+		string2 = std::to_wstring((int)hook->ableToThrowHook) + L" \nhook recharge remaining";
+		string3 = std::to_wstring((int)hook->ropeZipBack) + L" \nRope zipback ";
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string2.data(), DirectX::XMFLOAT2(0, 50), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string3.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+
 		directXHandler->spriteBatch->End();
 
 		DxHandler::swapChainPtr->Present(1, 0); 
@@ -492,15 +564,16 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		directXHandler->draw(model, primaryCamera, model->isSky);
 	}
 
-	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	//auto rot = animatedMeshes.at(0)->getRotation();
-	//rot = XMFLOAT3(rot.x, rot.y + 0.01, 0);
-	//animatedMeshes.at(0)->setRotation(rot);
-	//directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
-	//for (auto animMesh : animatedMeshes) //Draw all meshes 
-	//{
-	//	directXHandler->draw(animMesh, primaryCamera);
-	//}
+
+	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
+	auto rot = animatedMeshes.at(0)->getRotation();
+	rot = XMFLOAT3(rot.x + 0.01f, rot.y + 0.01, 0);
+	animatedMeshes.at(0)->setRotation(rot);
+	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
+	for (auto animMesh : animatedMeshes) //Draw all meshes 
+	{
+		directXHandler->draw(animMesh, primaryCamera);
+	}
 
 	//Set to null
 	ID3D11RenderTargetView* arrNull[1] =
@@ -558,7 +631,7 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
 	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
-	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);// , DxHandler::depthStencil); //Application screen
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, DxHandler::depthStencil); //Application screen
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	for (auto model : transparentSceneObjects) //Draw transparent stuff
 	{
@@ -591,56 +664,3 @@ void Engine::renderParticles()
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }
-//
-//void Engine::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes)
-//{
-//	Level* level = new Level();
-//	level->readFromeFile(level->levelMeshVector);
-//	DirectX::XMFLOAT3 multi(10, 10, 10);
-//
-//	//skapa en funktion som förenklar skapande av objekt senare
-//
-//	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
-//	{
-//
-//		if (level->levelMeshVector.at(i).tag == "platform")
-//		{
-//			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
-//			groundObject->readMeshFromFID("./Models/JellyFish.FID");
-//			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-//			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-//			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-//
-//
-//			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-//			this->scene.push_back(groundObject);
-//			DirectX::XMFLOAT3 test = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
-//			std::cout << test.x << " " << test.y << " " << test.z << std::endl;
-//		}
-//		else if (level->levelMeshVector.at(i).tag == "background")
-//		{
-//			Mesh* background = new Mesh(DxHandler::devicePtr);
-//			background->readMeshFromFID("./Models/berg.FID");
-//			background->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-//			background->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-//			background->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-//
-//			this->scene.push_back(background);
-//		}
-//		else if (level->levelMeshVector.at(i).tag == "enemy")
-//		{
-//			Enemy* enemy = new Enemy(DxHandler::devicePtr);
-//			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(),multi));
-//			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-//			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(),multi));
-//			this->enemies.push_back(enemy);
-//			this->scene.push_back(enemy->model);
-//			this->lights.push_back(enemy->light);
-//
-//		}
-//		else if (level->levelMeshVector.at(i).tag == "character")
-//		{
-//
-//		}
-//	}
-//}
