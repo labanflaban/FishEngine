@@ -73,6 +73,8 @@ public:
 	//Mesh* playerMesh = nullptr;
 	Player* player = nullptr;
 	Tool* fishingRod = nullptr;
+	Tool* hook = nullptr;
+	Tool* rope = nullptr;
 	bool pull = false;
 
 	void renderFirstPass(std::vector<Mesh*>* scene);
