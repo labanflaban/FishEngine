@@ -44,15 +44,18 @@ VS_OUTPUT main(uint vertexID : SV_VertexID)
 
 	VS_OUTPUT Output; 
 
+    float4 blendPos1 = float4(poses[vertexID].vPosition, 1); //Neutral
+    float4 blendPos2 = float4(poses[vertexOffsetPerModel * currentTargetIndex + vertexID].vPosition, 1);
+    float4 blendedPos = lerp(blendPos1, blendPos2, time);
+	
 	Output.vNormal = normalize(mul(float4(normalize(input.vNormal), 0), worldMatrix));
 	Output.vTangent = normalize(mul(float4(normalize(input.vTangent), 0), worldMatrix));
-	Output.vPosition = mul(float4(input.vPosition, 1), worldViewProjectionMatrix);
+	Output.vPosition = mul(blendedPos, worldViewProjectionMatrix);
 
-	Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix).xyww;
-	Output.vUV = float4(input.vPosition, 1);
+	Output.positionInWorldSpace = mul(blendedPos, worldMatrix).xyww;
 
 
-	Output.vColour = input.vColour;
+    Output.vColour = input.vColour;
 	Output.vUV = float4(input.vUV, 1, 1);
 
 	return Output;

@@ -181,7 +181,7 @@ std::vector<Vertex> ObjParser::readFromObj(std::string fileName)
 
 					loadedVertTextureCoords.push_back(float2{ v1, v2 });
 					//std::cout << v1 << " : " << v2 << std::endl;
-					std::cout << std::endl;
+					//std::cout << std::endl;
 				}
 				else if (line.at(0) == 'f') //If it's a face.
 				{

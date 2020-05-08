@@ -182,7 +182,7 @@ void DxHandler::setDefaultState()
 	VS_CONSTANT_MATRIX_BUFFER buff;
 	PS_CONSTANT_LIGHT_BUFFER lBuff;
 	DxHandler::contextPtr->VSSetConstantBuffers(PER_OBJECT_CBUFFER_SLOT, 1, &constantVertexBuffer);
-	contextPtr->PSSetConstantBuffers(1, 1, &constantAnimBuffer);
+	contextPtr->VSSetConstantBuffers(1, 1, &constantAnimBuffer);
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
 	
@@ -366,8 +366,6 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 
 }
 
-double t = 0.0;
-int target = 0;
 void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light)
 {
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
@@ -394,23 +392,26 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 		lightBuff.lightColor = light->lightColor;
 	}
 
-	t += 0.01;
-	if (t > 1)
+	if (drawMesh->t >= 1)
 	{
-		if (target == 0)
-			target = 1;
-		else
-			target = 0;
-
-		std::cout << "Switch target" << std::endl;
-		t = 0;
+		drawMesh->decrementT = true;
 	}
+	if (drawMesh->t <= 0)
+	{
+		drawMesh->decrementT = false;
+	}
+
+	if (!drawMesh->decrementT)
+		drawMesh->t += 0.01;
+	if(drawMesh->decrementT)
+		drawMesh->t -= 0.01;
 
 
 
 	VS_CONSTANT_ANIM_BUFFER animBuff;
-	animBuff.time = t;
-	animBuff.currentTargetIndex = target;
+	animBuff.time = drawMesh->t;
+	animBuff.currentTargetIndex = drawMesh->targetPoseIndex;
+	animBuff.vertexOffsetPerModel = drawMesh->nrOfVertices;
 
 	contextPtr->VSSetShaderResources(0, 1, &drawMesh->srv);
 
