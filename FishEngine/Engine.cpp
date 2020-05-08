@@ -262,6 +262,7 @@ void Engine::engineLoop()
 
 	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
 	groundObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -269,6 +270,7 @@ void Engine::engineLoop()
 
 	Mesh* groundObject2= new Mesh(DxHandler::devicePtr); //Ground
 	groundObject2->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject2->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
 	groundObject2->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -276,6 +278,7 @@ void Engine::engineLoop()
 	
 	Mesh* groundObject3 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject3->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject3->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
 	groundObject3->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -283,6 +286,7 @@ void Engine::engineLoop()
 
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject4->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
 	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -290,6 +294,7 @@ void Engine::engineLoop()
 
 	Mesh* groundObject5= new Mesh(DxHandler::devicePtr); //Ground
 	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject5->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
 	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -297,6 +302,7 @@ void Engine::engineLoop()
 
 	Mesh* groundObject6 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject6->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject6->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject6->setTranslation(DirectX::XMFLOAT3(200, 0, 4));
 	groundObject6->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject6->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -304,6 +310,7 @@ void Engine::engineLoop()
 
 	Mesh* groundObject7 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject7->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject7->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject7->setTranslation(DirectX::XMFLOAT3(250, -25, 4));
 	groundObject7->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	groundObject7->initRigidbody(dynamicsWorld, &collisionShapes, 0);

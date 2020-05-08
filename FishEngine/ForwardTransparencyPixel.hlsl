@@ -19,6 +19,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 	bool hasTexture;
 	bool isSky;
+	bool hasNormalMap;
 }
 
 struct PS_INPUT //Output from geometry shader

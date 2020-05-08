@@ -1,24 +1,4 @@
-﻿  Engine.cpp
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(81,61): warning C4316: 'Particle': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(140,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(149,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(150,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(151,65): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(151,55): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(161,47): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(166,46): warning C4244: 'argument': conversion from 'double' to 'const btScalar', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(200,75): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(240,52): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(245,66): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(254,57): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(263,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(270,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(277,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(284,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(291,53): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(298,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(305,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(312,54): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(325,48): warning C4316: 'Light': object allocated on the heap may not be aligned 16
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(407,21): warning C4018: '<': signed/unsigned mismatch
-  FishEngine.vcxproj -> C:\Users\DaveM\Documents\GitHub\FishEngine\Debug\FishEngine.exe
+﻿  Skybox.cpp
+C:\Users\isakz\OneDrive\Documents\GitHub\FishEngine\FishEngine\Skybox.cpp(13,43): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\Users\isakz\OneDrive\Documents\GitHub\FishEngine\FishEngine\Skybox.cpp(15,56): warning C4305: 'argument': truncation from 'double' to 'float'
+  FishEngine.vcxproj -> C:\Users\isakz\OneDrive\Documents\GitHub\FishEngine\Debug\FishEngine.exe
