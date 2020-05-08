@@ -83,6 +83,7 @@ struct PS_CONSTANT_LIGHT_BUFFER
 
 	BOOL hasTexture = false;
 	BOOL isSky = false;
+	BOOL hasNormalMap = false;
 };
 
 class DxHandler

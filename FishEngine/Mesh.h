@@ -38,6 +38,9 @@ private:
 	ObjParser parser;
 	FIDParser fidParser;
 
+	ID3D11Resource* NormalMap;
+	ID3D11Texture2D* pNormalMap = NULL;
+
 	ID3D11Resource* texture;
 	ID3D11Texture2D* pTexture = NULL;
 	D3D11_SAMPLER_DESC textureSamplerDesc;
@@ -58,6 +61,7 @@ public:
 	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass);
 
 	ID3D11ShaderResourceView* textureView = nullptr;
+	ID3D11ShaderResourceView* NormalView = nullptr;
 
 	ID3D11Buffer* vertexBuffer = NULL;
 	std::vector<Vertex> vertices;
@@ -73,12 +77,14 @@ public:
 	DirectX::XMMATRIX& getWorldMatrix();
 
 	bool hasTexture = false;
+	bool hasNormalMap = false;
 
 	ID3D11Buffer* createVertexBuffer();
 
 	void readMeshFromFID(std::string fileName);
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
+	void readNormalMapFromFile(std::wstring NormalMapName);
 	
 
 	bool isSky = false;

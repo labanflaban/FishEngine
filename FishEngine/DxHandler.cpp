@@ -343,6 +343,12 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 		contextPtr->PSSetShaderResources(0, 1, &drawMesh->textureView);
 	}
 
+	lightBuff.hasNormalMap = drawMesh->hasNormalMap;
+	if (lightBuff.hasNormalMap)
+	{
+		contextPtr->PSSetShaderResources(3, 1, &drawMesh->NormalView);
+	}
+
 	if (light != nullptr)
 	{
 		lightBuff.lightPos = DirectX::XMVectorSet(light->pos.x, light->pos.y, light->pos.z, 0);

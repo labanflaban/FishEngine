@@ -152,6 +152,40 @@ void Mesh::readTextureFromFile(std::wstring textureName)
 	hasTexture = true;
 }
 
+void Mesh::readNormalMapFromFile(std::wstring NormalMapName)
+{
+	HRESULT readNormalMapResult = DirectX::CreateWICTextureFromFile(device, NormalMapName.data(), &NormalMap, &NormalView, 0);
+
+	assert(SUCCEEDED(readNormalMapResult));
+
+	imageSampleDesc.MipLevels = imageSampleDesc.ArraySize = 1;
+	imageSampleDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	imageSampleDesc.SampleDesc.Count = 1;
+	imageSampleDesc.Usage = D3D11_USAGE_DEFAULT;
+	imageSampleDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	imageSampleDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	imageSampleDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* NormalInterface = 0;
+	ID3D11Resource* Resource;
+
+	NormalView->GetResource(&Resource);
+	Resource->QueryInterface<ID3D11Texture2D>(&NormalInterface);
+
+	D3D11_TEXTURE2D_DESC desc;
+	NormalInterface->GetDesc(&desc);
+	imageSampleDesc.Width = static_cast<int>(desc.Width);
+	imageSampleDesc.Height = static_cast<int>(desc.Height);
+
+	Resource->Release();
+	NormalInterface->Release();
+
+	HRESULT createNormalResult = device->CreateTexture2D(&desc, NULL, &pNormalMap);
+	assert(SUCCEEDED(createNormalResult));
+
+	hasNormalMap = true;
+}
+
 Mesh::Mesh(ID3D11Device* device)
 {
 	this->device = device;

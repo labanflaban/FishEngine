@@ -25,6 +25,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 	bool hasTexture;
 	bool isSky;
+	bool hasNormalMap;
 }
 
 struct VS_OUTPUT //comes from deferredVShader

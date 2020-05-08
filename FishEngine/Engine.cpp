@@ -288,14 +288,23 @@ void Engine::engineLoop()
 	this->fishingRod->model = fishingRodObject;
 	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1);
 	this->scene.push_back(fishingRodObject);
+	
 
+	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject4->readNormalMapFromFile(L"./Models/TegelNormMap.png");
+	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
+	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->transparentSceneObjects.push_back(groundObject4);
 
-	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject8->readMeshFromFile("./Models/actualCube.obj");
-	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
-	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
-	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject8);
+	Mesh* groundObject5= new Mesh(DxHandler::devicePtr); //Ground
+	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
+	groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
+	groundObject5->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
+	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
+	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->transparentSceneObjects.push_back(groundObject5);
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));

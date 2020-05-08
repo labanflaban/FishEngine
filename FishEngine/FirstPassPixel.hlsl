@@ -1,6 +1,6 @@
-
 Texture2D colorMap : register(t0);
 TextureCube sky : register(t1);
+Texture2D NormalMapTexture : register(t3);
 SamplerState mysampler;
 
 //From CPU to GPU. Sends whatever you need.
@@ -22,6 +22,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 	bool hasTexture;
 	bool isSky;
+	bool hasNormalMap;
 }
 
 struct PS_INPUT //Output from geometry shader
@@ -70,16 +71,16 @@ PS_OUTPUT main(PS_INPUT input) : SV_Target
 		output.vColour.w = 2;
 	}
 
-	/*if (hasNormalMap)
+	if (hasNormalMap)
 	{
-		float3 loadedNormal = NormalMapTexture.Sample(mysampler, input.vUV);
+		float3 loadedNormal = NormalMapTexture.Sample(mysampler, input.vUV.xy);
 		float3 tangent = normalize(input.vTangent - dot(input.vTangent, input.vNormal) * input.vNormal);
 		float3 bitangent = normalize(cross(loadedNormal, tangent));
 
 		float3x3 tbn = float3x3(tangent, bitangent, loadedNormal); //This will move things into 'texture space' or 'tangent space' in order to support rotations of the object without distortion.
 
 		input.vNormal = normalize(float4(mul(loadedNormal, tbn), 0));
-	}*/
+	}
 
 	output.vNormal = input.vNormal;
 	return output;
