@@ -44,7 +44,9 @@ VS_OUTPUT main(VS_INPUT input)
 		Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix);
 	else
 	{
-		Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix).xyww;
+        //input.vPosition.z = 1;
+        Output.positionInWorldSpace = mul(float4(input.vPosition, 1), worldMatrix);
+        //Output.positionInWorldSpace.w = 1;
 		Output.vUV = float4(input.vPosition, 1);
 	}
 		

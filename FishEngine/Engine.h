@@ -48,7 +48,8 @@ private:
 
 	Camera primaryCamera;
 
-
+	int clientWidth = 0;
+	int clientHeight = 0;
 	
 public:
 	Engine();

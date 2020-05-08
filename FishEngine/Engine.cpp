@@ -23,8 +23,8 @@ Engine::~Engine()
 void Engine::initialSetup()
 {
 
-	DxHandler::WIDTH = WIDTH;
-	DxHandler::HEIGHT = HEIGHT;
+	//DxHandler::WIDTH = WIDTH;
+	//DxHandler::HEIGHT = HEIGHT;
 
 	YSE::System().init();
 
@@ -49,7 +49,7 @@ void Engine::initialSetup()
 
 	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
 	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
-	deferredBufferHandler.init(WIDTH, HEIGHT);
+	deferredBufferHandler.init(clientWidth, clientHeight);
 
 	createInputHandler();
 
@@ -112,6 +112,19 @@ void Engine::createWindow()
 void Engine::createDirectX()
 {
 	this->directXHandler = new DxHandler(primaryWindow);
+	RECT rect;
+
+	GetClientRect(primaryWindow, &rect);
+	int myWidth = rect.right - rect.left;
+	int myHeight = rect.bottom - rect.top;
+
+	std::cout << "WINDOW SIZE: " << myWidth << " " << myHeight << std::endl;
+
+	clientWidth = myWidth;
+	clientHeight = myHeight;
+
+	DxHandler::WIDTH = myWidth;
+	DxHandler::HEIGHT = myHeight;
 }
 
 void Engine::createInputHandler()
@@ -179,6 +192,8 @@ void Engine::updatePlayerMovement(double deltaTime)
 	primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
 
 	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
+	player->playerLight->setPosition(XMFLOAT3(playerPos.x, playerPos.y + 25, playerPos.z));
+	
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
 void Engine::updatePlayerTools(double deltaTime)
@@ -251,6 +266,11 @@ void Engine::engineLoop()
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->scene.push_back(debugObject);
+
+	player->playerLight = new Light(DxHandler::devicePtr);
+	player->playerLight->lightColor = XMVectorSet(1.f, 249 / 255.f, 10 / 255.f, 0.f);
+	lights.push_back(player->playerLight);
+
 	//debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
 
 	//this->scene.push_back(debugObject);
@@ -287,7 +307,7 @@ void Engine::engineLoop()
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
-	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 200));
+	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 3000));
 	Skybox::sphereModel->isSky = true;
 	scene.push_back(Skybox::sphereModel);
 
@@ -313,6 +333,7 @@ void Engine::engineLoop()
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
+	animMesh->targetPoseIndex = 1;
 	animatedMeshes.push_back(animMesh);
 	
 	while (!shutdown)
@@ -491,7 +512,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	auto rot = animatedMeshes.at(0)->getRotation();
-	rot = XMFLOAT3(rot.x, rot.y + 0.01, 0);
+	rot = XMFLOAT3(rot.x + 0.01f, rot.y + 0.01, 0);
 	animatedMeshes.at(0)->setRotation(rot);
 	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
 	for (auto animMesh : animatedMeshes) //Draw all meshes 
@@ -555,7 +576,7 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
 	DxHandler::transparencyPixel->useThis(DxHandler::contextPtr);
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
-	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);// , DxHandler::depthStencil); //Application screen
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, DxHandler::depthStencil); //Application screen
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	for (auto model : transparentSceneObjects) //Draw transparent stuff
 	{
