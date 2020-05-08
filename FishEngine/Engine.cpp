@@ -295,7 +295,10 @@ void Engine::engineLoop()
 	light->setPosition(XMFLOAT3(0, 0, -10));
 	this->lights.push_back(light);
 
-	createLevel(dynamicsWorld, collisionShapes);
+	Level* level = new Level();
+	level->createLevel(dynamicsWorld, collisionShapes, scene, enemies, lights);
+
+	//createLevel(dynamicsWorld, collisionShapes);
 
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
@@ -307,13 +310,13 @@ void Engine::engineLoop()
 	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
 	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
 	
-	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
+	/*AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
 	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
 	animMesh->appendStructuredBuffer(arr, 2);
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
-	animatedMeshes.push_back(animMesh);
+	animatedMeshes.push_back(animMesh);*/
 	
 	while (!shutdown)
 	{
@@ -489,15 +492,15 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		directXHandler->draw(model, primaryCamera, model->isSky);
 	}
 
-	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	auto rot = animatedMeshes.at(0)->getRotation();
-	rot = XMFLOAT3(rot.x, rot.y + 0.01, 0);
-	animatedMeshes.at(0)->setRotation(rot);
-	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
-	for (auto animMesh : animatedMeshes) //Draw all meshes 
-	{
-		directXHandler->draw(animMesh, primaryCamera);
-	}
+	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
+	//auto rot = animatedMeshes.at(0)->getRotation();
+	//rot = XMFLOAT3(rot.x, rot.y + 0.01, 0);
+	//animatedMeshes.at(0)->setRotation(rot);
+	//directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
+	//for (auto animMesh : animatedMeshes) //Draw all meshes 
+	//{
+	//	directXHandler->draw(animMesh, primaryCamera);
+	//}
 
 	//Set to null
 	ID3D11RenderTargetView* arrNull[1] =
@@ -588,59 +591,56 @@ void Engine::renderParticles()
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }
-
-void Engine::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes)
-{
-	Level* level = new Level();
-	level->readFromeFile(level->levelMeshVector);
-
-	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
-	{
-
-		if (level->levelMeshVector.at(i).tag == "platform")
-		{
-			cout << "platform" << endl;
-			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
-			groundObject->readMeshFromFID("./Models/JellyFish.FID");
-			//groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
-
-			groundObject->setTranslation(level->levelMeshVector.at(i).getTranslation());
-			groundObject->setRotation(level->levelMeshVector.at(i).getRotation());
-			//groundObject->setScaling(level->levelMeshVector.at(i).getScale());
-
-			groundObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-			this->scene.push_back(groundObject);
-		}
-		else if (level->levelMeshVector.at(i).tag == "background")
-		{
-			cout << "background" << endl;
-
-			Mesh* background = new Mesh(DxHandler::devicePtr);
-			background->readMeshFromFID("./Models/JellyFish.FID");
-			background->setTranslation(level->levelMeshVector.at(i).getTranslation());
-			background->setRotation(level->levelMeshVector.at(i).getRotation());
-			//background->setScaling(level->levelMeshVector.at(i).getScale());
-			background->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-			this->scene.push_back(background);
-
-		}
-		else if (level->levelMeshVector.at(i).tag == "enemy")
-		{
-			cout << "enemy" << endl;
-			Enemy* enemy = new Enemy(DxHandler::devicePtr);
-			enemy->model->setTranslation(level->levelMeshVector.at(i).getTranslation());
-			enemy->model->setRotation(level->levelMeshVector.at(i).getRotation());
-			//enemy->model->setScaling(level->levelMeshVector.at(i).getScale());
-			this->enemies.push_back(enemy);
-			this->scene.push_back(enemy->model);
-			this->lights.push_back(enemy->light);
-
-		}
-		else if (level->levelMeshVector.at(i).tag == "character")
-		{
-			cout << "character" << endl;
-
-		}
-	}
-}
+//
+//void Engine::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes)
+//{
+//	Level* level = new Level();
+//	level->readFromeFile(level->levelMeshVector);
+//	DirectX::XMFLOAT3 multi(10, 10, 10);
+//
+//	//skapa en funktion som förenklar skapande av objekt senare
+//
+//	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
+//	{
+//
+//		if (level->levelMeshVector.at(i).tag == "platform")
+//		{
+//			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+//			groundObject->readMeshFromFID("./Models/JellyFish.FID");
+//			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+//			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+//			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+//
+//
+//			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+//			this->scene.push_back(groundObject);
+//			DirectX::XMFLOAT3 test = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
+//			std::cout << test.x << " " << test.y << " " << test.z << std::endl;
+//		}
+//		else if (level->levelMeshVector.at(i).tag == "background")
+//		{
+//			Mesh* background = new Mesh(DxHandler::devicePtr);
+//			background->readMeshFromFID("./Models/berg.FID");
+//			background->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+//			background->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+//			background->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+//
+//			this->scene.push_back(background);
+//		}
+//		else if (level->levelMeshVector.at(i).tag == "enemy")
+//		{
+//			Enemy* enemy = new Enemy(DxHandler::devicePtr);
+//			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(),multi));
+//			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+//			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(),multi));
+//			this->enemies.push_back(enemy);
+//			this->scene.push_back(enemy->model);
+//			this->lights.push_back(enemy->light);
+//
+//		}
+//		else if (level->levelMeshVector.at(i).tag == "character")
+//		{
+//
+//		}
+//	}
+//}

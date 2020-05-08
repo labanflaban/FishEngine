@@ -87,5 +87,5 @@ public:
 	std::vector<Enemy*> enemies;
 	std::vector<Particle*> particles;
 
-	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes);
+	//void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes);
 };
