@@ -41,7 +41,7 @@ struct Level
 	DirectX::XMFLOAT3 multiplyFloat3XYZ(DirectX::XMFLOAT3 first, DirectX::XMFLOAT3 second);
 	DirectX::XMFLOAT3 degreesToRadians(DirectX::XMFLOAT3 degrees);
 
-	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, vector<Mesh*> &scene, vector<Enemy*> &enemies, vector<Light*> &lights);
+	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, vector<Mesh*>& scene, vector<Enemy*>& enemies, vector<Light*>& lights);
 
 
 };

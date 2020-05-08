@@ -3,7 +3,7 @@
 Tool::Tool()
 {
 	slapSound.create("./Sounds/slap.wav");
-	slapSound.setVolume(0);
+	slapSound.setVolume(0.01);
 	assert(slapSound.isValid());
 }
 

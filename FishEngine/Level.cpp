@@ -29,7 +29,7 @@ istream& operator>>(istream& input, LevelMesh& level)
 {
 	input >> level.name >> level.translation.x >> level.translation.y >> level.translation.z
 		>> level.rotation.x >> level.rotation.y >> level.rotation.z
-		>> level.scale.x>> level.scale.y>> level.scale.z >> level.backGroundCheck >> level.tag;
+		>> level.scale.x >> level.scale.y >> level.scale.z >> level.backGroundCheck >> level.tag;
 	return input;
 }
 
@@ -68,7 +68,7 @@ void Level::printVector(vector<LevelMesh>& levelMeshVector)
 
 DirectX::XMFLOAT3 Level::multiplyFloat3XYZ(DirectX::XMFLOAT3 first, DirectX::XMFLOAT3 second)
 {
-	DirectX::XMFLOAT3 mul(1,1,1);
+	DirectX::XMFLOAT3 mul(1, 1, 1);
 	mul.x = first.x * second.x;
 	mul.y = first.y * second.y;
 	mul.z = first.z * second.z;

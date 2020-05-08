@@ -4,7 +4,7 @@ using namespace DirectX;
 Player::Player()
 {
 	jumpSound.create("./Sounds/Ah.wav");
-	jumpSound.setVolume(0.1);
+	jumpSound.setVolume(0.01);
 	assert(jumpSound.isValid());
 }
 

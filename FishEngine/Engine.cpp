@@ -209,23 +209,8 @@ void Engine::updatePlayerMovement(double deltaTime)
 	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
 }
 
-	}
-	if (currentRotation.z <= -1)
-	{
-		pull = true;
-		fishingRod->slapSound.play();
-	}
-	if (currentRotation.z < 0 && fishingRod->pullback >= 1.f && pull == true)
-	{
-		//std::cout << "UPDATED" << std::endl;
-		fishingRod->model->setRotation(DirectX::XMFLOAT3(0,0, currentRotation.z + 0.5));
-		//fishingRod->pullback -= 3.f;
-	}
-	if (currentRotation.z >= 0)
-	{
-		pull = false;
-	}
-}
+	
+
 void Engine::updateParticles()
 {
 	for (Particle* p : particles)
@@ -305,44 +290,6 @@ void Engine::engineLoop()
 	this->scene.push_back(fishingRodObject);
 
 
-	
-
-	Mesh* groundObject = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject->setTranslation(DirectX::XMFLOAT3(3, -25, 4));
-	groundObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject);
-
-	Mesh* groundObject2= new Mesh(DxHandler::devicePtr); //Ground
-	groundObject2->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject2->setTranslation(DirectX::XMFLOAT3(100, -25, 4));
-	groundObject2->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject2->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject2);
-	
-	Mesh* groundObject3 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject3->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject3->setTranslation(DirectX::XMFLOAT3(150, 0, 4));
-	groundObject3->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	groundObject3->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->scene.push_back(groundObject3);
-
-
-	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
-	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->transparentSceneObjects.push_back(groundObject4);
-
-	Mesh* groundObject5= new Mesh(DxHandler::devicePtr); //Ground
-	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject5->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
-	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->transparentSceneObjects.push_back(groundObject5);
-
 	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject8->readMeshFromFile("./Models/actualCube.obj");
 	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
@@ -363,6 +310,7 @@ void Engine::engineLoop()
 	Level* level = new Level();
 	level->createLevel(dynamicsWorld, collisionShapes, scene, enemies, lights);
 
+
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
@@ -379,7 +327,6 @@ void Engine::engineLoop()
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
-
 	animMesh->targetPoseIndex = 1;
 	animatedMeshes.push_back(animMesh);
 	
@@ -564,7 +511,6 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		directXHandler->draw(model, primaryCamera, model->isSky);
 	}
 
-
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	auto rot = animatedMeshes.at(0)->getRotation();
 	rot = XMFLOAT3(rot.x + 0.01f, rot.y + 0.01, 0);
@@ -664,3 +610,4 @@ void Engine::renderParticles()
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }
+
