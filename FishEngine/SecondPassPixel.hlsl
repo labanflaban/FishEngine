@@ -47,13 +47,13 @@ float4 main(VS_OUTPUT input) : SV_Target0
 
 
 	//Calculate light
-	float3 surfaceToLightV = normalize(globalLightPos - position);
-	float diffuseStrength = clamp(dot(normal, surfaceToLightV), 0, 1); //Cannot go over 1, and never below 0.
+	//float3 surfaceToLightV = normalize(globalLightPos - position);
+	//float diffuseStrength = clamp(dot(normal, surfaceToLightV), 0, 1); //Cannot go over 1, and never below 0.
 	float ambientStrength = 0.1f; //Constant 'global' light.
 
-	float4 lookVector = normalize(position - camPos); //Specular, camera to position
-	float4 reflectionVec = normalize(reflect(float4(surfaceToLightV, 0), normal)); //Specular
-	float specStrength = pow(clamp(dot(reflectionVec, lookVector), 0, 1), 32); // 32 being spec exponent
+	//float4 lookVector = normalize(position - camPos); //Specular, camera to position
+	//float4 reflectionVec = normalize(reflect(float4(surfaceToLightV, 0), normal)); //Specular
+	//float specStrength = pow(clamp(dot(reflectionVec, lookVector), 0, 1), 32); // 32 being spec exponent
 	//
 
 	//if (albedo.w != 2)

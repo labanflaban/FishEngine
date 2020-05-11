@@ -62,13 +62,10 @@ PS_OUTPUT main(PS_INPUT input) : SV_Target
 		float3 camToPixelVec = (input.positionInWorldSpace.xyz - camPos.xyz);
 		float3 camToPixelReflected = normalize(reflect(camToPixelVec, input.vNormal.xyz));
 
-		output.vColour.w = 2;
-		//input.vUV = float4(input.vUV.x - 1, input.vUV.y, input.vUV.z, 0);
-		//output.vColour = sky.Sample(mysampler, input.vUV);
-		output.vColour = sky.Sample(mysampler, normalize(camToPixelVec));
-		//output.vColour = sky.Sample(mysampler, input.vPosition);
-		output.vColour.w = 2;
-	}
+	//	output.vColour = sky.Sample(mysampler, normalize(camToPixelVec));
+	//	output.vColour.w = 2;
+        output.vColour = float4(1, 0, 0, 0);
+    }
 
 	/*if (hasNormalMap)
 	{

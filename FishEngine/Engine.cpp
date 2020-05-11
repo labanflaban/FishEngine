@@ -33,6 +33,9 @@ void Engine::initialSetup()
 	DxHandler::firstPassPixel->compileShader(L"./FirstPassPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::firstPassVertex->compileShader(L"./FirstPassVertex.hlsl", DxHandler::devicePtr);
 
+	DxHandler::skyboxPixel->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
+	DxHandler::skyboxVertex->compileShader(L"./SkyboxVertex.hlsl", DxHandler::devicePtr);
+
 	DxHandler::secondPassPixel->compileShader(L"./SecondPassPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::secondPassVertex->compileShader(L"./SecondPassVertex.hlsl", DxHandler::devicePtr);
 
@@ -78,7 +81,20 @@ void Engine::initialSetup()
 	states = std::make_unique<DirectX::CommonStates>(DxHandler::devicePtr);
 	DxHandler::alphaBlendState = states->AlphaBlend();
 
-	DxHandler::standardSampler = states->LinearWrap();
+	D3D11_SAMPLER_DESC sampleDesc = {};
+	sampleDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampleDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampleDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampleDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampleDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampleDesc.MinLOD = 0;
+	sampleDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	HRESULT sampleSucc = DxHandler::devicePtr->CreateSamplerState(&sampleDesc, &DxHandler::standardSampler);
+	assert(SUCCEEDED(sampleSucc));
+
+	DxHandler::contextPtr->PSSetSamplers(0, 1, &DxHandler::standardSampler);
+
+	//DxHandler::standardSampler = states->LinearWrap();
 
 	for (int i = 0; i < 50; i++)
 	{
@@ -309,7 +325,7 @@ void Engine::engineLoop()
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
 	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 3000));
 	Skybox::sphereModel->isSky = true;
-	scene.push_back(Skybox::sphereModel);
+	//scene.push_back(Skybox::sphereModel);
 
 	Light* light = new Light(DxHandler::devicePtr);
 	light->setPosition(XMFLOAT3(0, 0, -10));
@@ -491,8 +507,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	//--------------------------------------
-	
-	DxHandler::contextPtr->PSSetShaderResources(1, 1, &Skybox::srv); //Skybox
+
 
 	ID3D11RenderTargetView* arr[3] =
 	{
@@ -502,12 +517,14 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	};
 	directXHandler->contextPtr->OMSetRenderTargets(3, arr, DxHandler::depthStencil); //DEPTH
 
+	
+
 	DxHandler::firstPassPixel->useThis(DxHandler::contextPtr);
 	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
 
 	for (auto model : *scene) //Draw all meshes 
 	{
-		directXHandler->draw(model, primaryCamera, model->isSky);
+		directXHandler->draw(model, primaryCamera);
 	}
 
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
@@ -556,6 +573,26 @@ void Engine::renderSecondPass()
 	
 	float background_color[4] = { 0.f, 0.f, 0.f, 0.f };
 	//directXHandler->contextPtr->OMSetRenderTargets(1, &nullRTV, NULL); //Application screen
+
+	//Sky
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, DxHandler::depthStencil); //Application screen
+
+	PS_CONSTANT_LIGHT_BUFFER lightBuff;
+	lightBuff.camPos = primaryCamera.cameraPosition;
+	lightBuff.isSky = true;
+
+	DxHandler::contextPtr->UpdateSubresource(DxHandler::constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
+
+	DxHandler::skyboxPixel->useThis(DxHandler::contextPtr);
+	DxHandler::skyboxVertex->useThis(DxHandler::contextPtr);
+
+	DxHandler::contextPtr->PSSetShaderResources(3, 1, &Skybox::srv); //Skybox
+	//directXHandler->drawFullscreenQuad(primaryCamera);
+	//DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
+	directXHandler->draw(Skybox::sphereModel, primaryCamera);
+	//End sky
+
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL); //Application screen
 }
 
 void Engine::renderLightVolumes()
@@ -589,6 +626,8 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &nullSRV); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &nullSRV); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &nullSRV); //Position
+
+	
 }
 
 void Engine::renderParticles()

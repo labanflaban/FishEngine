@@ -113,6 +113,8 @@ public:
 	static VertexShader* transparencyVertex;
 
 	static PixelShader* particlePixel;
+	static PixelShader* skyboxPixel;
+	static VertexShader* skyboxVertex;
 
 	static GeometryShader* backfaceCullShader;
 
