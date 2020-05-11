@@ -167,7 +167,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		//std::cout << "Space" << std::endl;
 		movementVector += btVector3(0, 10.f, 0);
 
-		movementVector += btVector3(0, 20.f, 0);
+		movementVector += btVector3(0, 5.f, 0);
 
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
@@ -321,6 +321,13 @@ void Engine::engineLoop()
 	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	this->transparentSceneObjects.push_back(groundObject5);
+
+	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
+	groundObject8->readMeshFromFile("./Models/actualCube.obj");
+	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
+	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
+	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+	this->scene.push_back(groundObject8);
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
