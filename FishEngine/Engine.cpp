@@ -202,7 +202,7 @@ void Engine::engineLoop()
 	//--------------------------------------------------------------------------// 
 	Mesh* debugObject = new Mesh(DxHandler::devicePtr); //Body
 	debugObject->readMeshFromFile("./Models/character.obj");
-	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
+	debugObject->setTranslation(DirectX::XMFLOAT3(-5, 0, 4));
 	debugObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
 	this->player = new Player;
@@ -287,15 +287,24 @@ void Engine::engineLoop()
 	this->lights.push_back(light);
 
 	Enemy* enemy = new Enemy(DxHandler::devicePtr);
+	
 	this->enemies.push_back(enemy);
 	this->scene.push_back(enemy->model);
 	this->lights.push_back(enemy->light);
+	enemy->model->setTranslation(XMFLOAT3(30, 20, 0));
+	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2);
+	enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
+	enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
 
 	Enemy* enemy2 = new Enemy(DxHandler::devicePtr);
+	
 	this->enemies.push_back(enemy2);
 	this->scene.push_back(enemy2->model);
-	this->lights.push_back(enemy2->light);
-	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));
+	this->lights.push_back(enemy2->light); enemy2->model->setTranslation(XMFLOAT3(70, 20, 0));
+	enemy2->model->initRigidbody(dynamicsWorld, &collisionShapes, 2);
+	enemy2->model->rigidBody->setActivationState(ACTIVE_TAG);
+	enemy2->model->rigidBody->setGravity(btVector3(0, 0, 0));
+	
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
@@ -376,7 +385,6 @@ void Engine::engineLoop()
 		}
         		                				
 		YSE::System().update();
-		
 		
 
 		directXHandler->spriteBatch->Begin();
