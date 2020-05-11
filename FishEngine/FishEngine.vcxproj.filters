@@ -236,5 +236,11 @@
     <FxCompile Include="AnimatedVertexShader.hlsl">
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
+    <FxCompile Include="SkyboxPixel.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="SkyboxVertex.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

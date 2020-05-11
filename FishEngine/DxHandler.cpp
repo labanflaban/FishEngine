@@ -21,6 +21,8 @@ PixelShader* DxHandler::particlePixel = new PixelShader();
 
 PixelShader* DxHandler::transparencyPixel = new PixelShader();
 VertexShader* DxHandler::transparencyVertex = new VertexShader();
+PixelShader* DxHandler::skyboxPixel = new PixelShader();
+VertexShader* DxHandler::skyboxVertex = new VertexShader();
 
 VertexShader* DxHandler::animVertex = new VertexShader; //´handles morph anims
 
@@ -138,6 +140,7 @@ void DxHandler::setupDepthBuffer()
 	devicePtr->CreateDepthStencilView(DxHandler::depthBuffer, NULL, &depthStencil);
 
 	D3D11_DEPTH_STENCIL_DESC depthStateDesc = { 0 };
+	depthStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	devicePtr->CreateDepthStencilState(&depthStateDesc, &depthStencilState);
 	contextPtr->OMSetDepthStencilState(depthStencilState, 0);
 }
@@ -161,10 +164,10 @@ void DxHandler::drawFullscreenQuad(Camera& drawFromCamera)
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
 	UINT offset = 0u;
 
-	PS_CONSTANT_LIGHT_BUFFER lightBuff;
-	lightBuff.camPos = drawFromCamera.cameraPosition;
+	//PS_CONSTANT_LIGHT_BUFFER lightBuff;
+	//lightBuff.camPos = drawFromCamera.cameraPosition;
 
-	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
+	//DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 
 	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &fullscreenQuad->vertexBuffer,
 		&stride, &offset);
