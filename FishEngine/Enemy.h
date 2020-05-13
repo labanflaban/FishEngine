@@ -16,6 +16,10 @@ public:
 	~Enemy();
 
 	int health = 100;
+	
+	float damageDebounce = 5.0f;
+	float maxDebounce = 5.0f;
+
 	float xVel, yVel = 0.f;
 
 	virtual void update(Player* plr);

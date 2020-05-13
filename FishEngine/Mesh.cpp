@@ -29,6 +29,10 @@ void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObject
 	btRigidBody::btRigidBodyConstructionInfo rbInfo2(mass, rigidBodyState, rigidBodyCollider, btVector3(0, 0, 0)); //First param is 0, ie its static
 	btRigidBody* rigidBodyBody = new btRigidBody(rbInfo2);
 	this->rigidBody = rigidBodyBody;
+
+
+	//this->rigidBody->setUserPointer(collStruct);
+
 	dynamicsWorld->addRigidBody(rigidBodyBody);
 }
 

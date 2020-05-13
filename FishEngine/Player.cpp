@@ -32,10 +32,11 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 	transform.setOrigin(btVector3(fishingRodPos.x, fishingRodPos.y, fishingRodPos.z));
 	transform.setOrigin(btVector3(ropePos.x, ropePos.y, ropePos.z));
 
-	rope->model->rigidBody->setWorldTransform(transform);
-
 	tool->model->setTranslation(fishingRodPos);
 	tool->model->rigidBody->setWorldTransform(transform);
+
+	//transform = hook->model->rigidBody->getWorldTransform();
+	//std::cout << transform.getOrigin().x() << " " << transform.getOrigin().y() << " " << transform.getOrigin().z() << " " << std::endl;
 }
 
 void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTime)
@@ -65,7 +66,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 
 		}
 	}
-	if (hook->ropeZipBack >= 10 && updateHook == false)
+	if (hook->ropeZipBack >= 3 && updateHook == false)
 	{
 		hook->zipBackRope(rod, hook, rope);
 		if (rod->model->getTranslation().y + 10 - hook->model->getTranslation().y < 0.001f && rod->model->getTranslation().x + 3- hook->model->getTranslation().x < 0.001f)
@@ -74,10 +75,6 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 			updateHook = true;
 		}
 	}
-	/*if (hook->ropeZipBack >= 10)
-	{
-		hook->zipBackRope(rod, hook, rope);
-	}*/
 
 	if (currentRotation.z <= -1)
 	{

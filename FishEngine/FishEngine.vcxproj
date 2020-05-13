@@ -170,6 +170,9 @@
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="BaseShader.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollisionStruct.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="DeferredRenderBuffer.h" />
     <ClInclude Include="DxHandler.h" />
     <ClInclude Include="Enemy.h" />

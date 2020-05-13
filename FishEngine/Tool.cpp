@@ -16,8 +16,8 @@ void Tool::zipBackRope(Tool* rod, Tool* hook, Tool* rope)
 
 	//std::cout << dX << " " << dY << std::endl;
 
-	xVel = sin(angle) * 5.f;
-	yVel = cos(angle) * 5.f;
+	xVel = sin(angle) * 10.f;
+	yVel = cos(angle) * 10.f;
 
 	btVector3 velocityVector(-xVel, -yVel, 0);
 
@@ -65,6 +65,7 @@ void Tool::updateRope(Tool* rod, Tool* hook, Tool* rope)
 
 void Tool::throwHook(Tool* rod, Tool* hook, Tool* rope)
 {
+	hook->isActive = true;
 	float deltaX = inputhandler.getMousePosX() - WIDTH/2;
 
 	float deltaY = inputhandler.getMousePosY() - HEIGHT/2;
@@ -81,6 +82,5 @@ void Tool::throwHook(Tool* rod, Tool* hook, Tool* rope)
 	hook->model->rigidBody->setActivationState(ACTIVE_TAG);
 	hook->model->rigidBody->setLinearVelocity(velocityVector);
 	
-	
-	
+
 }

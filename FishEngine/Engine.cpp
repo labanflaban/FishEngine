@@ -109,6 +109,7 @@ void Engine::initialSetup()
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 {
 	//game logic here thanks
+	
 	updatePlayerMovement(deltaTime);
 	player->updatePlayerTools(fishingRod,hook,rope, deltaTime);
 	if (fishingRod->pullback < 10.f)
@@ -117,6 +118,11 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 	if (hook->ableToThrowHook < 10.f)
 		hook->ableToThrowHook += 0.1f;
 	
+	for(int i = 0; i < enemies.size(); i++)
+	{
+		if (enemies.at(i)->damageDebounce < enemies.at(i)->maxDebounce) //Lägg 3 i enemy i en variabel
+			enemies.at(i)->damageDebounce += 0.1;
+	}
 	
 	if (hook->ropeZipBack < 10.f)
 		hook->ropeZipBack += 0.1f;
@@ -173,10 +179,10 @@ void Engine::updatePlayerMovement(double deltaTime)
 		player->jumpSound.play();
 
 		//for (Particle* p : particles)
+		std::cout << "JUMP YEEET" << std::endl;
 
 		for(int i = 0; i < particles.size(); i++)
 		{
-			std::cout << "Looped over particle?" << std::endl;
 			std::random_device randomSeed;
 			std::mt19937 numberGenerator(randomSeed());
 			std::uniform_real_distribution<> randomNum(-1.f, 1.f); //Between -1 - 1
@@ -186,9 +192,6 @@ void Engine::updatePlayerMovement(double deltaTime)
 			float rNum = randomNum(numberGenerator);
 			float rNumY = randomNumPlus(numberGenerator);
 			particles.at(i)->velocity = DirectX::XMFLOAT3(rNum * 0.5, 0.5*rNumY, 0);
-
-			std::cout << "Placed at plr" << std::endl;
-			std::cout << particles.at(i)->getTranslation().x << " " << particles.at(i)->getTranslation().y << " " << particles.at(i)->getTranslation().z << " " << std::endl;
 		}
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
@@ -221,8 +224,9 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
 	player->playerLight->setPosition(XMFLOAT3(playerPos.x, playerPos.y + 25, playerPos.z));
+
 	
-	//::cout << movementVector.x() << " " << movementVector.z() << " " << movementVector.z() << std::endl;
+	
 }
 
 	
@@ -232,6 +236,123 @@ void Engine::updateParticles()
 	for (Particle* p : particles)
 	{
 		p->updateParticle();
+	}
+}
+
+collisionStruct* getCollStruct(void* ptr)
+{
+	if (ptr != nullptr)
+		return static_cast<collisionStruct*>(ptr);
+}
+
+bool isValidStruct(void* ptr)
+{
+	bool retVal = false;
+	if (ptr)
+	{
+		collisionStruct* collStruct = static_cast<collisionStruct*>(ptr);
+		if (collStruct != nullptr)
+		{
+			if (collStruct->type != collisionEnums::Ignored)
+				return true;
+		}
+	}
+}
+
+void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) 
+{
+	int manifoldCount = myWorld->getDispatcher()->getNumManifolds(); //Manifolds cache all contact points between objects
+	//printf("numManifolds = %d\n", manifoldCount);
+
+	for (int i = 0; i < manifoldCount; i++)
+	{
+		btPersistentManifold* manif = myWorld->getDispatcher()->getManifoldByIndexInternal(i);
+		btCollisionObject* colliderA = const_cast<btCollisionObject*>(manif->getBody0());
+		btCollisionObject* colliderB = const_cast<btCollisionObject*>(manif->getBody1());
+		//btCollisionObject* colliderA = static_cast<btCollisionObject*>(manif->getBody0());
+		//btCollisionObject* colliderB = static_cast<btCollisionObject*>(manif->getBody1());
+
+		collisionStruct* collision = nullptr;
+		collisionStruct* collision1 = nullptr;
+
+		if (isValidStruct(colliderA->getUserPointer()) && isValidStruct(colliderB->getUserPointer())) //If both have an enum that is not ignore, ie is a rod, hook or enemy
+		{
+			collision = getCollStruct(manif->getBody0()->getUserPointer());
+			collision1 = getCollStruct(manif->getBody1()->getUserPointer());
+
+			//collision->type = collisionEnums::Hook;
+
+			if (((collision->type == collisionEnums::Hook) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Hook) && (collision->type == collisionEnums::Enemy)))
+			{
+				//Hämta hooken här, kolla om den är active, kolla enum på båda collision och se vilken som har enum hook och sedan hämta där
+				Tool* hook = nullptr;
+				if(collision->type == collisionEnums::Hook)
+				{
+					hook = collision->hook;
+				}
+				else
+				{
+					hook = collision1->hook;
+				}
+
+				Enemy* myEnemy = nullptr; //Sätt denna i if-checken
+				if(collision->type == collisionEnums::Enemy)
+				{
+					myEnemy = collision->enemy;
+				}
+				else
+				{
+					myEnemy = collision1->enemy;
+				}
+
+				
+				if(myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				{
+					myEnemy->health -= 10;
+					myEnemy->damageDebounce = 0;
+					std::cout << "Enemy hit" << std::endl;
+				}
+				std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
+			
+				
+
+				//std::cout << "Hook hit enemy" << std::endl;
+			}
+
+			if (((collision->type == collisionEnums::Rod) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Rod) && (collision->type == collisionEnums::Enemy)))
+			{
+				Tool* rod = nullptr;
+				if(collision->type == collisionEnums::Rod)
+				{
+					rod = collision->rod;
+				}
+				else
+				{
+					rod = collision1->rod;
+				}
+
+				Enemy* myEnemy = nullptr;
+				if(collision->type == collisionEnums::Enemy)
+				{
+					myEnemy = collision->enemy;
+				}
+				else
+				{
+					myEnemy = collision1->enemy;
+				}
+
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				{
+					myEnemy->health -= 30;
+					myEnemy->damageDebounce = 0;
+					std::cout << "Enemy hit" << std::endl;
+				}
+				std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
+			}
+		}
+
+	
+			
 	}
 }
 
@@ -245,6 +366,7 @@ void Engine::engineLoop()
 	btDiscreteDynamicsWorld* dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
+	dynamicsWorld->setInternalTickCallback(myTickCallback);
 	dynamicsWorld->setGravity(btVector3(0, -1.5, 0));
 	//--------------------------------------------------------------------------------------------------- physics 
 
@@ -285,7 +407,10 @@ void Engine::engineLoop()
 	hookObject->setRotation(DirectX::XMFLOAT3(0, 0, 0.5));
 	this->hook = new Tool;
 	this->hook->model = hookObject;
+	collisionStruct* hookCollStruct = new collisionStruct(hook, collisionEnums::Hook);
+	hookCollStruct->hook = hook;
 	hookObject->initRigidbody(dynamicsWorld, &collisionShapes, 5);
+	hookObject->rigidBody->setUserPointer(hookCollStruct);
 	this->scene.push_back(hookObject);
 
 	Mesh* rope = new Mesh(DxHandler::devicePtr); //Rope
@@ -295,14 +420,27 @@ void Engine::engineLoop()
 	this->rope->model = rope;
 	rope->initRigidbody(dynamicsWorld, &collisionShapes, 5);
 	this->scene.push_back(rope);
-
+	
+	Enemy* enemy = new Enemy(DxHandler::devicePtr);
+	this->enemies.push_back(enemy);
+	this->scene.push_back(enemy->model);
+	this->lights.push_back(enemy->light);
+	enemy->model->setTranslation(XMFLOAT3(30, 20, 0));
+	collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
+	
+	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2);
+	enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
+	enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
+	enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
 
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
 	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	this->fishingRod = new Tool;
 	this->fishingRod->model = fishingRodObject;
+	collisionStruct* fishingRodCollStruct = new collisionStruct(fishingRod, collisionEnums::Rod);
 	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1);
+	fishingRodObject->rigidBody->setUserPointer(fishingRodCollStruct);
 	this->scene.push_back(fishingRodObject);
 	
 
@@ -357,6 +495,7 @@ void Engine::engineLoop()
 	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
 	animMesh->appendStructuredBuffer(arr, 2);
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
+	animMesh->setTranslation(XMFLOAT3(-50, 10, 0));
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
 	animMesh->targetPoseIndex = 1;
@@ -665,4 +804,5 @@ void Engine::renderParticles()
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }
+
 

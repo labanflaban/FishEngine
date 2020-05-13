@@ -23,9 +23,10 @@ public:
 
 	float pullback = 30.f;
 	float ableToThrowHook = 10.f;
-	float ropeZipBack = 10.f;
+	float ropeZipBack = 3.f;
 	btTransform transform;
 
+	bool isActive = false;
 	float xVel, yVel = 0.f;
 
 	void zipBackRope(Tool* rod, Tool* hook, Tool* rope);

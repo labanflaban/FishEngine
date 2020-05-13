@@ -4,11 +4,8 @@
 #include "Character.h"
 #include "assert.h"
 #include "Tool.h"
-
 #include "Light.h"
-
 #include <Keyboard.h>
-
 
 
 class Player : public Character

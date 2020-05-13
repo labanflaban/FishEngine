@@ -24,6 +24,7 @@
 #include <random>
 #include "ObjParser.h"
 #include "Level.h"
+#include "CollisionStruct.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -71,6 +72,7 @@ public:
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 
 	//Mesh* playerMesh = nullptr;
+	
 	Player* player = nullptr;
 	Tool* fishingRod = nullptr;
 	Tool* hook = nullptr;
