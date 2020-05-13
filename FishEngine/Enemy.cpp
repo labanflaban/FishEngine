@@ -12,8 +12,8 @@ Enemy::Enemy(ID3D11Device* device)
  
 Enemy::~Enemy()
 {
-	delete this->model;
-	delete this->light;
+	//delete this->model;
+	//delete this->light;
 }
 
 void Enemy::update(Player* plr)

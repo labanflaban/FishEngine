@@ -25,6 +25,7 @@
 #include "ObjParser.h"
 #include "Level.h"
 #include "CollisionStruct.h"
+#include "SceneManager.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -71,7 +72,7 @@ public:
 	ID3D11RenderTargetView* nullRTV = nullptr;
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 
-	//Mesh* playerMesh = nullptr;
+	SceneManager sceneManager;
 	
 	Player* player = nullptr;
 	Tool* fishingRod = nullptr;
@@ -84,7 +85,6 @@ public:
 	void renderLightVolumes();
 	void renderParticles();
 
-	
 	std::vector<Mesh*> scene;
 	std::vector<AnimatedMesh*> animatedMeshes;
 	std::vector<Light*> lights;

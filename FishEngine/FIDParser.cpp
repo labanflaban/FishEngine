@@ -13,7 +13,7 @@ std::vector<Vertex> FIDParser::readFromFID(std::string fileName)
 		tempVertex.z = tempMesh->getVertexPoints()[i].positon[2];
 
 		tempVertex.u = tempMesh->getVertexPoints()[i].UV[0];
-		tempVertex.v = tempMesh->getVertexPoints()[i].UV[1];
+		tempVertex.v = 1-tempMesh->getVertexPoints()[i].UV[1];
 
 		tempVertex.nx = tempMesh->getVertexPoints()[i].normal[0];
 		tempVertex.ny = tempMesh->getVertexPoints()[i].normal[1];
@@ -25,6 +25,7 @@ std::vector<Vertex> FIDParser::readFromFID(std::string fileName)
 
 		vertexList.push_back(tempVertex);
 	}
+	assert(vertexList.size() != 0);
 
 	return vertexList;
 }

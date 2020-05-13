@@ -22,5 +22,7 @@ public:
 
 	float xVel, yVel = 0.f;
 
+	int vectorIndex = 0;
+
 	virtual void update(Player* plr);
 };
