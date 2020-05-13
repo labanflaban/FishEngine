@@ -26,6 +26,9 @@ VertexShader* DxHandler::skyboxVertex = new VertexShader();
 
 VertexShader* DxHandler::animVertex = new VertexShader; //´handles morph anims
 
+VertexShader* DxHandler::GuiShaderVertex = new VertexShader();
+PixelShader* DxHandler::GuiShaderPixel = new PixelShader();
+
 //VertexShader* DxHandler::skyboxVertexShader = new VertexShader();
 //PixelShader* DxHandler::skyboxPixelShader = new PixelShader();
 
@@ -56,6 +59,8 @@ ID3D11BlendState* DxHandler::alphaBlendState = nullptr;
 ID3D11SamplerState* DxHandler::standardSampler = nullptr;
 
 ID3D11Buffer* DxHandler::GSConstBuff = nullptr;
+
+ID3D11Buffer* DxHandler::guiBuffer = nullptr;
 
 void DxHandler::initalizeDeviceContextAndSwapChain()
 {
@@ -190,6 +195,7 @@ void DxHandler::setDefaultState()
 	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
 	
 	contextPtr->GSSetConstantBuffers(0, 1, &GSConstBuff);
+	contextPtr->PSSetConstantBuffers(1, 1, &guiBuffer);
 
 	
 	DxHandler::contextPtr->PSSetSamplers(0, 1, &standardSampler);
@@ -322,6 +328,34 @@ ID3D11Buffer*& DxHandler::createGSConstBuffer()
 	GSConstBuff = constantGeometryBuffer;
 
 	return constantGeometryBuffer;
+}
+
+ID3D11Buffer* DxHandler::createPSGuiBuffer(PS_CONSTANT_GUI_BUFFER& matrix)
+{
+	D3D11_BUFFER_DESC constGui;
+	constGui.ByteWidth = sizeof(PS_CONSTANT_LIGHT_BUFFER);
+	constGui.Usage = D3D11_USAGE_DEFAULT;
+	constGui.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	constGui.CPUAccessFlags = 0;
+	constGui.MiscFlags = 0;
+	constGui.StructureByteStride = 0;
+
+	D3D11_SUBRESOURCE_DATA InitDataPixel;
+	InitDataPixel.pSysMem = &matrix;
+	InitDataPixel.SysMemPitch = 0;
+	InitDataPixel.SysMemSlicePitch = 0;
+	
+	HRESULT buffPSucc = devicePtr->CreateBuffer(&constGui, &InitDataPixel,
+		&guiBuffer);
+	assert(SUCCEEDED(buffPSucc));
+
+	contextPtr->UpdateSubresource(guiBuffer, 0, NULL, &matrix, 0, 0);
+	contextPtr->PSSetConstantBuffers(1, 1, &guiBuffer);
+
+	//loadedPSBuffers.push_back(constantPixelBuffer);
+	this->guiBuffer = guiBuffer;
+
+	return guiBuffer;
 }
 
 void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* light)
