@@ -48,14 +48,14 @@ PS_OUTPUT main(PS_INPUT input) : SV_Target
 	PS_OUTPUT output;
 	output.vPosition = input.positionInWorldSpace;
 
-	//if (hasTexture == true)
-	//{
-		//output.vColour = colorMap.Sample(mysampler, input.vUV.xy);
-	//}
-	//else
-	//{
+	if (hasTexture == true)
+	{
+		output.vColour = colorMap.Sample(mysampler, input.vUV.xy);
+	}
+	else
+	{
 		output.vColour = float4(0.8, 0.8, 0.8, 1);
-	//}
+	}
 
 	if (isSky)
 	{

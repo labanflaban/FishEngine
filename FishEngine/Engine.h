@@ -22,6 +22,7 @@
 #include "Enemy.h"
 #include "Particle.h"
 #include <random>
+#include "GUIhandler.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -46,7 +47,7 @@ private:
 
 	Camera primaryCamera;
 
-
+	GUIhandler* guiHandler;
 	
 public:
 	Engine();
@@ -62,6 +63,8 @@ public:
 	void createInputHandler();
 	void engineLoop();
 
+	void createGUIHandler();
+
 	std::unique_ptr<DirectX::CommonStates> states;
 
 	ID3D11RenderTargetView* nullRTV = nullptr;
@@ -74,6 +77,7 @@ public:
 
 	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();
+	void renderGUI();
 	void renderLightVolumes();
 	void renderParticles();
 

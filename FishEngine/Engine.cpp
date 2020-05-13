@@ -30,6 +30,7 @@ void Engine::initialSetup()
 
 	this->createWindow();
 	createDirectX();
+
 	DxHandler::firstPassPixel->compileShader(L"./FirstPassPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::firstPassVertex->compileShader(L"./FirstPassVertex.hlsl", DxHandler::devicePtr);
 
@@ -45,6 +46,9 @@ void Engine::initialSetup()
 
 	DxHandler::particlePixel->compileShader(L"./ForwardParticlePixel.hlsl", DxHandler::devicePtr);
 
+	DxHandler::GuiShaderVertex->compileShader(L"./GuiShaderVertex.hlsl", DxHandler::devicePtr);
+	DxHandler::GuiShaderPixel->compileShader(L"./GuiShaderPixel.hlsl", DxHandler::devicePtr);
+
 	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
 	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
 	deferredBufferHandler.init(WIDTH, HEIGHT);
@@ -59,14 +63,17 @@ void Engine::initialSetup()
 	DxHandler::contextPtr->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DxHandler::contextPtr->IASetInputLayout((ID3D11InputLayout*)DxHandler::input_layout_ptr);
 
+	createGUIHandler();
+
 	directXHandler->generateFullScreenQuad();
 
 	PS_CONSTANT_LIGHT_BUFFER ps_buff;
 	VS_CONSTANT_MATRIX_BUFFER vs_buff;
+	PS_CONSTANT_GUI_BUFFER ps_gui_buff;
 	directXHandler->createPSConstBuffer(ps_buff);
 	directXHandler->createVSConstBuffer(vs_buff);
 	directXHandler->createGSConstBuffer();
-
+	directXHandler->createPSGuiBuffer(ps_gui_buff);
 	directXHandler->initAdditiveBlendState();
 	
 	this->primaryCamera = Camera(WIDTH, HEIGHT);
@@ -336,6 +343,17 @@ void Engine::engineLoop()
 	this->scene.push_back(enemy2->model);
 	this->lights.push_back(enemy2->light);
 	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));
+
+	Mesh* bruh = guiHandler->generateGUIElement();
+	bruh->setScaling(XMFLOAT3(0.3, 0.1, 0));
+	bruh->setTranslation(XMFLOAT3(-0.69f, 0.9f, 0));
+	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
+
+	bruh = guiHandler->generateGUIElement();
+	bruh->setScaling(XMFLOAT3(0.1, 0.1, 0));
+	bruh->setTranslation(XMFLOAT3(0, 0.9f, 0));
+	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
+
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
@@ -343,8 +361,8 @@ void Engine::engineLoop()
 	MSG msg;
 	bool shutdown = false;
 
-	
-	
+
+
 	while (!shutdown)
 	{
 		directXHandler->contextPtr->RSSetViewports(1, &port);
@@ -355,6 +373,7 @@ void Engine::engineLoop()
 		renderSecondPass();
 		renderLightVolumes();
 		renderParticles();
+		renderGUI();
 
 		//upp upp och ivääääg
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -486,6 +505,11 @@ void Engine::engineLoop()
 	*/
 }
 
+void Engine::createGUIHandler()
+{
+	this->guiHandler = new GUIhandler(this->directXHandler);
+}
+
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
 	DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
@@ -516,6 +540,9 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	{
 		directXHandler->draw(model, primaryCamera, model->isSky);
 	}
+
+	//guiHandler->drawGuiElements(primaryCamera);
+
 
 	//Set to null
 	ID3D11RenderTargetView* arrNull[1] =
@@ -553,6 +580,19 @@ void Engine::renderSecondPass()
 	
 	float background_color[4] = { 0.f, 0.f, 0.f, 0.f };
 	//directXHandler->contextPtr->OMSetRenderTargets(1, &nullRTV, NULL); //Application screen
+}
+
+void Engine::renderGUI()
+{
+	float blendingFactor[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+
+	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
+	DxHandler::GuiShaderPixel->useThis(DxHandler::contextPtr);
+	DxHandler::GuiShaderVertex->useThis(DxHandler::contextPtr);
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
+	DxHandler::contextPtr->PSSetShaderResources(0, 1, &guiHandler->GuiElements.at(0)->textureView);
+	guiHandler->drawGuiElements(this->primaryCamera);
+	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }
 
 void Engine::renderLightVolumes()

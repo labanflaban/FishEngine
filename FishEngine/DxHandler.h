@@ -56,6 +56,11 @@ struct GS_CONSTANT_MATRIX_BUFFER
 	DirectX::XMVECTOR camPos;
 };
 
+struct PS_CONSTANT_GUI_BUFFER
+{
+	BOOL selected = false;
+};
+
 struct PS_CONSTANT_LIGHT_BUFFER
 {
 	DirectX::XMVECTOR lightPos = DirectX::XMVectorSet(0, 50, -60, 0);
@@ -105,6 +110,9 @@ public:
 
 	static GeometryShader* backfaceCullShader;
 
+	static VertexShader* GuiShaderVertex;
+	static PixelShader* GuiShaderPixel;
+
 	//static PixelShader* skyboxPixelShader;
 	//static VertexShader* skyboxVertexShader;
 
@@ -131,6 +139,7 @@ public:
 	static ID3D11Buffer* GSConstBuff;
 	static ID3D11RasterizerState* rasterizerState;
 
+	static ID3D11Buffer* guiBuffer;
 
 	DxHandler(HWND hWnd);
 	void configureSwapChain(HWND& hWnd);
@@ -148,6 +157,8 @@ public:
 	ID3D11Buffer* createPSConstBuffer(PS_CONSTANT_LIGHT_BUFFER& matrix);
 
 	ID3D11Buffer*& createGSConstBuffer();
+
+	ID3D11Buffer* createPSGuiBuffer(PS_CONSTANT_GUI_BUFFER& matrix);
 
 	void draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky = false, Light* light = nullptr);
 
