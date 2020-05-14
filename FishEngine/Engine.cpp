@@ -491,13 +491,13 @@ void Engine::engineLoop()
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	sceneManager.addTransparentObject(groundObject6);
 
-	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
+	/*Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject8->readMeshFromFile("./Models/actualCube.obj");
 	groundObject8->readNormalMapFromFile(L"./Textures/scales.jpg");
 	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
 	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
 	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->sceneManager.addMesh(groundObject8);
+	this->sceneManager.addMesh(groundObject8);*/
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
