@@ -16,7 +16,7 @@ private:
 	bool returnRope = false;
 	int WIDTH = 1920;
 	int HEIGHT = 1280;
-	InputHandler inputhandler;
+	InputHandler* inputhandler = nullptr;
 public:
 	DirectX::XMFLOAT3 fishingRodPos = DirectX::XMFLOAT3(0,0,0);
 	DirectX::XMFLOAT3 hookPos = DirectX::XMFLOAT3(0, 0, 0);

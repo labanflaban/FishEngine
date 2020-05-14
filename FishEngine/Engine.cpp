@@ -498,7 +498,7 @@ void Engine::engineLoop()
 
 
 
-	Enemy* enemy = new Enemy(DxHandler::devicePtr);
+	/*Enemy* enemy = new Enemy(DxHandler::devicePtr);
 	this->enemies.push_back(enemy);
 	this->scene.push_back(enemy->model);
 	this->lights.push_back(enemy->light);
@@ -507,7 +507,7 @@ void Engine::engineLoop()
 	this->enemies.push_back(enemy2);
 	this->scene.push_back(enemy2->model);
 	this->lights.push_back(enemy2->light);
-	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));
+	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));*/
 
 	Mesh* bruh = guiHandler->generateGUIElement();
 	bruh->setScaling(XMFLOAT3(0.3, 0.1, 0));
@@ -879,8 +879,3 @@ void Engine::renderParticles()
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 
 }
-
-
-
-}
-
