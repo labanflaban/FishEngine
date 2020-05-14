@@ -45,12 +45,11 @@ bool GUIhandler::isSelected(Mesh* guiElement)
 {
 	float pixelPosX = ((guiElement->getTranslation().x + 1) / 2) * DxHandler::WIDTH;
 	float pixelPosY = ((guiElement->getTranslation().y + 1) / 2) * DxHandler::HEIGHT;
-	float sizeX = guiElement->getScaling().x;
-	float sizeY = guiElement->getScaling().y;
+	float sizeX = guiElement->getScaling().x * DxHandler::WIDTH;
+	float sizeY = guiElement->getScaling().y * DxHandler::HEIGHT;
 
-	std::cout << "MOUSE POSITION : " << inputHandler->getMousePosX() << ", " << inputHandler->getMousePosY() << std::endl;
-
-	if(inputHandler->getMousePosX() < DxHandler::WIDTH/2 && inputHandler->getMousePosY() < DxHandler::HEIGHT/2)
+	if((inputHandler->getMousePosX() < pixelPosX + sizeX / 2 && inputHandler->getMousePosX() > pixelPosX - sizeX / 2) &&
+	(DxHandler::HEIGHT-(inputHandler->getMousePosY()) < pixelPosY + sizeY / 2 && DxHandler::HEIGHT-(inputHandler->getMousePosY()) > pixelPosY - sizeY / 2))
 	{
 		return true;
 	}

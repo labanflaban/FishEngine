@@ -533,6 +533,10 @@ void Engine::engineLoop()
 	bruh->setTranslation(XMFLOAT3(0, 0.9f, 0));
 	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
 
+	bruh = guiHandler->generateGUIElement();
+	bruh->setScaling(XMFLOAT3(0.1, 0.1, 0));
+	bruh->setTranslation(XMFLOAT3(0.3f, 0.9f, 0));
+	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
 
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
