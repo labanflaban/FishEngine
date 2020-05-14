@@ -217,6 +217,8 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
+	if (!movementVector.isZero())
+		player->model->stepAnim(deltaTime);
 
 	XMFLOAT3 playerPos = player->model->getTranslation();
 	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
@@ -352,7 +354,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				if (myEnemy->health < 0)
 					std::cout << "Should be dead" << std::endl;
 
-				std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
+				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
 		}
 
@@ -387,16 +389,23 @@ void Engine::engineLoop()
 	port.MaxDepth = 1.0f; //Furthest possible
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
-	Mesh* debugObject = new Mesh(DxHandler::devicePtr); //Body
+	AnimatedMesh* debugObject = new AnimatedMesh(DxHandler::devicePtr); //Body
 	//debugObject->readMeshFromFile("./Models/character.obj");
-	debugObject->readMeshFromFID("./Models/SUSAN.FID");
+	std::vector<Vertex> vertVectorPlr = FIDParser::readFromFID("./Models/Fish_Right.FID");
+	std::vector<Vertex> vertVectorPlr1 = FIDParser::readFromFID("./Models/Fish_Left.FID");
+	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1 };
+	debugObject->appendStructuredBuffer(plrArr, 2);
+	debugObject->createStructuredBuffer(DxHandler::devicePtr);
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	debugObject->setRotation(DirectX::XMFLOAT3(-3.14 / 2, 3.14 / 2,0));
-	this->player = new Player;
+	debugObject->setScaling(DirectX::XMFLOAT3(4, 4, 4));
+	debugObject->setRotation(DirectX::XMFLOAT3(0,  3.14, 3.14/2));
+	debugObject->manualUpdate = true;
+	debugObject->readTextureFromFile(L"./Models/FISHCOLOR.png");
+	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
-	this->sceneManager.addMesh(debugObject);
+	this->sceneManager.addAnimatedMesh(debugObject);
+	debugObject->targetPoseIndex = 1;
 
 	player->playerLight = new Light(DxHandler::devicePtr);
 	player->playerLight->lightColor = XMVectorSet(1.f, 249 / 255.f, 10 / 255.f, 0.f);
@@ -411,7 +420,7 @@ void Engine::engineLoop()
 	hookObject->readMeshFromFile("./Models/actualCube.obj");
 	hookObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	hookObject->setRotation(DirectX::XMFLOAT3(0, 0, 0.5));
-	this->hook = new Tool;
+	this->hook = new Tool(&inputHandler);
 	this->hook->model = hookObject;
 	collisionStruct* hookCollStruct = new collisionStruct(hook, collisionEnums::Hook);
 	hookCollStruct->hook = hook;
@@ -422,7 +431,7 @@ void Engine::engineLoop()
 	Mesh* rope = new Mesh(DxHandler::devicePtr); //Rope
 	rope->readMeshFromFile("./Models/actualCube.obj");
 	rope->setRotation(DirectX::XMFLOAT3(0, 0, 8));
-	this->rope = new Tool;
+	this->rope = new Tool(&inputHandler);
 	this->rope->model = rope;
 	rope->initRigidbody(dynamicsWorld, &collisionShapes, 5);
 	this->sceneManager.addMesh(rope);
@@ -445,7 +454,7 @@ void Engine::engineLoop()
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
 	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
-	this->fishingRod = new Tool;
+	this->fishingRod = new Tool(&inputHandler);
 	this->fishingRod->model = fishingRodObject;
 	collisionStruct* fishingRodCollStruct = new collisionStruct(fishingRod, collisionEnums::Rod);
 	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1);
@@ -515,7 +524,8 @@ void Engine::engineLoop()
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 0, 3.14 / 2));
 	animMesh->targetPoseIndex = 1;
-	animatedMeshes.push_back(animMesh);
+	//animatedMeshes.push_back(animMesh);
+	sceneManager.addAnimatedMesh(animMesh);
 	
 	while (!shutdown)
 	{
@@ -578,7 +588,7 @@ void Engine::engineLoop()
 
 		//XMFLOAT3 debugpos = DirectX::XMFLOAT3(sceneManager.sceneMeshes.at(0)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.sceneMeshes.at(0)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.sceneMeshes.at(0)->rigidBody->getWorldTransform().getOrigin().z());
 		//std::cout << debugpos.x << " " << debugpos.y << " " << debugpos.z << " " << std::endl;
-		for (int i = 0; i < sceneManager.sceneMeshes.size(); i++)
+		for (int i = 0; i < sceneManager.sceneMeshes.size(); i++) //Update according to rigid body
 		{
 			bool check = sceneManager.sceneMeshes.at(i)->rigidBody != nullptr;
 
@@ -587,6 +597,18 @@ void Engine::engineLoop()
 			{
 				sceneManager.sceneMeshes.at(i)->setTranslation(DirectX::XMFLOAT3(sceneManager.sceneMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.sceneMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.sceneMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().z()));
 				XMFLOAT3 pos = DirectX::XMFLOAT3(sceneManager.sceneMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.sceneMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.sceneMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().z());
+			}
+		}
+
+		for (int i = 0; i < sceneManager.animatedMeshes.size(); i++) //Update according to rigidbody
+		{
+			bool check = sceneManager.animatedMeshes.at(i)->rigidBody != nullptr;
+
+			btTransform transform;
+			if (sceneManager.animatedMeshes.at(i)->rigidBody != nullptr && sceneManager.animatedMeshes.at(i)->rigidBody->getMotionState())
+			{
+				sceneManager.animatedMeshes.at(i)->setTranslation(DirectX::XMFLOAT3(sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().z()));
+				XMFLOAT3 pos = DirectX::XMFLOAT3(sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().z());
 			}
 		}
         		                				
@@ -714,12 +736,16 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	}
 
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	auto rot = animatedMeshes.at(0)->getRotation();
+	auto rot = sceneManager.animatedMeshes.at(0)->getRotation();
 	rot = XMFLOAT3(rot.x + 0.01f, rot.y + 0.01, 0);
 	//animatedMeshes.at(0)->setRotation(rot);
 	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
-	for (auto animMesh : animatedMeshes) //Draw all meshes 
+	for (auto animMesh : sceneManager.animatedMeshes) //Draw all meshes 
 	{
+		if (!animMesh->manualUpdate)
+		{
+			animMesh->stepAnim(1/60);
+		}
 		directXHandler->draw(animMesh, primaryCamera);
 	}
 

@@ -1,10 +1,11 @@
 #include "Tool.h"
 
-Tool::Tool()
+Tool::Tool(InputHandler* handler)
 {
 	slapSound.create("./Sounds/slap.wav");
 	slapSound.setVolume(0.01);
 	assert(slapSound.isValid());
+	this->inputhandler = handler;
 }
 
 void Tool::zipBackRope(Tool* rod, Tool* hook, Tool* rope)
@@ -66,9 +67,9 @@ void Tool::updateRope(Tool* rod, Tool* hook, Tool* rope)
 void Tool::throwHook(Tool* rod, Tool* hook, Tool* rope)
 {
 	hook->isActive = true;
-	float deltaX = inputhandler.getMousePosX() - WIDTH/2;
+	float deltaX = inputhandler->getMousePosX() - WIDTH/2;
 
-	float deltaY = inputhandler.getMousePosY() - HEIGHT/2;
+	float deltaY = inputhandler->getMousePosY() - HEIGHT/2;
 
 	float angle = atan2(deltaX, deltaY);
 	

@@ -1,10 +1,11 @@
 #include "Player.h"
 using namespace DirectX;
 
-Player::Player()
+Player::Player(InputHandler* handler)
 {
 	jumpSound.create("./Sounds/Ah.wav");
 	jumpSound.setVolume(0.01);
+	this->inputhandler = handler;
 	assert(jumpSound.isValid());
 }
 

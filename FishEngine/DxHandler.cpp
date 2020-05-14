@@ -401,20 +401,6 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 		lightBuff.lightColor = light->lightColor;
 	}
 
-	if (drawMesh->t >= 1)
-	{
-		drawMesh->decrementT = true;
-	}
-	if (drawMesh->t <= 0)
-	{
-		drawMesh->decrementT = false;
-	}
-
-	if (!drawMesh->decrementT)
-		drawMesh->t += 0.01;
-	if(drawMesh->decrementT)
-		drawMesh->t -= 0.01;
-
 
 
 	VS_CONSTANT_ANIM_BUFFER animBuff;

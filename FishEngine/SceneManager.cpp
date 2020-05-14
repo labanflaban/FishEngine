@@ -20,7 +20,7 @@ void SceneManager::removeMesh(Mesh* mesh)
 void SceneManager::addAnimatedMesh(AnimatedMesh* animMesh)
 {
 	this->animatedMeshes.push_back(animMesh);
-	animMesh->vectorIndex = this->sceneMeshes.size();
+	animMesh->vectorIndex = this->animatedMeshes.size()-1;
 }
 
 void SceneManager::removeAnimatedMesh(AnimatedMesh* animMesh)
