@@ -15,8 +15,6 @@ InputHandler::InputHandler(HWND& primaryWindow, Camera* camera)
 	keyboard = std::make_unique<DirectX::Keyboard>();
 	mouse = std::make_unique<DirectX::Mouse>();
 
-	this->primaryWindow = primaryWindow;
-	assert(primaryWindow != nullptr);
 	assert(keyboard != nullptr);
 	mouse->SetWindow(primaryWindow);
 
@@ -38,6 +36,9 @@ InputHandler::InputHandler(HWND& primaryWindow, Camera* camera)
 	assert(SUCCEEDED(setCoopSucc));
 
 	this->camera = camera;
+
+	this->primaryWindow = &primaryWindow;
+	assert(primaryWindow != nullptr);
 }
 
 InputHandler::InputHandler()
@@ -57,7 +58,8 @@ float InputHandler::getMousePosX()
 		RECT rect;
 		//GetClientRect(*primaryWindow, &rect);
 
-		ScreenToClient(this->primaryWindow, &point);
+
+		ScreenToClient(*(this->primaryWindow), &point);
 
 		return point.x;
 	}
@@ -67,11 +69,14 @@ float InputHandler::getMousePosY()
 {
 	POINT point;
 	if (GetCursorPos(&point))
-	{
+	{	
 		RECT rect;
 		//GetClientRect(*primaryWindow, &rect);
 
-		ScreenToClient(this->primaryWindow, &point);
+		ScreenToClient(*(this->primaryWindow), &point);
+
+
+		std::cout << point.x << " " << point.y << std::endl;
 
 		return point.y;
 	}

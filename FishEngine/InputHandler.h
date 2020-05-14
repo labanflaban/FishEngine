@@ -28,8 +28,9 @@ private:
 	static IDirectInputDevice8* DIMouse;
 	static Camera* camera;
 	static LPDIRECTINPUT8 DirectInput;
-	POINT p;
-	HWND primaryWindow;
+
+	HWND* primaryWindow;
+
 public:
 	static std::unique_ptr<DirectX::Mouse> mouse;
 	static std::unique_ptr<DirectX::Keyboard> keyboard;

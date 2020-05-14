@@ -47,3 +47,19 @@ void Keyframes::appendStructuredBuffer(std::vector<Vertex>* vertVectorsToMerge[]
 	this->nrOfPoses += nrOfVectorsToMerge;
 	this->nrOfVertices = vertices.size() / nrOfPoses;
 }
+
+void Keyframes::stepAnim(double deltaT)
+{
+	if (t >= 1)
+		decrementT = true;
+
+	if (t <= 0)
+		decrementT = false;
+
+	if (!decrementT)
+	{
+		this->t += deltaT * animationSpeed;
+	}
+	else
+		this->t -= deltaT * animationSpeed;
+}

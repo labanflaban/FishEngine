@@ -21,7 +21,7 @@ public:
 	DirectX::XMFLOAT3 fishingRodPos = DirectX::XMFLOAT3(0,0,0);
 	DirectX::XMFLOAT3 hookPos = DirectX::XMFLOAT3(0, 0, 0);
 	DirectX::XMFLOAT3 ropePos = DirectX::XMFLOAT3(0, 0, 0);
-	Player();
+	Player(InputHandler* handler);
 	Light* playerLight = nullptr;
 
 	YSE::sound jumpSound;

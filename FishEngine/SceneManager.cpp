@@ -20,7 +20,7 @@ void SceneManager::removeMesh(Mesh* mesh)
 void SceneManager::addAnimatedMesh(AnimatedMesh* animMesh)
 {
 	this->animatedMeshes.push_back(animMesh);
-	animMesh->vectorIndex = this->sceneMeshes.size();
+	animMesh->vectorIndex = this->animatedMeshes.size()-1;
 }
 
 void SceneManager::removeAnimatedMesh(AnimatedMesh* animMesh)
@@ -60,10 +60,19 @@ void SceneManager::removeLight(Light* light)
 
 void SceneManager::addTransparentObject(Mesh* mesh)
 {
+	this->transparentSceneObjects.push_back(mesh);
+	mesh->vectorIndex = this->transparentSceneObjects.size() - 1;
 }
 
 void SceneManager::removeTransparentObject(Mesh* mesh)
 {
+	int index = mesh->vectorIndex;
+	std::swap(transparentSceneObjects.at(transparentSceneObjects.size() - 1), transparentSceneObjects.at(mesh->vectorIndex));
+
+	transparentSceneObjects.at(index)->vectorIndex = index; //Update the moved mesh's index in the array.
+
+	delete transparentSceneObjects.at(transparentSceneObjects.size() - 1); //Delete the object
+	this->transparentSceneObjects.pop_back(); //Clear the pointer from vector
 }
 
 void SceneManager::addEnemy(Enemy* enemy)
@@ -77,9 +86,15 @@ void SceneManager::removeEnemy(Enemy* enemy)
 	Enemy* tempPtr = nullptr;
 
 	int index = enemy->vectorIndex;
-	std::swap(enemies.at(enemies.size()-1), enemies.at(index));
+	tempPtr = enemies.at(enemies.size()-1); //Save the back one
+	enemies.at(enemies.size() - 1) = enemies.at(index); //Replace back with the one to be deleted.
+	enemies.at(index) = tempPtr; //Replace index with what was at the back.
+	enemies.at(index)->vectorIndex = index; //Update its index.
+	//Swap completed.
 
-	enemies.at(index)->vectorIndex = index; //Update the moved mesh's index in the array.
+	//std::swap(enemies.at(enemies.size()-1), enemies.at(index));
+
+	//enemies.at(index)->vectorIndex = index; //Update the moved mesh's index in the array.
 
 	removeMesh(enemies.at(enemies.size()-1)->model);
 	removeLight(enemies.at(enemies.size()-1)->light);
