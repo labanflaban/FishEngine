@@ -309,11 +309,11 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				{
 					myEnemy->health -= 10;
 					myEnemy->damageDebounce = 0;
-					std::cout << "Enemy hit" << std::endl;
+					//std::cout << "Enemy hit" << std::endl;
 
 
 				}
-				std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
+				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			
 				
 
@@ -346,8 +346,12 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				{
 					myEnemy->health -= 30;
 					myEnemy->damageDebounce = 0;
-					std::cout << "Enemy hit" << std::endl;
+					//std::cout << "Enemy hit" << std::endl;
 				}
+
+				if (myEnemy->health < 0)
+					std::cout << "Should be dead" << std::endl;
+
 				std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
 		}
@@ -451,22 +455,23 @@ void Engine::engineLoop()
 
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject4->readNormalMapFromFile(L"./Models/TegelNormMap.png");
+	//groundObject4->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
 	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->transparentSceneObjects.push_back(groundObject4);
+	sceneManager.addTransparentObject(groundObject4);
 
 	Mesh* groundObject5= new Mesh(DxHandler::devicePtr); //Ground
 	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
+	//groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject5->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
 	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->transparentSceneObjects.push_back(groundObject5);
+	sceneManager.addTransparentObject(groundObject5);
 
 	Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject8->readMeshFromFile("./Models/actualCube.obj");
+	groundObject8->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
 	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
 	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
@@ -484,7 +489,7 @@ void Engine::engineLoop()
 	sceneManager.addLight(light);
 
 	Level* level = new Level();
-	level->createLevel(dynamicsWorld, collisionShapes, sceneManager.sceneMeshes, sceneManager.enemies, lights);
+	level->createLevel(dynamicsWorld, collisionShapes, &sceneManager);
 
 
 	//--------------------------------------------------------------------------------------------------- 
@@ -607,12 +612,22 @@ void Engine::engineLoop()
 
 		directXHandler->setDefaultState();
 
-		for (auto enemy : sceneManager.enemies)
+		for (int i = 0; i < sceneManager.enemies.size(); i++)
 		{
-			enemy->update(player);
-			if (enemy->health < 0)
+			Enemy* enemy = sceneManager.enemies.at(i);
+			if (enemy)
 			{
-				sceneManager.removeEnemy(enemy);
+				enemy->update(player);
+				//std::cout << enemy->health << std::endl;
+				if (enemy->health < 0)
+				{
+					std::cout << "Died" << std::endl;
+
+					collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
+					delete collStruct;
+
+					sceneManager.removeEnemy(enemy);
+				}
 			}
 		}
 
@@ -786,7 +801,7 @@ void Engine::renderLightVolumes()
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, DxHandler::depthStencil); //Application screen
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	for (auto model : transparentSceneObjects) //Draw transparent stuff
+	for (auto model : sceneManager.transparentSceneObjects) //Draw transparent stuff
 	{
 		directXHandler->draw(model, primaryCamera, false);
 	}

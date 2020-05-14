@@ -4,7 +4,7 @@ Texture2D NormalMapTexture : register(t3);
 SamplerState mysampler;
 
 //From CPU to GPU. Sends whatever you need.
-cbuffer PS_CONSTANT_BUFFER
+cbuffer PS_CONSTANT_BUFFER : register(b0)
 {
 	float4 lightPos;
 	float4 lightColor;
@@ -77,7 +77,7 @@ PS_OUTPUT main(PS_INPUT input) : SV_Target
 		float3x3 tbn = float3x3(tangent, bitangent, loadedNormal); //This will move things into 'texture space' or 'tangent space' in order to support rotations of the object without distortion.
 
 		input.vNormal = normalize(float4(mul(loadedNormal, tbn), 0));
-	}
+    }
 
 	output.vNormal = input.vNormal;
 	return output;

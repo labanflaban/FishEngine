@@ -66,7 +66,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 
 		}
 	}
-	if (hook->ropeZipBack >= 3 && updateHook == false)
+	if (hook->ropeZipBack >= 1 && updateHook == false)
 	{
 		hook->zipBackRope(rod, hook, rope);
 		if (rod->model->getTranslation().y + 10 - hook->model->getTranslation().y < 0.001f && rod->model->getTranslation().x + 3- hook->model->getTranslation().x < 0.001f)

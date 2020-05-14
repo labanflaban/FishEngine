@@ -16,8 +16,8 @@ void Tool::zipBackRope(Tool* rod, Tool* hook, Tool* rope)
 
 	//std::cout << dX << " " << dY << std::endl;
 
-	xVel = sin(angle) * 10.f;
-	yVel = cos(angle) * 10.f;
+	xVel = sin(angle) * 25.f;
+	yVel = cos(angle) * 25.f;
 
 	btVector3 velocityVector(-xVel, -yVel, 0);
 
@@ -73,8 +73,8 @@ void Tool::throwHook(Tool* rod, Tool* hook, Tool* rope)
 	float angle = atan2(deltaX, deltaY);
 	
 
-	float velocityX = sin(angle) * 20;
-	float velocityY = cos(angle) * 20;
+	float velocityX = sin(angle) * 50;
+	float velocityY = cos(angle) * 50;
 
 	hook->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
 	btVector3 velocityVector(velocityX , -velocityY, 0);

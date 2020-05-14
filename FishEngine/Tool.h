@@ -23,7 +23,7 @@ public:
 
 	float pullback = 30.f;
 	float ableToThrowHook = 10.f;
-	float ropeZipBack = 3.f;
+	float ropeZipBack = 1.f;
 	btTransform transform;
 
 	bool isActive = false;
