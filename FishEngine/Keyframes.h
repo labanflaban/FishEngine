@@ -18,7 +18,7 @@ public:
 	ID3D11ShaderResourceView* srv = nullptr;
 
 	int nrOfPoses = 0;
-	UINT nrOfVertices = 0;
+	UINT nrOfVertices = 1;
 	std::vector<Vertex> vertices;
 
 	bool decrementT = false;

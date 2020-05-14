@@ -7,14 +7,19 @@ void AnimatedMesh::updateWorldMatrix()
 }
 
 
-void AnimatedMesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass)
+void AnimatedMesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape)
 {
 	//rigidBody stuff
 	btTransform rigidBodyTransform;
 
 	rigidBodyTransform.setIdentity();
 	rigidBodyTransform.setOrigin(btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z));
-	btCollisionShape* rigidBodyCollider = new btBoxShape(btVector3(btScalar(this->getScaling().x), btScalar(this->getScaling().y), btScalar(this->getScaling().z)));
+
+	btCollisionShape* rigidBodyCollider = nullptr;
+	if (collShape == nullptr)
+		rigidBodyCollider = new btBoxShape(btVector3(btScalar(this->getScaling().x), btScalar(this->getScaling().y), btScalar(this->getScaling().z)));
+	else
+		rigidBodyCollider = collShape;
 	collisionShapes->push_back(rigidBodyCollider);
 
 	bool isDynamic = (mass != 0.f);
@@ -26,7 +31,7 @@ void AnimatedMesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlign
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, rigidBodyCollider, localInertia);
 
 	btDefaultMotionState* rigidBodyState = new btDefaultMotionState(rigidBodyTransform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo2(mass, rigidBodyState, rigidBodyCollider, btVector3(0, 0, 0)); //First param is 0, ie its static
+	btRigidBody::btRigidBodyConstructionInfo rbInfo2(mass, rigidBodyState, rigidBodyCollider, btVector3(0, 0, 0)); //If first param is 0, it is static
 	btRigidBody* rigidBodyBody = new btRigidBody(rbInfo2);
 	this->rigidBody = rigidBodyBody;
 	dynamicsWorld->addRigidBody(rigidBodyBody);
@@ -130,6 +135,40 @@ void AnimatedMesh::readTextureFromFile(std::wstring textureName)
 	hasTexture = true;
 }
 
+void AnimatedMesh::readNormalMapFromFile(std::wstring NormalMapName)
+{
+	HRESULT readNormalMapResult = DirectX::CreateWICTextureFromFile(device, NormalMapName.data(), &NormalMap, &NormalView, 0);
+
+	assert(SUCCEEDED(readNormalMapResult));
+
+	imageSampleDesc.MipLevels = imageSampleDesc.ArraySize = 1;
+	imageSampleDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	imageSampleDesc.SampleDesc.Count = 1;
+	imageSampleDesc.Usage = D3D11_USAGE_DEFAULT;
+	imageSampleDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	imageSampleDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	imageSampleDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* NormalInterface = 0;
+	ID3D11Resource* Resource;
+
+	NormalView->GetResource(&Resource);
+	Resource->QueryInterface<ID3D11Texture2D>(&NormalInterface);
+
+	D3D11_TEXTURE2D_DESC desc;
+	NormalInterface->GetDesc(&desc);
+	imageSampleDesc.Width = static_cast<int>(desc.Width);
+	imageSampleDesc.Height = static_cast<int>(desc.Height);
+
+	Resource->Release();
+	NormalInterface->Release();
+
+	HRESULT createNormalResult = device->CreateTexture2D(&desc, NULL, &pNormalMap);
+	assert(SUCCEEDED(createNormalResult));
+
+	hasNormalMap = true;
+}
+
 AnimatedMesh::AnimatedMesh(ID3D11Device* device)
 {
 	this->device = device;
@@ -141,6 +180,9 @@ AnimatedMesh::~AnimatedMesh()
 	{
 		this->vertexBuffer->Release();
 	}
+
+	if (this->textureView)
+		this->textureView->Release();
 	//delete this->rigidBody;
 	//delete this->collider;
 }

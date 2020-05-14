@@ -40,6 +40,6 @@ float4 main(PS_INPUT input) : SV_Target
 	//	output.vColour = sky.Sample(mysampler, normalize(camToPixelVec));
 	//	output.vColour.w = 2;
     
-    return colorMap.Sample(mysampler, normalize(camToPixelVec));
+    return colorMap.Sample(mysampler, normalize(camToPixelVec))*0.5;
 
 }

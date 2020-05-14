@@ -3,6 +3,7 @@
 Texture2D ColorTexture : register(t0);
 Texture2D NormalTexture : register(t1);
 Texture2D PositionTexture : register(t2);
+Texture2D NormalMap : register(t3);
 
 SamplerState mySampler;
 
@@ -28,6 +29,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 	bool hasTexture;
 	bool isSky;
+    bool hasNormalMap;
 }
 
 struct VS_OUTPUT //comes from deferredVShader
@@ -47,8 +49,7 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float4 albedo = ColorTexture.Load(float3(input.vPosition.xy, 0), 0);
 	float4 normal = NormalTexture.Load(float3(input.vPosition.xy, 0), 0);
 	float4 position = PositionTexture.Load(float3(input.vPosition.xy, 0), 0);
-
-
+	
 	//Calculate light
 	float3 surfaceToLightV = normalize(lightPos - position);
 	float diffuseStrength = clamp(dot(normal, surfaceToLightV), 0, 1); //Cannot go over 1, and never below 0.
@@ -64,7 +65,6 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float attenuationFactor = max(min(1 / (attenuation.x + lightDistance * attenuation.y + distanceSquared * attenuation.z), 1), 0);
 
 	//float4(0.117, 0.47, 0.83, 0)
-	
 	if (albedo.w != 2)
 	{
         float4 col = (diffuseStrength + ambientStrength + specStrength) * albedo * lightColor * attenuationFactor;

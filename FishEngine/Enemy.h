@@ -10,7 +10,7 @@ class Enemy
 private:
 
 public:
-	Mesh* model = nullptr;
+	AnimatedMesh* model = nullptr;
 	Light* light = nullptr;
 	Enemy(ID3D11Device* device);
 	~Enemy();
