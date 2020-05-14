@@ -121,17 +121,17 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		}
 		else if (level->levelMeshVector.at(i).tag == "enemy")
 		{
-			Enemy* enemy = new Enemy(DxHandler::devicePtr);
-			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-
-			collisionStruct* enemyCollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 1);
-			enemy->model->rigidBody->setUserPointer(enemyCollStruct);
-			sceneManager->addEnemy(enemy);
-			sceneManager->addLight(enemy->light);
-			sceneManager->addMesh(enemy->model);
+			//Enemy* enemy = new Enemy(DxHandler::devicePtr);
+			//enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			//enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			//enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+	
+			//collisionStruct* enemyCollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
+			//enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 1);
+			//enemy->model->rigidBody->setUserPointer(enemyCollStruct);
+			//sceneManager->addEnemy(enemy);
+			//sceneManager->addLight(enemy->light);
+			//sceneManager->addMesh(enemy->model);
 
 		}
 		else if (level->levelMeshVector.at(i).tag == "ground")

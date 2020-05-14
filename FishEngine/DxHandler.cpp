@@ -423,6 +423,13 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 	PS_CONSTANT_LIGHT_BUFFER lightBuff;
 	lightBuff.camPos = drawFromCamera.cameraPosition;
 	lightBuff.hasTexture = drawMesh->hasTexture;
+	lightBuff.hasNormalMap = drawMesh->hasNormalMap;
+
+	lightBuff.hasNormalMap = drawMesh->hasNormalMap;
+	if (lightBuff.hasNormalMap)
+	{
+		contextPtr->PSSetShaderResources(3, 1, &drawMesh->NormalView);
+	}
 
 	if (lightBuff.hasTexture)
 	{
