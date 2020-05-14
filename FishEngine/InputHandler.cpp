@@ -58,8 +58,8 @@ float InputHandler::getMousePosX()
 		RECT rect;
 		//GetClientRect(*primaryWindow, &rect);
 
-
 		ScreenToClient(*(this->primaryWindow), &point);
+
 
 		return point.x;
 	}

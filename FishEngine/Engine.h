@@ -22,13 +22,10 @@
 #include "Enemy.h"
 #include "Particle.h"
 #include <random>
-
 #include "ObjParser.h"
 #include "Level.h"
 #include "CollisionStruct.h"
 #include "SceneManager.h"
-
-#include "GUIhandler.h"
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -53,11 +50,8 @@ private:
 
 	Camera primaryCamera;
 
-
 	int clientWidth = 0;
 	int clientHeight = 0;
-
-	GUIhandler* guiHandler;
 	
 public:
 	Engine();
@@ -72,8 +66,6 @@ public:
 	void createDirectX();
 	void createInputHandler();
 	void engineLoop();
-
-	void createGUIHandler();
 
 	std::unique_ptr<DirectX::CommonStates> states;
 
@@ -90,7 +82,6 @@ public:
 
 	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();
-	void renderGUI();
 	void renderLightVolumes();
 	void renderParticles();
 
