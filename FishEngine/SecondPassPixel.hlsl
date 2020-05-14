@@ -58,7 +58,7 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	//
 
 	if (albedo.w != 2)
-        return (diffuseStrength + ambientStrength + specStrength) * 0.1 * albedo; //((diffuseStrength + ambientStrength + specStrength) * albedo); //Final light output
+        return (diffuseStrength + ambientStrength + specStrength)*0.1* albedo; //((diffuseStrength + ambientStrength + specStrength) * albedo); //Final light output
 	//else
 	//if (albedo.w != 2)
         //return albedo * ambientStrength;

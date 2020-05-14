@@ -408,7 +408,7 @@ void Engine::engineLoop()
 	debugObject->targetPoseIndex = 1;
 
 	player->playerLight = new Light(DxHandler::devicePtr);
-	player->playerLight->lightColor = XMVectorSet(1.f, 140 / 255.f, 220 / 255.f, 0.f);
+	player->playerLight->lightColor = XMVectorSet(1.f, 2, 0.5, 0.f);
 	//lights.push_back(player->playerLight);
 	sceneManager.addLight(player->playerLight);
 
@@ -529,12 +529,11 @@ void Engine::engineLoop()
 
 	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
 	animMesh->readTextureFromFile(L"./Models/FISHCOLOR.png");
-	animMesh->readNormalMapFromFile(L"./Textures/scales.jpg");
 
 	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
 	animMesh->appendStructuredBuffer(arr, 2);
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
-	animMesh->setTranslation(XMFLOAT3(-50, -20, 0));
+	animMesh->setTranslation(XMFLOAT3(-25, -20, 10));
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 0, 3.14 / 2));
 	animMesh->targetPoseIndex = 1;
