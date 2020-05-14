@@ -1,5 +1,11 @@
 #include "GUIhandler.h"
 
+GUIhandler::GUIhandler(DxHandler* dxHandler, InputHandler* inputHandler)
+{
+	this->dxHandler = dxHandler;
+	this->inputHandler = inputHandler;
+}
+
 Mesh* GUIhandler::generateGUIElement()
 {
 	Mesh* tempMesh = new Mesh(this->dxHandler->devicePtr);	  //X  Y  Z   R	 G  B  A, U, V  nX nY nZ
@@ -35,11 +41,6 @@ void GUIhandler::drawGuiElements(Camera& camera)
 	}
 }
 
-GUIhandler::GUIhandler(DxHandler* dxHandler)
-{
-	this->dxHandler = dxHandler;
-}
-
 bool GUIhandler::isSelected(Mesh* guiElement)
 {
 	float pixelPosX = ((guiElement->getTranslation().x + 1) / 2) * DxHandler::WIDTH;
@@ -49,7 +50,7 @@ bool GUIhandler::isSelected(Mesh* guiElement)
 
 	std::cout << "MOUSE POSITION : " << inputHandler->getMousePosX() << ", " << inputHandler->getMousePosY() << std::endl;
 
-	if(inputHandler->getMousePosX() < DxHandler::WIDTH/2 && inputHandler->getMousePosY() < DxHandler::HEIGHT)
+	if(inputHandler->getMousePosX() < DxHandler::WIDTH/2 && inputHandler->getMousePosY() < DxHandler::HEIGHT/2)
 	{
 		return true;
 	}
@@ -57,5 +58,4 @@ bool GUIhandler::isSelected(Mesh* guiElement)
 	{
 		return false;
 	}
-	return false;
 }

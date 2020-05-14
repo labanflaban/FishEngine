@@ -743,7 +743,7 @@ void Engine::engineLoop()
 
 void Engine::createGUIHandler()
 {
-	this->guiHandler = new GUIhandler(this->directXHandler);
+	this->guiHandler = new GUIhandler(this->directXHandler, &this->inputHandler);
 }
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
