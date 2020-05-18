@@ -83,6 +83,7 @@ struct PS_CONSTANT_LIGHT_BUFFER
 
 	BOOL hasTexture = false;
 	BOOL isSky = false;
+	BOOL hasNormalMap = false;
 };
 
 class DxHandler
@@ -113,6 +114,11 @@ public:
 	static VertexShader* transparencyVertex;
 
 	static PixelShader* particlePixel;
+<<<<<<< Updated upstream
+=======
+	static PixelShader* skyboxPixel;
+	static VertexShader* skyboxVertex;
+>>>>>>> Stashed changes
 
 	static GeometryShader* backfaceCullShader;
 

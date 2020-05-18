@@ -15,7 +15,6 @@ InputHandler::InputHandler(HWND& primaryWindow, Camera* camera)
 	keyboard = std::make_unique<DirectX::Keyboard>();
 	mouse = std::make_unique<DirectX::Mouse>();
 
-	assert(primaryWindow != nullptr);
 	assert(keyboard != nullptr);
 	mouse->SetWindow(primaryWindow);
 
@@ -37,6 +36,9 @@ InputHandler::InputHandler(HWND& primaryWindow, Camera* camera)
 	assert(SUCCEEDED(setCoopSucc));
 
 	this->camera = camera;
+
+	this->primaryWindow = &primaryWindow;
+	assert(primaryWindow != nullptr);
 }
 
 InputHandler::InputHandler()
@@ -48,6 +50,39 @@ void InputHandler::handleInput()
 {
 }
 
+<<<<<<< Updated upstream
+=======
+float InputHandler::getMousePosX()
+{
+	POINT point;
+	if (GetCursorPos(&point))
+	{
+		RECT rect;
+		//GetClientRect(*primaryWindow, &rect);
+
+		ScreenToClient(*(this->primaryWindow), &point);
+
+
+		return point.x;
+	}
+}
+
+float InputHandler::getMousePosY()
+{
+	POINT point;
+	if (GetCursorPos(&point))
+	{	
+		RECT rect;
+		//GetClientRect(*primaryWindow, &rect);
+
+		ScreenToClient(*(this->primaryWindow), &point);
+
+
+		return point.y;
+	}
+}
+
+>>>>>>> Stashed changes
 bool InputHandler::isKeyDown(int keyCode)
 {
 

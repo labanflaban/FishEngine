@@ -1,2191 +1,2284 @@
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 12:06:18pm
+Log started: 11 May 2020 1:46:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 12:08:32pm
+Log started: 11 May 2020 1:47:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 12:10:00pm
+Log started: 11 May 2020 1:49:33pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:19:34pm
+Log started: 11 May 2020 1:51:38pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:41:16pm
+Log started: 11 May 2020 1:52:48pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:48:12pm
+Log started: 11 May 2020 1:53:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:48:49pm
+Log started: 11 May 2020 1:53:45pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:49:08pm
+Log started: 11 May 2020 1:54:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:49:26pm
+Log started: 11 May 2020 1:57:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:50:31pm
+Log started: 11 May 2020 2:01:36pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:51:55pm
+Log started: 11 May 2020 2:02:11pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 1:59:18pm
+Log started: 11 May 2020 2:24:31pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 2:52:51pm
+Log started: 11 May 2020 2:30:47pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 2:55:05pm
+Log started: 11 May 2020 2:31:22pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 2:56:07pm
+Log started: 11 May 2020 2:50:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 2:57:28pm
+Log started: 11 May 2020 2:50:53pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:00:31pm
+Log started: 11 May 2020 3:42:11pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:01:16pm
+Log started: 11 May 2020 3:43:33pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:01:31pm
+Log started: 11 May 2020 3:44:47pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:01:52pm
+Log started: 11 May 2020 3:47:11pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:02:07pm
+Log started: 11 May 2020 4:22:34pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:03:36pm
+Log started: 11 May 2020 4:51:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:06:01pm
+Log started: 11 May 2020 4:53:02pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:06:33pm
+Log started: 11 May 2020 5:10:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:07:52pm
+Log started: 12 May 2020 10:44:25am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:12:51pm
+Log started: 12 May 2020 10:48:56am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:13:08pm
+Log started: 12 May 2020 10:50:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:20:14pm
+Log started: 12 May 2020 11:06:08am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:30:22pm
+Log started: 12 May 2020 11:06:37am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:30:25pm
+Log started: 12 May 2020 11:07:45am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:30:36pm
+Log started: 12 May 2020 11:08:17am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:30:51pm
+Log started: 12 May 2020 11:09:22am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:31:39pm
+Log started: 12 May 2020 11:09:56am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 16 Apr 2020 3:36:22pm
+Log started: 12 May 2020 11:10:29am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 9:06:01am
+Log started: 12 May 2020 11:10:39am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 9:08:45am
+Log started: 12 May 2020 11:11:59am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 9:09:31am
+Log started: 12 May 2020 11:15:22am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 9:31:04am
+Log started: 12 May 2020 11:26:54am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 9:54:01am
+Log started: 12 May 2020 11:27:51am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:05:15am
+Log started: 12 May 2020 11:30:04am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:05:40am
+Log started: 12 May 2020 11:32:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:06:58am
+Log started: 12 May 2020 11:34:23am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:35:07am
+Log started: 12 May 2020 11:37:09am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:39:23am
+Log started: 12 May 2020 11:39:03am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:39:43am
+Log started: 12 May 2020 11:40:23am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:40:28am
+Log started: 12 May 2020 11:48:00am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:44:08am
+Log started: 12 May 2020 11:50:22am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:46:10am
+Log started: 12 May 2020 11:53:39am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:47:52am
+Log started: 12 May 2020 11:55:46am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:50:05am
+Log started: 12 May 2020 11:56:16am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:50:21am
+Log started: 12 May 2020 12:03:13pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:50:41am
+Log started: 12 May 2020 12:05:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:51:34am
+Log started: 12 May 2020 2:04:41pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:51:55am
+Log started: 12 May 2020 2:04:59pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:55:59am
+Log started: 12 May 2020 2:06:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 10:59:42am
+Log started: 12 May 2020 2:08:18pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:05:34am
+Log started: 12 May 2020 2:08:34pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:06:19am
+Log started: 12 May 2020 2:50:42pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:07:46am
+Log started: 12 May 2020 2:51:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:09:45am
+Log started: 12 May 2020 2:56:18pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:13:34am
+Log started: 12 May 2020 2:59:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:14:38am
+Log started: 12 May 2020 3:04:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:16:55am
+Log started: 12 May 2020 3:08:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:17:49am
+Log started: 12 May 2020 3:10:16pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:19:04am
+Log started: 12 May 2020 3:10:58pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:20:50am
+Log started: 12 May 2020 3:12:12pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:22:02am
+Log started: 12 May 2020 3:13:05pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:22:56am
+Log started: 12 May 2020 3:14:39pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:24:23am
+Log started: 12 May 2020 3:15:18pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:25:05am
+Log started: 12 May 2020 3:15:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:26:00am
+Log started: 12 May 2020 3:16:59pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:26:54am
+Log started: 12 May 2020 3:17:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:27:24am
+Log started: 12 May 2020 3:18:38pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:31:32am
+Log started: 12 May 2020 3:20:39pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:33:58am
+Log started: 12 May 2020 3:23:17pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:34:20am
+Log started: 12 May 2020 3:25:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:35:17am
+Log started: 12 May 2020 3:26:09pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:36:34am
+Log started: 12 May 2020 3:27:10pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:37:16am
+Log started: 12 May 2020 3:32:02pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 11:54:05am
+Log started: 12 May 2020 3:33:32pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:01:27pm
+Log started: 12 May 2020 3:38:08pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:02:05pm
+Log started: 12 May 2020 3:52:19pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:03:56pm
+Log started: 12 May 2020 3:53:19pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:06:38pm
+Log started: 12 May 2020 3:54:11pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:08:39pm
+Log started: 12 May 2020 3:54:26pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:09:31pm
+Log started: 12 May 2020 3:54:59pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:10:02pm
+Log started: 12 May 2020 3:55:35pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:10:57pm
+Log started: 12 May 2020 4:06:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 17 Apr 2020 12:11:20pm
+Log started: 13 May 2020 10:21:47am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 9:12:02am
+Log started: 13 May 2020 10:45:08am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 9:50:02am
+Log started: 13 May 2020 10:57:54am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 9:50:25am
+Log started: 13 May 2020 11:07:08am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:07:44am
+Log started: 13 May 2020 11:08:25am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:08:02am
+Log started: 13 May 2020 11:10:38am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:08:55am
+Log started: 13 May 2020 11:21:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:09:21am
+Log started: 13 May 2020 11:28:16am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:11:36am
+Log started: 13 May 2020 11:30:26am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:12:30am
+Log started: 13 May 2020 11:31:12am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:13:23am
+Log started: 13 May 2020 11:31:33am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:14:07am
+Log started: 13 May 2020 11:31:46am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:37:28am
+Log started: 13 May 2020 11:33:03am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:37:56am
+Log started: 13 May 2020 11:35:28am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:05:59am
+Log started: 13 May 2020 11:35:55am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:06:33am
+Log started: 13 May 2020 11:36:35am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:21:05am
+Log started: 13 May 2020 11:36:58am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:28:40am
+Log started: 13 May 2020 11:37:43am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:29:59am
+Log started: 13 May 2020 11:38:13am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:31:28am
+Log started: 13 May 2020 11:38:36am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:32:33am
+Log started: 13 May 2020 11:40:00am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:33:04am
+Log started: 13 May 2020 11:45:04am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:39:46am
+Log started: 13 May 2020 11:46:04am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:49:02am
+Log started: 13 May 2020 11:46:52am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:49:52am
+Log started: 13 May 2020 11:51:00am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:53:33am
+Log started: 13 May 2020 11:51:23am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:57:31am
+Log started: 13 May 2020 11:52:01am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:57:48am
+Log started: 13 May 2020 11:54:38am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:58:28am
+Log started: 13 May 2020 11:57:02am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:58:54am
+Log started: 13 May 2020 12:03:31pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:07:15pm
+Log started: 13 May 2020 12:04:08pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:11:08pm
+Log started: 13 May 2020 12:05:36pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:14:31pm
+Log started: 13 May 2020 12:06:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:29:26pm
+Log started: 13 May 2020 12:06:43pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:29:40pm
+Log started: 13 May 2020 12:11:14pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:30:24pm
+Log started: 13 May 2020 12:13:53pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:30:50pm
+Log started: 13 May 2020 12:36:32pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:31:48pm
+Log started: 13 May 2020 12:42:18pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:32:08pm
+Log started: 13 May 2020 12:42:41pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:32:40pm
+Log started: 13 May 2020 12:42:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:33:04pm
+Log started: 13 May 2020 12:46:41pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 12:33:27pm
+Log started: 13 May 2020 12:47:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:27:57pm
+Log started: 13 May 2020 12:48:36pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 10:42:35pm
+Log started: 13 May 2020 12:49:07pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:14:38pm
+Log started: 13 May 2020 2:01:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:16:53pm
+Log started: 13 May 2020 2:02:08pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:17:38pm
+Log started: 13 May 2020 2:03:20pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:17:57pm
+Log started: 13 May 2020 2:05:46pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:18:21pm
+Log started: 13 May 2020 2:15:13pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:18:57pm
+Log started: 13 May 2020 2:17:01pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:19:24pm
+Log started: 13 May 2020 2:18:16pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:28:56pm
+Log started: 13 May 2020 2:21:34pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:29:15pm
+Log started: 13 May 2020 2:22:06pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:36:33pm
+Log started: 13 May 2020 2:22:59pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:36:57pm
+Log started: 13 May 2020 2:27:58pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:39:25pm
+Log started: 13 May 2020 2:28:35pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:44:38pm
+Log started: 13 May 2020 2:29:02pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:45:28pm
+Log started: 13 May 2020 2:40:58pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:46:47pm
+Log started: 13 May 2020 2:41:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:50:12pm
+Log started: 13 May 2020 2:41:53pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:50:51pm
+Log started: 13 May 2020 2:43:01pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 20 Apr 2020 11:51:50pm
+Log started: 13 May 2020 2:43:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:01:07am
+Log started: 13 May 2020 2:47:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:01:47am
+Log started: 13 May 2020 2:47:48pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:10:30am
+Log started: 13 May 2020 2:48:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:15:54am
+Log started: 13 May 2020 2:50:47pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:19:44am
+Log started: 13 May 2020 2:52:23pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:25:41am
+Log started: 13 May 2020 2:59:12pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:44:00am
+Log started: 13 May 2020 3:10:05pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:46:04am
+Log started: 13 May 2020 3:14:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:48:01am
+Log started: 13 May 2020 3:22:00pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:48:19am
+Log started: 13 May 2020 3:23:01pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:49:07am
+Log started: 13 May 2020 3:23:43pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:51:35am
+Log started: 13 May 2020 3:25:07pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:52:02am
+Log started: 13 May 2020 3:26:00pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:52:43am
+Log started: 13 May 2020 3:27:03pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:54:54am
+Log started: 13 May 2020 3:27:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:55:30am
+Log started: 13 May 2020 3:31:04pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 12:59:40am
+Log started: 13 May 2020 3:31:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:00:11am
+Log started: 13 May 2020 3:35:02pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:01:50am
+Log started: 13 May 2020 3:39:20pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:06:28am
+Log started: 13 May 2020 3:41:22pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:07:11am
+Log started: 13 May 2020 3:43:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:07:57am
+Log started: 13 May 2020 3:45:26pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:10:58am
+Log started: 13 May 2020 3:47:41pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:11:04am
+Log started: 13 May 2020 3:50:10pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:11:13am
+Log started: 13 May 2020 3:56:11pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:11:35am
+Log started: 13 May 2020 3:58:04pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:15:24am
+Log started: 13 May 2020 3:59:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:30:43am
+Log started: 13 May 2020 4:06:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:31:51am
+Log started: 13 May 2020 4:07:37pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:32:41am
+Log started: 13 May 2020 4:09:56pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:32:53am
+Log started: 13 May 2020 4:10:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:33:09am
+Log started: 13 May 2020 4:11:43pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:03:08pm
+Log started: 13 May 2020 4:14:12pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:05:56pm
+Log started: 13 May 2020 8:22:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:15:12pm
+Log started: 13 May 2020 8:57:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:18:52pm
+Log started: 13 May 2020 8:58:23pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:19:51pm
+Log started: 13 May 2020 9:00:06pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:21:03pm
+Log started: 13 May 2020 9:00:24pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:21:29pm
+Log started: 13 May 2020 9:06:01pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:22:04pm
+Log started: 13 May 2020 9:14:33pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:23:53pm
+Log started: 13 May 2020 9:19:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:26:46pm
+Log started: 13 May 2020 9:20:52pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:27:47pm
+Log started: 13 May 2020 9:22:26pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:30:07pm
+Log started: 13 May 2020 9:23:48pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:30:27pm
+Log started: 13 May 2020 9:24:34pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:37:34pm
+Log started: 13 May 2020 9:24:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:38:01pm
+Log started: 13 May 2020 9:25:56pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:39:03pm
+Log started: 13 May 2020 9:26:51pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:40:17pm
+Log started: 13 May 2020 9:28:43pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:40:28pm
+Log started: 13 May 2020 9:30:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:41:18pm
+Log started: 13 May 2020 9:40:28pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:41:30pm
+Log started: 13 May 2020 9:46:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:42:08pm
+Log started: 13 May 2020 9:48:13pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:42:54pm
+Log started: 13 May 2020 9:57:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:43:22pm
+Log started: 13 May 2020 9:57:50pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:44:54pm
+Log started: 14 May 2020 9:24:27am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:46:55pm
+Log started: 14 May 2020 10:11:48am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:47:10pm
+Log started: 14 May 2020 10:15:19am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:49:08pm
+Log started: 14 May 2020 10:16:17am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 1:50:48pm
+Log started: 14 May 2020 10:17:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:14:42pm
+Log started: 14 May 2020 10:19:15am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:15:38pm
+Log started: 14 May 2020 10:20:30am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:16:03pm
+Log started: 14 May 2020 10:21:11am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:16:40pm
+Log started: 14 May 2020 10:21:31am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:19:19pm
+Log started: 14 May 2020 10:21:49am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:20:10pm
+Log started: 14 May 2020 10:22:57am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:21:09pm
+Log started: 14 May 2020 10:23:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:23:30pm
+Log started: 14 May 2020 10:24:06am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:24:01pm
+Log started: 14 May 2020 10:24:49am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:30:47pm
+Log started: 14 May 2020 10:25:35am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:31:11pm
+Log started: 14 May 2020 10:26:25am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 2:57:35pm
+Log started: 14 May 2020 10:26:58am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 3:08:36pm
+Log started: 14 May 2020 10:30:44am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 3:13:50pm
+Log started: 14 May 2020 10:31:45am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 21 Apr 2020 10:06:37pm
+Log started: 14 May 2020 10:35:00am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:33:03am
+Log started: 14 May 2020 10:37:17am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:34:12am
+Log started: 14 May 2020 10:44:30am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:36:39am
+Log started: 14 May 2020 10:45:20am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:37:24am
+Log started: 14 May 2020 11:05:16am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:38:44am
+Log started: 14 May 2020 11:06:23am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:38:58am
+Log started: 14 May 2020 11:07:57am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:46:04am
+Log started: 14 May 2020 11:08:42am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:46:18am
+Log started: 14 May 2020 11:10:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:46:41am
+Log started: 14 May 2020 11:16:25am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:46:58am
+Log started: 14 May 2020 11:17:56am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:48:26am
+Log started: 14 May 2020 11:41:00am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:52:34am
+Log started: 14 May 2020 11:43:09am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:53:25am
+Log started: 14 May 2020 11:47:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 9:55:47am
+Log started: 14 May 2020 11:51:06am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:20:22am
+Log started: 14 May 2020 11:52:04am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:22:55am
+Log started: 14 May 2020 11:54:43am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:26:56am
+Log started: 14 May 2020 11:55:28am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:29:17am
+Log started: 14 May 2020 11:56:03am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:30:10am
+Log started: 14 May 2020 11:57:28am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:35:45am
+Log started: 14 May 2020 11:57:46am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:41:36am
+Log started: 14 May 2020 11:58:45am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:45:16am
+Log started: 14 May 2020 11:59:59am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:49:26am
+Log started: 14 May 2020 12:00:43pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:49:41am
+Log started: 14 May 2020 12:01:17pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:49:59am
+Log started: 14 May 2020 12:08:26pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:50:06am
+Log started: 14 May 2020 1:23:54pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:50:31am
+Log started: 14 May 2020 1:28:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:51:33am
+Log started: 14 May 2020 1:29:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:51:53am
+Log started: 14 May 2020 1:30:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:52:21am
+Log started: 14 May 2020 1:32:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:52:31am
+Log started: 14 May 2020 1:32:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 10:54:57am
+Log started: 14 May 2020 1:34:46pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:00:02am
+Log started: 14 May 2020 1:36:07pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:02:36am
+Log started: 14 May 2020 1:37:01pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:06:49am
+Log started: 14 May 2020 1:37:23pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:07:14am
+Log started: 14 May 2020 1:39:52pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:08:57am
+Log started: 14 May 2020 1:42:11pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:12:19am
+Log started: 14 May 2020 1:43:26pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:14:08am
+Log started: 14 May 2020 1:46:09pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:16:20am
+Log started: 14 May 2020 1:47:13pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:18:07am
+Log started: 14 May 2020 1:48:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:19:11am
+Log started: 14 May 2020 1:48:54pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:23:33am
+Log started: 14 May 2020 1:50:42pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:23:54am
+Log started: 14 May 2020 1:52:54pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:25:06am
+Log started: 14 May 2020 1:54:10pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:25:31am
+Log started: 14 May 2020 2:01:13pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:25:55am
+Log started: 14 May 2020 2:19:07pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:26:15am
+Log started: 14 May 2020 2:20:12pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:27:04am
+Log started: 14 May 2020 2:20:58pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:28:48am
+Log started: 14 May 2020 2:22:31pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:29:20am
+Log started: 14 May 2020 2:25:08pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 11:29:36am
+Log started: 14 May 2020 2:26:22pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 1:12:00pm
+Log started: 14 May 2020 2:30:36pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 1:14:40pm
+Log started: 14 May 2020 2:40:55pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 2:18:56pm
+Log started: 14 May 2020 2:41:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 2:19:28pm
+Log started: 14 May 2020 2:41:52pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 2:21:10pm
+Log started: 14 May 2020 3:02:28pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 2:25:52pm
+Log started: 14 May 2020 3:02:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 22 Apr 2020 2:30:23pm
+Log started: 14 May 2020 3:03:24pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:17:31pm
+Log started: 14 May 2020 3:08:18pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:19:16pm
+Log started: 14 May 2020 3:08:32pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:21:20pm
+Log started: 14 May 2020 3:09:55pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:21:45pm
+Log started: 14 May 2020 3:13:20pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:43:59pm
+Log started: 14 May 2020 3:13:59pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:50:07pm
+Log started: 14 May 2020 3:15:46pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:51:04pm
+Log started: 14 May 2020 3:19:48pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:53:46pm
+Log started: 14 May 2020 3:21:28pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:54:45pm
+Log started: 14 May 2020 3:24:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:55:20pm
+Log started: 14 May 2020 3:31:00pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:57:27pm
+Log started: 14 May 2020 3:34:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 1:59:12pm
+Log started: 14 May 2020 3:36:06pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:00:38pm
+Log started: 14 May 2020 3:36:19pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:01:27pm
+Log started: 14 May 2020 3:37:48pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:33:08pm
+Log started: 14 May 2020 3:38:45pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:33:29pm
+Log started: 14 May 2020 3:43:33pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:34:48pm
+Log started: 14 May 2020 3:43:45pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:35:10pm
+Log started: 14 May 2020 3:50:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:38:24pm
+Log started: 14 May 2020 3:50:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:39:06pm
+Log started: 14 May 2020 3:51:09pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:40:00pm
+Log started: 14 May 2020 3:51:30pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:41:07pm
+Log started: 14 May 2020 4:00:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:41:33pm
+Log started: 14 May 2020 4:01:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:43:02pm
+Log started: 14 May 2020 4:02:04pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:45:44pm
+Log started: 14 May 2020 4:02:34pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:46:05pm
+Log started: 14 May 2020 4:16:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:46:23pm
+Log started: 14 May 2020 4:18:05pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:47:13pm
+Log started: 14 May 2020 4:21:15pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:47:44pm
+Log started: 14 May 2020 4:24:02pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:50:14pm
+Log started: 14 May 2020 4:25:23pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:53:30pm
+Log started: 14 May 2020 4:27:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:53:57pm
+Log started: 14 May 2020 4:30:19pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:54:50pm
+Log started: 14 May 2020 4:31:24pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:56:00pm
+Log started: 14 May 2020 4:32:31pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:56:22pm
+Log started: 14 May 2020 4:33:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 2:59:00pm
+Log started: 14 May 2020 4:36:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:03:18pm
+Log started: 14 May 2020 4:44:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:03:32pm
+Log started: 14 May 2020 4:46:03pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:04:12pm
+Log started: 15 May 2020 9:34:19am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:17:42pm
+Log started: 15 May 2020 9:42:52am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:18:07pm
+Log started: 15 May 2020 9:52:08am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:36:39pm
+Log started: 15 May 2020 9:58:52am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:41:02pm
+Log started: 15 May 2020 9:59:14am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:41:54pm
+Log started: 15 May 2020 10:00:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:43:10pm
+Log started: 15 May 2020 10:02:40am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:46:48pm
+Log started: 15 May 2020 10:05:12am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:47:14pm
+Log started: 15 May 2020 10:07:50am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:47:51pm
+Log started: 15 May 2020 10:08:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:48:45pm
+Log started: 15 May 2020 10:09:16am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:49:18pm
+Log started: 15 May 2020 10:14:24am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:50:00pm
+Log started: 15 May 2020 10:15:04am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:50:50pm
+Log started: 15 May 2020 10:15:31am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:51:32pm
+Log started: 15 May 2020 10:16:02am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:52:22pm
+Log started: 15 May 2020 10:16:58am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 3:54:27pm
+Log started: 15 May 2020 10:19:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 4:05:12pm
+Log started: 15 May 2020 10:19:48am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 4:06:43pm
+Log started: 15 May 2020 10:22:12am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 4:38:44pm
+Log started: 15 May 2020 10:22:46am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 4:39:07pm
+Log started: 15 May 2020 10:29:48am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 23 Apr 2020 4:41:57pm
+Log started: 15 May 2020 10:32:33am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:04:35am
+Log started: 15 May 2020 10:42:14am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:07:34am
+Log started: 15 May 2020 10:49:25am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:08:09am
+Log started: 15 May 2020 10:49:46am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:12:21am
+Log started: 15 May 2020 10:50:07am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:18:54am
+Log started: 15 May 2020 10:50:45am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:26:43am
+Log started: 15 May 2020 10:53:10am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:34:09am
+Log started: 15 May 2020 10:53:53am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:34:43am
+Log started: 15 May 2020 10:54:12am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:35:10am
+Log started: 15 May 2020 10:54:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:40:44am
+Log started: 15 May 2020 10:54:58am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:41:01am
+Log started: 15 May 2020 10:56:00am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:41:43am
+Log started: 15 May 2020 10:56:48am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:42:45am
+Log started: 15 May 2020 11:03:10am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 24 Apr 2020 9:43:26am
+Log started: 15 May 2020 11:03:36am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:09:41am
+Log started: 15 May 2020 11:03:58am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:11:37am
+Log started: 15 May 2020 11:04:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:13:43am
+Log started: 15 May 2020 11:04:56am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:21:27am
+Log started: 15 May 2020 11:14:11am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:21:58am
+Log started: 15 May 2020 11:16:20am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:23:13am
+Log started: 15 May 2020 11:16:41am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:23:52am
+Log started: 15 May 2020 11:17:05am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:24:19am
+Log started: 15 May 2020 11:19:05am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:25:19am
+Log started: 15 May 2020 11:21:34am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:28:36am
+Log started: 15 May 2020 11:22:16am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:29:07am
+Log started: 15 May 2020 11:23:18am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:29:37am
+Log started: 15 May 2020 11:45:04am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:30:09am
+Log started: 15 May 2020 11:47:32am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:30:34am
+Log started: 15 May 2020 11:48:48am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:31:07am
+Log started: 15 May 2020 11:49:58am
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:31:26am
+Log started: 15 May 2020 1:41:35pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:31:54am
+Log started: 15 May 2020 1:43:54pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:42:26am
+Log started: 15 May 2020 1:44:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:43:22am
+Log started: 15 May 2020 1:45:09pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:45:01am
+Log started: 15 May 2020 1:46:55pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:46:37am
+Log started: 15 May 2020 1:47:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:47:51am
+Log started: 15 May 2020 1:48:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:48:14am
+Log started: 15 May 2020 1:49:42pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:52:50am
+Log started: 15 May 2020 1:50:09pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 10:55:19am
+Log started: 15 May 2020 1:50:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:06:57am
+Log started: 15 May 2020 1:53:17pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:08:20am
+Log started: 15 May 2020 1:54:05pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:09:28am
+Log started: 15 May 2020 1:54:35pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:09:47am
+Log started: 15 May 2020 1:55:03pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:10:14am
+Log started: 15 May 2020 1:55:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:11:18am
+Log started: 15 May 2020 2:02:10pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:12:01am
+Log started: 15 May 2020 2:03:23pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:12:50am
+Log started: 15 May 2020 2:22:16pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:13:55am
+Log started: 15 May 2020 2:22:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:15:00am
+Log started: 15 May 2020 2:23:35pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:18:25am
+Log started: 15 May 2020 2:23:52pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:21:20am
+Log started: 15 May 2020 2:24:58pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:25:01am
+Log started: 15 May 2020 2:25:44pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:25:29am
+Log started: 15 May 2020 2:26:35pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:26:51am
+Log started: 15 May 2020 2:28:22pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:35:41am
+Log started: 15 May 2020 2:33:03pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:35:56am
+Log started: 15 May 2020 2:52:45pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:36:37am
+Log started: 15 May 2020 2:54:40pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:38:51am
+Log started: 15 May 2020 2:55:05pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:42:46am
+Log started: 15 May 2020 2:55:31pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:43:34am
+Log started: 15 May 2020 2:56:06pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:48:11am
+Log started: 15 May 2020 3:01:31pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:49:35am
+Log started: 15 May 2020 3:02:25pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:49:55am
+Log started: 15 May 2020 3:02:57pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:51:14am
+Log started: 15 May 2020 3:20:21pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:52:12am
+Log started: 15 May 2020 3:21:27pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:53:47am
+Log started: 15 May 2020 3:22:34pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:58:19am
+Log started: 15 May 2020 3:25:50pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 11:59:54am
+Log started: 15 May 2020 3:26:49pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 27 Apr 2020 12:00:35pm
+Log started: 15 May 2020 3:29:12pm
 
 
 **********************************************************
 === start of YSE log ===
-Log started: 28 Apr 2020 1:18:06pm
+Log started: 15 May 2020 3:30:45pm
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 1:26:39pm
+=======
+Log started: 15 May 2020 3:32:38pm
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 1:37:57pm
+=======
+Log started: 16 May 2020 10:25:11am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:29:11pm
+=======
+Log started: 16 May 2020 10:29:11am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:31:24pm
+=======
+Log started: 16 May 2020 10:31:25am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:33:09pm
+=======
+Log started: 16 May 2020 10:33:41am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:37:05pm
+=======
+Log started: 16 May 2020 10:35:04am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:39:48pm
+=======
+Log started: 16 May 2020 10:37:31am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:41:39pm
+=======
+Log started: 16 May 2020 10:38:36am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:42:13pm
+=======
+Log started: 16 May 2020 10:41:55am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:43:07pm
+=======
+Log started: 16 May 2020 10:42:40am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:47:28pm
+=======
+Log started: 16 May 2020 10:43:18am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:47:58pm
+=======
+Log started: 16 May 2020 10:44:32am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:48:20pm
+=======
+Log started: 16 May 2020 10:45:33am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:48:38pm
+=======
+Log started: 16 May 2020 10:46:52am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:48:55pm
+=======
+Log started: 16 May 2020 10:47:51am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:49:10pm
+=======
+Log started: 16 May 2020 10:48:45am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:50:17pm
+=======
+Log started: 16 May 2020 10:50:38am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:51:43pm
+=======
+Log started: 16 May 2020 10:53:17am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:52:19pm
+=======
+Log started: 16 May 2020 10:55:12am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:54:55pm
+=======
+Log started: 16 May 2020 10:56:44am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:55:14pm
+=======
+Log started: 16 May 2020 10:57:04am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:56:57pm
+=======
+Log started: 16 May 2020 11:03:58am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:57:18pm
+=======
+Log started: 18 May 2020 9:32:35am
+>>>>>>> Stashed changes
 
 
 **********************************************************
 === start of YSE log ===
+<<<<<<< Updated upstream
 Log started: 28 Apr 2020 2:58:10pm
 
 
@@ -3087,4 +3180,7 @@ Log started: 7 May 2020 10:20:02am
 **********************************************************
 === start of YSE log ===
 Log started: 7 May 2020 10:46:18am
+=======
+Log started: 18 May 2020 9:36:30am
+>>>>>>> Stashed changes
 

@@ -170,6 +170,9 @@
     <ClInclude Include="AnimatedMesh.h" />
     <ClInclude Include="BaseShader.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CollisionStruct.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="DeferredRenderBuffer.h" />
     <ClInclude Include="DxHandler.h" />
     <ClInclude Include="Enemy.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextHandler.h">
@@ -222,6 +226,7 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="TextHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -341,6 +346,23 @@
       <DisableOptimizations Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</DisableOptimizations>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="SkyboxPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="SkyboxVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FIDImporter\FIDImporter.vcxproj">
+      <Project>{6698eabc-fba4-4116-a629-6c74eed7b958}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FIDImporter\FIDImporter.vcxproj">

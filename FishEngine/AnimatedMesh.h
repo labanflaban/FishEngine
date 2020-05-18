@@ -46,6 +46,11 @@ private:
 public:
 	ID3D11Device* device = nullptr;
 
+<<<<<<< Updated upstream
+=======
+	int vectorIndex = 0;
+
+>>>>>>> Stashed changes
 	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);

@@ -3,6 +3,11 @@
 #include "Vertex.h"
 #include <vector>
 #include <iostream>
+<<<<<<< Updated upstream
+=======
+#include <assert.h>
+
+>>>>>>> Stashed changes
 class FIDParser
 {
 public:

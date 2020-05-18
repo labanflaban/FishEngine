@@ -7,7 +7,11 @@ Texture2D PositionTexture : register(t2);
 SamplerState mySampler;
 
 //const static float3 attenuation = float3(1, 0, 0.0006); //lower c value is, the farther light travels. a, b, c = x, y, z
+<<<<<<< Updated upstream
 const static float3 attenuation = float3(0.5, 0, 0.0006);
+=======
+const static float3 attenuation = float3(0, 0, 0.00199);
+>>>>>>> Stashed changes
 
 //From CPU to GPU. Sends whatever you need.
 cbuffer PS_CONSTANT_BUFFER
@@ -52,7 +56,7 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	//Calculate light
 	float3 surfaceToLightV = normalize(lightPos - position);
 	float diffuseStrength = clamp(dot(normal, surfaceToLightV), 0, 1); //Cannot go over 1, and never below 0.
-	float ambientStrength = 0.5f; //Constant 'global' light.
+	float ambientStrength = 0.1f; //Constant 'global' light.
 
 	float4 lookVector = normalize(position - camPos); //Specular, camera to position
 	float4 reflectionVec = normalize(reflect(float4(surfaceToLightV, 0), normal)); //Specular
@@ -63,9 +67,11 @@ float4 main(VS_OUTPUT input) : SV_Target0
 	float distanceSquared = pow(lightDistance, 2);
 	float attenuationFactor = max(min(1 / (attenuation.x + lightDistance * attenuation.y + distanceSquared * attenuation.z), 1), 0);
 
+	//float4(0.117, 0.47, 0.83, 0)
+	
 	if (albedo.w != 2)
 	{
-		float4 col = (diffuseStrength + ambientStrength + specStrength) * albedo * lightColor * attenuationFactor;
+        float4 col = (diffuseStrength + ambientStrength + specStrength) * albedo * lightColor * attenuationFactor;
 		col.w = 1;
 		return col;//((diffuseStrength + ambientStrength + specStrength) * albedo) + glow; //Final light output
 	}	

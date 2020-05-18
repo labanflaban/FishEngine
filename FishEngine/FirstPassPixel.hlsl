@@ -1,10 +1,10 @@
-
 Texture2D colorMap : register(t0);
 TextureCube sky : register(t1);
+Texture2D NormalMapTexture : register(t3);
 SamplerState mysampler;
 
 //From CPU to GPU. Sends whatever you need.
-cbuffer PS_CONSTANT_BUFFER
+cbuffer PS_CONSTANT_BUFFER : register(b0)
 {
 	float4 lightPos;
 	float4 lightColor;
@@ -22,6 +22,7 @@ cbuffer PS_CONSTANT_BUFFER
 
 	bool hasTexture;
 	bool isSky;
+	bool hasNormalMap;
 }
 
 struct PS_INPUT //Output from geometry shader
@@ -62,24 +63,21 @@ PS_OUTPUT main(PS_INPUT input) : SV_Target
 		float3 camToPixelVec = (input.positionInWorldSpace.xyz - camPos.xyz);
 		float3 camToPixelReflected = normalize(reflect(camToPixelVec, input.vNormal.xyz));
 
-		output.vColour.w = 2;
-		//input.vUV = float4(input.vUV.x - 1, input.vUV.y, input.vUV.z, 0);
-		//output.vColour = sky.Sample(mysampler, input.vUV);
-		output.vColour = sky.Sample(mysampler, normalize(camToPixelVec));
-		//output.vColour = sky.Sample(mysampler, input.vPosition);
-		output.vColour.w = 2;
-	}
+	//	output.vColour = sky.Sample(mysampler, normalize(camToPixelVec));
+	//	output.vColour.w = 2;
+        output.vColour = float4(1, 0, 0, 0);
+    }
 
-	/*if (hasNormalMap)
+	if (hasNormalMap)
 	{
-		float3 loadedNormal = NormalMapTexture.Sample(mysampler, input.vUV);
+		float3 loadedNormal = NormalMapTexture.Sample(mysampler, input.vUV.xy);
 		float3 tangent = normalize(input.vTangent - dot(input.vTangent, input.vNormal) * input.vNormal);
 		float3 bitangent = normalize(cross(loadedNormal, tangent));
 
 		float3x3 tbn = float3x3(tangent, bitangent, loadedNormal); //This will move things into 'texture space' or 'tangent space' in order to support rotations of the object without distortion.
 
 		input.vNormal = normalize(float4(mul(loadedNormal, tbn), 0));
-	}*/
+    }
 
 	output.vNormal = input.vNormal;
 	return output;

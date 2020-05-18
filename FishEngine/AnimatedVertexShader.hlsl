@@ -44,6 +44,7 @@ VS_OUTPUT main(uint vertexID : SV_VertexID)
 
 	VS_OUTPUT Output; 
 
+<<<<<<< Updated upstream
 	Output.vNormal = normalize(mul(float4(normalize(input.vNormal), 0), worldMatrix));
 	Output.vTangent = normalize(mul(float4(normalize(input.vTangent), 0), worldMatrix));
 	Output.vPosition = mul(float4(input.vPosition, 1), worldViewProjectionMatrix);
@@ -53,6 +54,25 @@ VS_OUTPUT main(uint vertexID : SV_VertexID)
 
 
 	Output.vColour = input.vColour;
+=======
+    float4 blendPos1 = float4(poses[vertexID].vPosition, 1); //Neutral
+    float4 blendPos2 = float4(poses[vertexOffsetPerModel * currentTargetIndex + vertexID].vPosition, 1);
+	
+    float3 blendNormal1 = poses[vertexID].vNormal;
+    float3 blendNormal2 = poses[vertexOffsetPerModel * currentTargetIndex + vertexID].vNormal;
+	
+    float4 blendedPos = lerp(blendPos1, blendPos2, time);
+    float3 blendedNormal = normalize(lerp(blendNormal1, blendNormal2, time));
+	
+	Output.vNormal = normalize(mul(float4(normalize(blendedNormal), 0), worldMatrix));
+	Output.vTangent = normalize(mul(float4(normalize(input.vTangent), 0), worldMatrix));
+	Output.vPosition = mul(blendedPos, worldViewProjectionMatrix);
+
+	Output.positionInWorldSpace = mul(blendedPos, worldMatrix).xyww;
+
+
+    Output.vColour = input.vColour;
+>>>>>>> Stashed changes
 	Output.vUV = float4(input.vUV, 1, 1);
 
 	return Output;

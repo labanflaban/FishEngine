@@ -1,6 +1,10 @@
+<<<<<<< Updated upstream
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
 F:\Github\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\GarbageBranch\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
 C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
 C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\FishEngine - Copy\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
 C:\Users\Filip\Documents\GitHub\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
+=======
+C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\MergedTest\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
+>>>>>>> Stashed changes

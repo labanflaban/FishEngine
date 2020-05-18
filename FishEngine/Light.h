@@ -13,6 +13,8 @@ public:
 	Light(ID3D11Device* device);
 	~Light();
 
+	int vectorIndex = 0;
+
 	void setPosition(DirectX::XMFLOAT3 pos);
 };
 

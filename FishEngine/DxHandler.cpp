@@ -21,6 +21,10 @@ PixelShader* DxHandler::particlePixel = new PixelShader();
 
 PixelShader* DxHandler::transparencyPixel = new PixelShader();
 VertexShader* DxHandler::transparencyVertex = new VertexShader();
+PixelShader* DxHandler::skyboxPixel = new PixelShader();
+VertexShader* DxHandler::skyboxVertex = new VertexShader();
+
+VertexShader* DxHandler::animVertex = new VertexShader; //´handles morph anims
 
 VertexShader* DxHandler::animVertex = new VertexShader; //´handles morph anims
 
@@ -138,6 +142,7 @@ void DxHandler::setupDepthBuffer()
 	devicePtr->CreateDepthStencilView(DxHandler::depthBuffer, NULL, &depthStencil);
 
 	D3D11_DEPTH_STENCIL_DESC depthStateDesc = { 0 };
+	depthStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 	devicePtr->CreateDepthStencilState(&depthStateDesc, &depthStencilState);
 	contextPtr->OMSetDepthStencilState(depthStencilState, 0);
 }
@@ -161,10 +166,10 @@ void DxHandler::drawFullscreenQuad(Camera& drawFromCamera)
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
 	UINT offset = 0u;
 
-	PS_CONSTANT_LIGHT_BUFFER lightBuff;
-	lightBuff.camPos = drawFromCamera.cameraPosition;
+	//PS_CONSTANT_LIGHT_BUFFER lightBuff;
+	//lightBuff.camPos = drawFromCamera.cameraPosition;
 
-	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
+	//DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
 
 	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &fullscreenQuad->vertexBuffer,
 		&stride, &offset);
@@ -182,7 +187,11 @@ void DxHandler::setDefaultState()
 	VS_CONSTANT_MATRIX_BUFFER buff;
 	PS_CONSTANT_LIGHT_BUFFER lBuff;
 	DxHandler::contextPtr->VSSetConstantBuffers(PER_OBJECT_CBUFFER_SLOT, 1, &constantVertexBuffer);
+<<<<<<< Updated upstream
 	contextPtr->PSSetConstantBuffers(1, 1, &constantAnimBuffer);
+=======
+	contextPtr->VSSetConstantBuffers(1, 1, &constantAnimBuffer);
+>>>>>>> Stashed changes
 	DxHandler::contextPtr->ClearDepthStencilView(DxHandler::depthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	contextPtr->PSSetConstantBuffers(0, 1, &constantPixelBuffer);
 	
@@ -342,6 +351,15 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 	{
 		contextPtr->PSSetShaderResources(0, 1, &drawMesh->textureView);
 	}
+<<<<<<< Updated upstream
+=======
+
+	lightBuff.hasNormalMap = drawMesh->hasNormalMap;
+	if (lightBuff.hasNormalMap)
+	{
+		contextPtr->PSSetShaderResources(3, 1, &drawMesh->NormalView);
+	}
+>>>>>>> Stashed changes
 
 	if (light != nullptr)
 	{
@@ -366,8 +384,11 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 
 }
 
+<<<<<<< Updated upstream
 double t = 0.0;
 int target = 0;
+=======
+>>>>>>> Stashed changes
 void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light)
 {
 	UINT stride = (UINT)sizeof(float) * FLOATS_PER_VERTEX;
@@ -394,6 +415,7 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 		lightBuff.lightColor = light->lightColor;
 	}
 
+<<<<<<< Updated upstream
 	t += 0.01;
 	if (t > 1)
 	{
@@ -411,6 +433,14 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 	VS_CONSTANT_ANIM_BUFFER animBuff;
 	animBuff.time = t;
 	animBuff.currentTargetIndex = target;
+=======
+
+
+	VS_CONSTANT_ANIM_BUFFER animBuff;
+	animBuff.time = drawMesh->t;
+	animBuff.currentTargetIndex = drawMesh->targetPoseIndex;
+	animBuff.vertexOffsetPerModel = drawMesh->nrOfVertices;
+>>>>>>> Stashed changes
 
 	contextPtr->VSSetShaderResources(0, 1, &drawMesh->srv);
 

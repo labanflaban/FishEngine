@@ -11,18 +11,17 @@
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
 #include "Keyframes.h"
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 const int FLOATS_PER_VERTEX = 15;
-/*struct Vertex
-{
-	float x, y, z = 0;
-	float r, g, b, a = 1; //Default to white for debug
-	float u, v = 0;
-	float nx, ny, nz = 0;
-	float tx, ty, tz = 0;
-};*/
 
+<<<<<<< Updated upstream
 //class ObjParser;
+=======
+>>>>>>> Stashed changes
 
 class Mesh
 {
@@ -37,6 +36,12 @@ private:
 
 	ObjParser parser;
 	FIDParser fidParser;
+<<<<<<< Updated upstream
+=======
+
+	ID3D11Resource* NormalMap;
+	ID3D11Texture2D* pNormalMap = NULL;
+>>>>>>> Stashed changes
 
 	ID3D11Resource* texture;
 	ID3D11Texture2D* pTexture = NULL;
@@ -58,6 +63,7 @@ public:
 	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass);
 
 	ID3D11ShaderResourceView* textureView = nullptr;
+	ID3D11ShaderResourceView* NormalView = nullptr;
 
 	ID3D11Buffer* vertexBuffer = NULL;
 	std::vector<Vertex> vertices;
@@ -73,15 +79,22 @@ public:
 	DirectX::XMMATRIX& getWorldMatrix();
 
 	bool hasTexture = false;
+	bool hasNormalMap = false;
 
 	ID3D11Buffer* createVertexBuffer();
 
 	void readMeshFromFID(std::string fileName);
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
+<<<<<<< Updated upstream
+=======
+	void readNormalMapFromFile(std::wstring NormalMapName);
+>>>>>>> Stashed changes
 	
 
 	bool isSky = false;
 	Mesh(ID3D11Device* device);
 	~Mesh();
+
+	int vectorIndex = 0;
 };

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 ﻿  Engine.cpp
 C:\Users\Filip\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(85,61): warning C4316: 'Particle': object allocated on the heap may not be aligned 16
 C:\Users\Filip\Documents\GitHub\FishEngine\FishEngine\Engine.cpp(144,20): warning C4018: '<': signed/unsigned mismatch
@@ -90,3 +91,13 @@ BulletCollision_Debug.lib(btSubSimplexConvexCast.obj) : warning LNK4099: PDB 'Bu
 BulletCollision_Debug.lib(btVoronoiSimplexSolver.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btVoronoiSimplexSolver.obj)' or at 'C:\Users\Filip\Documents\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
 BulletCollision_Debug.lib(btPolyhedralContactClipping.obj) : warning LNK4099: PDB 'BulletCollision.pdb' was not found with 'BulletCollision_Debug.lib(btPolyhedralContactClipping.obj)' or at 'C:\Users\Filip\Documents\GitHub\FishEngine\Debug\BulletCollision.pdb'; linking object as if no debug info
   FishEngine.vcxproj -> C:\Users\Filip\Documents\GitHub\FishEngine\Debug\FishEngine.exe
+=======
+﻿  Enemy.cpp
+C:\3DProgramming\FishEngine-master\FishEngine\Enemy.cpp(5,32): warning C4316: 'Mesh': object allocated on the heap may not be aligned 16
+C:\3DProgramming\FishEngine-master\FishEngine\Enemy.cpp(13,33): warning C4316: 'Light': object allocated on the heap may not be aligned 16
+  Tool.cpp
+C:\3DProgramming\FishEngine-master\FishEngine\Tool.cpp(6,26): warning C4305: 'argument': truncation from 'double' to 'Flt'
+C:\3DProgramming\FishEngine-master\FishEngine\Tool.cpp(46,68): warning C4305: 'argument': truncation from 'double' to 'float'
+  Generating Code...
+  FishEngine.vcxproj -> C:\3DProgramming\FishEngine-master\Debug\FishEngine.exe
+>>>>>>> Stashed changes

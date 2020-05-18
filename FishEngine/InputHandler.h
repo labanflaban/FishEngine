@@ -28,6 +28,11 @@ private:
 	static IDirectInputDevice8* DIMouse;
 	static Camera* camera;
 	static LPDIRECTINPUT8 DirectInput;
+<<<<<<< Updated upstream
+=======
+
+	HWND* primaryWindow;
+>>>>>>> Stashed changes
 
 public:
 	static std::unique_ptr<DirectX::Mouse> mouse;

@@ -10,6 +10,11 @@ DirectX::XMFLOAT3 LevelMesh::getRotation()
 	return rotation;
 }
 
+<<<<<<< Updated upstream
+=======
+
+
+>>>>>>> Stashed changes
 DirectX::XMFLOAT3 LevelMesh::getScale()
 {
 	return scale;
@@ -27,7 +32,11 @@ istream& operator>>(istream& input, LevelMesh& level)
 {
 	input >> level.name >> level.translation.x >> level.translation.y >> level.translation.z
 		>> level.rotation.x >> level.rotation.y >> level.rotation.z
+<<<<<<< Updated upstream
 		>> level.scale.x>> level.scale.y>> level.scale.z >> level.backGroundCheck >> level.tag;
+=======
+		>> level.scale.x >> level.scale.y >> level.scale.z >> level.backGroundCheck >> level.tag;
+>>>>>>> Stashed changes
 	return input;
 }
 
@@ -63,3 +72,89 @@ void Level::printVector(vector<LevelMesh>& levelMeshVector)
 		cout << levelMeshVector.at(i) << endl;
 	}
 }
+<<<<<<< Updated upstream
+=======
+
+DirectX::XMFLOAT3 Level::multiplyFloat3XYZ(DirectX::XMFLOAT3 first, DirectX::XMFLOAT3 second)
+{
+	DirectX::XMFLOAT3 mul(1, 1, 1);
+	mul.x = first.x * second.x;
+	mul.y = first.y * second.y;
+	mul.z = first.z * second.z;
+	return mul;
+}
+
+DirectX::XMFLOAT3 Level::degreesToRadians(DirectX::XMFLOAT3 degrees)
+{
+	degrees.x = (degrees.x / 180) * DirectX::XM_PI;
+	degrees.y = (degrees.y / 180) * DirectX::XM_PI;
+	degrees.z = (degrees.z / 180) * DirectX::XM_PI;
+	std::cout << degrees.x << "," << degrees.y << "," << degrees.z << std::endl;
+	return degrees;
+}
+
+void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager)
+{
+	Level* level = new Level();
+	level->readFromeFile(level->levelMeshVector);
+	DirectX::XMFLOAT3 multi(10, 10, 10);
+
+	//skapa en funktion som förenklar skapande av objekt senare
+
+	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
+	{
+
+		if (level->levelMeshVector.at(i).tag == "platform")
+		{
+			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->readMeshFromFID("./Models/JellyFish.FID");
+			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+
+			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+			sceneManager->addMesh(groundObject);
+			//scene.push_back(groundObject);
+			DirectX::XMFLOAT3 test = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
+			std::cout << test.x << " " << test.y << " " << test.z << std::endl;
+		}
+		else if (level->levelMeshVector.at(i).tag == "background")
+		{
+			Mesh* background = new Mesh(DxHandler::devicePtr);
+			background->readMeshFromFID("./Models/berg.FID");
+			background->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			background->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			background->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			//scene.push_back(background);
+			sceneManager->addMesh(background);
+			cout << endl;
+
+		}
+		else if (level->levelMeshVector.at(i).tag == "enemy")
+		{
+			Enemy* enemy = new Enemy(DxHandler::devicePtr);
+			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			//enemies.push_back(enemy);
+			//scene.push_back(enemy->model);
+			//lights.push_back(enemy->light);
+			collisionStruct* enemyCollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
+			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 1);
+			enemy->model->rigidBody->setUserPointer(enemyCollStruct);
+			sceneManager->addEnemy(enemy);
+			sceneManager->addLight(enemy->light);
+			sceneManager->addMesh(enemy->model);
+
+		}
+		else if (level->levelMeshVector.at(i).tag == "character")
+		{
+
+		}
+	}
+}
+
+>>>>>>> Stashed changes

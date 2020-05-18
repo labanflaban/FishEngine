@@ -24,6 +24,11 @@
 #include <random>
 #include "ObjParser.h"
 #include "Level.h"
+<<<<<<< Updated upstream
+=======
+#include "CollisionStruct.h"
+#include "SceneManager.h"
+>>>>>>> Stashed changes
 
 //#include <btBulletDynamicsCommon.h>
 //#include <btBulletDynamics.h>
@@ -48,7 +53,8 @@ private:
 
 	Camera primaryCamera;
 
-
+	int clientWidth = 0;
+	int clientHeight = 0;
 	
 public:
 	Engine();
@@ -69,7 +75,8 @@ public:
 	ID3D11RenderTargetView* nullRTV = nullptr;
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 
-	//Mesh* playerMesh = nullptr;
+	SceneManager sceneManager;
+	
 	Player* player = nullptr;
 	Tool* fishingRod = nullptr;
 	bool pull = false;
@@ -79,7 +86,10 @@ public:
 	void renderLightVolumes();
 	void renderParticles();
 
+<<<<<<< Updated upstream
 	
+=======
+>>>>>>> Stashed changes
 	std::vector<Mesh*> scene;
 	std::vector<AnimatedMesh*> animatedMeshes;
 	std::vector<Light*> lights;
@@ -87,5 +97,9 @@ public:
 	std::vector<Enemy*> enemies;
 	std::vector<Particle*> particles;
 
+<<<<<<< Updated upstream
 	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes);
+=======
+	//void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes);
+>>>>>>> Stashed changes
 };

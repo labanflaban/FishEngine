@@ -21,8 +21,22 @@ public:
 	UINT nrOfVertices = 0;
 	std::vector<Vertex> vertices;
 
+<<<<<<< Updated upstream
 	int targetPoseIndex = 0; //Neutral
 
 	void createStructuredBuffer(ID3D11Device* device);
 	void appendStructuredBuffer(std::vector<Vertex>* vertVectorsToMerge[], int nrOfVectorsToMerge);
+=======
+	bool decrementT = false;
+	bool manualUpdate = false;
+
+	int targetPoseIndex = 0; //Neutral
+	double t = 0.0;
+	double animationSpeed = 1;
+
+	void createStructuredBuffer(ID3D11Device* device);
+	void appendStructuredBuffer(std::vector<Vertex>* vertVectorsToMerge[], int nrOfVectorsToMerge);
+
+	virtual void stepAnim(double deltaT = 0.0);
+>>>>>>> Stashed changes
 };
