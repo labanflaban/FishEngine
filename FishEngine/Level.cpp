@@ -143,10 +143,14 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 
-			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 			sceneManager->addMesh(groundObject);
+		}
+		else if(level->levelMeshVector.at(i).tag == "light")
+		{
+			Light* lightObject = new Light(DxHandler::devicePtr);
+			lightObject->setPosition(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			sceneManager->addLight(lightObject);
 		}
 	}
 }
