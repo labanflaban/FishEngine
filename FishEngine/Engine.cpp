@@ -251,6 +251,20 @@ void Engine::updateParticles()
 	}
 }
 
+void Engine::updateGUI()
+{
+	if(guiHandler->checkButtons() == 1)
+	{
+		gameOver = false;
+		cout << "STARTING GAME!" << endl;
+	}
+
+	else if(guiHandler->checkButtons() == 2)
+	{
+		cout << "QUITING APP!" << endl;
+	}
+}
+
 collisionStruct* getCollStruct(void* ptr)
 {
 	if (ptr != nullptr)
@@ -510,8 +524,8 @@ void Engine::engineLoop()
 	Level* level = new Level();
 	level->createLevel(dynamicsWorld, collisionShapes, &sceneManager);
 
-
-
+	guiHandler->initMainMenu();
+	guiHandler->initHUD();
 	/*Enemy* enemy = new Enemy(DxHandler::devicePtr);
 	this->enemies.push_back(enemy);
 	this->scene.push_back(enemy->model);
@@ -522,21 +536,6 @@ void Engine::engineLoop()
 	this->scene.push_back(enemy2->model);
 	this->lights.push_back(enemy2->light);
 	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));*/
-
-	Mesh* bruh = guiHandler->generateGUIElement();
-	bruh->setScaling(XMFLOAT3(0.3, 0.1, 0));
-	bruh->setTranslation(XMFLOAT3(-0.69f, 0.9f, 0));
-	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
-
-	bruh = guiHandler->generateGUIElement();
-	bruh->setScaling(XMFLOAT3(0.1, 0.1, 0));
-	bruh->setTranslation(XMFLOAT3(0, 0.9f, 0));
-	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
-
-	bruh = guiHandler->generateGUIElement();
-	bruh->setScaling(XMFLOAT3(0.1, 0.1, 0));
-	bruh->setTranslation(XMFLOAT3(0.3f, 0.9f, 0));
-	bruh->readTextureFromFile(L"./Textures/ButtonCombo.png");
 
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
@@ -580,6 +579,7 @@ void Engine::engineLoop()
 		renderSecondPass();
 		renderLightVolumes();
 		renderParticles();
+		updateGUI();
 		renderGUI();
 
 		//upp upp och ivääääg
@@ -865,7 +865,7 @@ void Engine::renderGUI()
 	DxHandler::GuiShaderPixel->useThis(DxHandler::contextPtr);
 	DxHandler::GuiShaderVertex->useThis(DxHandler::contextPtr);
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
-	DxHandler::contextPtr->PSSetShaderResources(0, 1, &guiHandler->GuiElements.at(0)->textureView);
+	DxHandler::contextPtr->PSSetShaderResources(0, 1, &guiHandler->guiElements.at(0)->mesh->textureView);
 	guiHandler->drawGuiElements(this->primaryCamera);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 }

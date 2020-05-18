@@ -58,7 +58,6 @@ float InputHandler::getMousePosX()
 		RECT rect;
 		//GetClientRect(*primaryWindow, &rect);
 
-
 		ScreenToClient(*(this->primaryWindow), &point);
 
 		return point.x;
@@ -74,9 +73,6 @@ float InputHandler::getMousePosY()
 		//GetClientRect(*primaryWindow, &rect);
 
 		ScreenToClient(*(this->primaryWindow), &point);
-
-
-		std::cout << point.x << " " << point.y << std::endl;
 
 		return point.y;
 	}

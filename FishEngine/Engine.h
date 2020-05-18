@@ -67,6 +67,7 @@ public:
 	void updatePlayerMovement(double deltaTime);
 	void updatePlayerTools(double deltaTime);
 	void updateParticles();
+	void updateGUI();
 
 	void createWindow();
 	void createDirectX();
@@ -87,6 +88,8 @@ public:
 	Tool* hook = nullptr;
 	Tool* rope = nullptr;
 	bool pull = false;
+
+	bool gameOver = true;
 
 	void renderFirstPass(std::vector<Mesh*>* scene);
 	void renderSecondPass();

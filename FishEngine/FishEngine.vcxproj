@@ -181,6 +181,8 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GBufferHandler.h" />
     <ClInclude Include="GeometryShader.h" />
+    <ClInclude Include="GUIButton.h" />
+    <ClInclude Include="GUIElement.h" />
     <ClInclude Include="GUIhandler.h" />
     <ClInclude Include="Keyframes.h" />
     <ClInclude Include="Level.h" />
@@ -217,6 +219,8 @@
     <ClCompile Include="FishMain.cpp" />
     <ClCompile Include="GBufferHandler.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="GUIButton.cpp" />
+    <ClCompile Include="GUIElement.cpp" />
     <ClCompile Include="GUIhandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Keyframes.cpp" />

@@ -6,55 +6,58 @@ GUIhandler::GUIhandler(DxHandler* dxHandler, InputHandler* inputHandler)
 	this->inputHandler = inputHandler;
 }
 
-Mesh* GUIhandler::generateGUIElement()
+void GUIhandler::initMainMenu()
 {
-	Mesh* tempMesh = new Mesh(this->dxHandler->devicePtr);	  //X  Y  Z   R	 G  B  A, U, V  nX nY nZ
-	tempMesh->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
-	tempMesh->vertices.push_back(Vertex{ 1, -1, 0.1f,    1, 1, 1, 1, 1, 1, 0, 0, -1 });
-	tempMesh->vertices.push_back(Vertex{ -1,  -1, 0.1f,  1, 1, 1, 1, 0, 1, 0, 0, -1 });
+	this->startButton = new GUIButton(dxHandler, inputHandler);
+	this->startButton->mesh->setScaling(DirectX::XMFLOAT3(0.3f, 0.1f, 0));
+	this->startButton->mesh->setTranslation(DirectX::XMFLOAT3(0, 0, 0));
+	this->startButton->mesh->readTextureFromFile(L"./Textures/ButtonCombo.png");
+	guiElements.push_back(this->startButton);
 
-	tempMesh->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
-	tempMesh->vertices.push_back(Vertex{ 1,  1, 0.1f,   1, 1, 1, 1, 1, 0, 0, 0, -1 });
-	tempMesh->vertices.push_back(Vertex{ 1,  -1, 0.1f, 1, 1, 1, 1, 1, 1, 0, 0, -1 });
+	this->exitButton = new GUIButton(dxHandler, inputHandler);
+	this->exitButton->mesh->setScaling(DirectX::XMFLOAT3(0.3f, 0.1, 0));
+	this->exitButton->mesh->setTranslation(DirectX::XMFLOAT3(0, -0.3f, 0));
+	this->exitButton->mesh->readTextureFromFile(L"./Textures/ButtonCombo.png");
+	guiElements.push_back(this->exitButton);
+}
 
-	tempMesh->createVertexBuffer();
+void GUIhandler::initHUD()
+{
+	GUIElement* element = new GUIElement(dxHandler);
+	element->mesh->setScaling(DirectX::XMFLOAT3(0.05f, 0.05f, 0));
+	element->mesh->setTranslation(DirectX::XMFLOAT3(-0.95f, 0.9f, 0));
+	element->mesh->readTextureFromFile(L"./Textures/HEART.png");
+	guiElements.push_back(element);
 
-	this->GuiElements.push_back(tempMesh);
-	return tempMesh;
+	GUIElement* element1 = new GUIElement(dxHandler);
+	element1->mesh->setScaling(DirectX::XMFLOAT3(0.05f, 0.05f, 0));
+	element1->mesh->setTranslation(DirectX::XMFLOAT3(-0.85f, 0.9f, 0));
+	element1->mesh->readTextureFromFile(L"./Textures/HEART.png");
+	guiElements.push_back(element1);
+
+	GUIElement* element2 = new GUIElement(dxHandler);
+	element2->mesh->setScaling(DirectX::XMFLOAT3(0.05f, 0.05f, 0));
+	element2->mesh->setTranslation(DirectX::XMFLOAT3(-0.75f, 0.9f, 0));
+	element2->mesh->readTextureFromFile(L"./Textures/HEART.png");
+	guiElements.push_back(element2);
+}
+
+int GUIhandler::checkButtons()
+{
+	if(startButton->checkIfPressed())
+	{
+		return 1;
+	}
+	else if(exitButton->checkIfPressed())
+	{
+		return 2;
+	}
 }
 
 void GUIhandler::drawGuiElements(Camera& camera)
 {
-	for(Mesh* m : this->GuiElements)
+	for(GUIElement* e : this->guiElements)
 	{
-		PS_CONSTANT_GUI_BUFFER guiBuff;
-		if (isSelected(m))
-		{
-			guiBuff.selected = true;
-		}
-		else 
-		{
-			guiBuff.selected = false;
-		}
-		DxHandler::contextPtr->UpdateSubresource(DxHandler::guiBuffer, 0, NULL, &guiBuff, 0, 0);
-		dxHandler->draw(m, camera, false, nullptr);
-	}
-}
-
-bool GUIhandler::isSelected(Mesh* guiElement)
-{
-	float pixelPosX = ((guiElement->getTranslation().x + 1) / 2) * DxHandler::WIDTH;
-	float pixelPosY = ((guiElement->getTranslation().y + 1) / 2) * DxHandler::HEIGHT;
-	float sizeX = guiElement->getScaling().x * DxHandler::WIDTH;
-	float sizeY = guiElement->getScaling().y * DxHandler::HEIGHT;
-
-	if((inputHandler->getMousePosX() < pixelPosX + sizeX / 2 && inputHandler->getMousePosX() > pixelPosX - sizeX / 2) &&
-	(DxHandler::HEIGHT-(inputHandler->getMousePosY()) < pixelPosY + sizeY / 2 && DxHandler::HEIGHT-(inputHandler->getMousePosY()) > pixelPosY - sizeY / 2))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
+		e->draw(camera);
 	}
 }

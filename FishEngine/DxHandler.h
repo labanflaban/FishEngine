@@ -57,7 +57,6 @@ struct GS_CONSTANT_MATRIX_BUFFER
 	DirectX::XMVECTOR camPos;
 };
 
-
 struct VS_CONSTANT_ANIM_BUFFER
 {
 	int vertexOffsetPerModel = 0;
@@ -68,6 +67,7 @@ struct VS_CONSTANT_ANIM_BUFFER
 struct PS_CONSTANT_GUI_BUFFER
 {
 	BOOL selected = false;
+	BOOL isButton = false;
 };
 
 struct PS_CONSTANT_LIGHT_BUFFER
