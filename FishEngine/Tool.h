@@ -16,8 +16,8 @@ private:
 	int WIDTH = 1920;
 	int HEIGHT = 1280;
 
-	float hookPosInGameX = 835.0f;
-	float hookPosInGameY = 330.0f;
+	float hookPosInGameX = (WIDTH / 2) + 62.0f;
+	float hookPosInGameY = (HEIGHT / 2) - 222.0f;
 
 	float multiplierX;
 	float multiplierY;
