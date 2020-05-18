@@ -46,16 +46,23 @@ private:
 public:
 	ID3D11Device* device = nullptr;
 
+	int vectorIndex = 0;
+
 	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 specularMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 
+	ID3D11Resource* NormalMap;
+	ID3D11Texture2D* pNormalMap = NULL;
+
 	btRigidBody* rigidBody = nullptr;
 	btCollisionShape* collider = nullptr;
 	ID3D11ShaderResourceView* textureView = nullptr;
+	ID3D11ShaderResourceView* NormalView = nullptr;
 	ID3D11Buffer* vertexBuffer = NULL;
 	//std::vector<Vertex> vertices;
 	bool hasTexture = false;
+	bool hasNormalMap = false;
 
 	DirectX::XMFLOAT3 getRotation();
 	DirectX::XMFLOAT3 getTranslation();
@@ -66,10 +73,11 @@ public:
 	void setTranslation(DirectX::XMFLOAT3 translation);
 	void setScaling(DirectX::XMFLOAT3 scaling);
 	void move(DirectX::XMFLOAT3 deltaTranslation);
-	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass);
+	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr);
 	void readMeshFromFID(std::string fileName);
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
+	void readNormalMapFromFile(std::wstring NormalMapName);
 
 	AnimatedMesh(ID3D11Device* device);
 	~AnimatedMesh();

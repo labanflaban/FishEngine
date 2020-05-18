@@ -181,6 +181,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GBufferHandler.h" />
     <ClInclude Include="GeometryShader.h" />
+    <ClInclude Include="GUIhandler.h" />
     <ClInclude Include="Keyframes.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Light.h" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TextHandler.h">
@@ -215,6 +217,7 @@
     <ClCompile Include="FishMain.cpp" />
     <ClCompile Include="GBufferHandler.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="GUIhandler.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Keyframes.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -225,6 +228,7 @@
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="TextHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -300,6 +304,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="GuiShaderPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="GuiShaderVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="LightVolumeShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

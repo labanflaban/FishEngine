@@ -10,7 +10,7 @@ class Enemy
 private:
 
 public:
-	Mesh* model = nullptr;
+	AnimatedMesh* model = nullptr;
 	Light* light = nullptr;
 	Enemy(ID3D11Device* device);
 	~Enemy();
@@ -21,6 +21,8 @@ public:
 	float maxDebounce = 5.0f;
 
 	float xVel, yVel = 0.f;
+
+	int vectorIndex = 0;
 
 	virtual void update(Player* plr);
 };

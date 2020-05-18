@@ -2,9 +2,18 @@
 
 Enemy::Enemy(ID3D11Device* device)
 {
-	this->model = new Mesh(device);
-	this->model->readMeshFromFile("./Models/actualCube.obj");
-	this->model->setScaling(DirectX::XMFLOAT3(10, 10, 10));
+	this->model = new AnimatedMesh(device);
+	//this->model->readMeshFromFile("./Models/actualCube.obj");
+	this->model->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+	std::vector<Vertex> target1 = FIDParser::readFromFID("./Models/Fish_Right.FID");
+	std::vector<Vertex> target2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
+	this->model->readTextureFromFile(L"./Models/FISHCOLOR.png");
+	std::vector<Vertex>* fishArr[] = { &target1, &target2 };
+	model->appendStructuredBuffer(fishArr, 2);
+	model->createStructuredBuffer(DxHandler::devicePtr);
+	model->targetPoseIndex = 1;
+	model->animationSpeed = 0.3;
+	//
 
 	this->light = new Light(device);
 	light->lightColor = DirectX::XMVectorSet(0, 0, 1, 0); //Blue
@@ -12,8 +21,8 @@ Enemy::Enemy(ID3D11Device* device)
  
 Enemy::~Enemy()
 {
-	delete this->model;
-	delete this->light;
+	//delete this->model;
+	//delete this->light;
 }
 
 void Enemy::update(Player* plr)
@@ -60,7 +69,14 @@ void Enemy::update(Player* plr)
 		}
 	}
 
-	model->setRotation(DirectX::XMFLOAT3(0, 0, -angle));
+	//model->setRotation(DirectX::XMFLOAT3(0, 0, angle));
+
+	if (model->getTranslation().x < plr->model->getTranslation().x)
+	{
+		model->setRotation(DirectX::XMFLOAT3(0, -3.14, 3.14/2));
+	}
+	else
+		model->setRotation(DirectX::XMFLOAT3(0, 0, 3.14/2));
 
 	//btTransform transform = model->rigidBody->getWorldTransform();
 	//std::cout << transform.getOrigin().x() << " " << transform.getOrigin().y() << " " << transform.getOrigin().z() << " " << std::endl;

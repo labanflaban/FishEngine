@@ -222,7 +222,6 @@ std::vector<Vertex> ObjParser::readFromObj(std::string fileName)
 									tempVert.u = loadedVertTextureCoords.at((std::stoi(tempString)) - 1).x;
 									tempVert.v = 1 - loadedVertTextureCoords.at((std::stoi(tempString)) - 1).y;
 
-									std::cout << "" << std::endl; //here
 								}
 								else
 								{

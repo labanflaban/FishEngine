@@ -82,4 +82,6 @@ public:
 	bool isSky = false;
 	Mesh(ID3D11Device* device);
 	~Mesh();
+
+	int vectorIndex = 0;
 };

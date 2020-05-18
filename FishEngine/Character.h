@@ -1,10 +1,11 @@
 #pragma once
 #include "Mesh.h"
+#include "AnimatedMesh.h"
 
 class Character
 {
 private:
 
 public:
-	Mesh* model;
+	AnimatedMesh* model = nullptr;
 };

@@ -201,6 +201,8 @@ Mesh::~Mesh()
 	{
 		this->vertexBuffer->Release();
 	}
+	if (this->textureView)
+		this->textureView->Release();
 	//delete this->rigidBody;
 	//delete this->collider;
 }

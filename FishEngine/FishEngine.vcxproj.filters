@@ -111,6 +111,12 @@
     <ClInclude Include="CollisionStruct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIhandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FishEngine.rc">
@@ -201,6 +207,12 @@
     <ClCompile Include="Level.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GUIhandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -243,6 +255,12 @@
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxVertex.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="GuiShaderPixel.hlsl">
+      <Filter>Source Files\Shaders\Deferred</Filter>
+    </FxCompile>
+    <FxCompile Include="GuiShaderVertex.hlsl">
       <Filter>Source Files\Shaders\Deferred</Filter>
     </FxCompile>
   </ItemGroup>

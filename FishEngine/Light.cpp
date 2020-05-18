@@ -9,7 +9,12 @@ Light::Light(ID3D11Device* device)
 
 Light::~Light()
 {
-	delete this->lightVolume;
+	if (this->lightVolume)
+	{
+		//this->lightVolume->vertexBuffer->Release();
+		delete this->lightVolume;
+	}
+	//
 }
 
 void Light::setPosition(DirectX::XMFLOAT3 pos)

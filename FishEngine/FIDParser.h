@@ -3,6 +3,8 @@
 #include "Vertex.h"
 #include <vector>
 #include <iostream>
+#include <assert.h>
+
 class FIDParser
 {
 public:

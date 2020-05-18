@@ -35,7 +35,7 @@ istream& operator>>(istream& input, LevelMesh& level)
 
 void Level::readFromeFile(vector<LevelMesh>& levelMeshVector)
 {
-	string fileName = "./Levels/Level.txt";
+	string fileName = "./Levels/Level.level";
 	ifstream inFile;
 	LevelMesh* levelMesh = new LevelMesh();
 
@@ -84,13 +84,11 @@ DirectX::XMFLOAT3 Level::degreesToRadians(DirectX::XMFLOAT3 degrees)
 	return degrees;
 }
 
-void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, vector<Mesh*>& scene, vector<Enemy*>& enemies, vector<Light*>& lights)
+void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager)
 {
 	Level* level = new Level();
 	level->readFromeFile(level->levelMeshVector);
 	DirectX::XMFLOAT3 multi(10, 10, 10);
-
-	//skapa en funktion som förenklar skapande av objekt senare
 
 	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
 	{
@@ -106,9 +104,8 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-			scene.push_back(groundObject);
-			DirectX::XMFLOAT3 test = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
-			std::cout << test.x << " " << test.y << " " << test.z << std::endl;
+			sceneManager->addMesh(groundObject);
+
 		}
 		else if (level->levelMeshVector.at(i).tag == "background")
 		{
@@ -118,24 +115,38 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			background->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			background->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 
-			scene.push_back(background);
+			sceneManager->addMesh(background);
 			cout << endl;
 
 		}
 		else if (level->levelMeshVector.at(i).tag == "enemy")
 		{
-			Enemy* enemy = new Enemy(DxHandler::devicePtr);
-			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-			enemies.push_back(enemy);
-			scene.push_back(enemy->model);
-			lights.push_back(enemy->light);
+			//Enemy* enemy = new Enemy(DxHandler::devicePtr);
+			//enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			//enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			//enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+	
+			//collisionStruct* enemyCollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
+			//enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 1);
+			//enemy->model->rigidBody->setUserPointer(enemyCollStruct);
+			//sceneManager->addEnemy(enemy);
+			//sceneManager->addLight(enemy->light);
+			//sceneManager->addMesh(enemy->model);
 
 		}
-		else if (level->levelMeshVector.at(i).tag == "character")
+		else if (level->levelMeshVector.at(i).tag == "ground")
 		{
+			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->readMeshFromFID("./Models/ground.FID");
 
+			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+
+			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+			sceneManager->addMesh(groundObject);
 		}
 	}
 }
