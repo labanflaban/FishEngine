@@ -6,6 +6,7 @@ cbuffer VS_CONSTANT_BUFFER
 	row_major float4x4 viewMatrix;
 	row_major float4x4 projMatrix;
 	bool isSky = false;
+	
 };
 
 struct VS_INPUT

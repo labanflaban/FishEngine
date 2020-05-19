@@ -15,6 +15,8 @@ public:
 	Enemy(ID3D11Device* device);
 	~Enemy();
 
+	bool justHit = false;
+
 	int health = 100;
 	
 	float damageDebounce = 5.0f;

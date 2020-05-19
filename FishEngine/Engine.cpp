@@ -206,7 +206,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 			particlePtr->setTranslation(player->model->getTranslation());
 			//particlePtr->velocity = DirectX::XMFLOAT3(rNum * 0.5 + randomNum(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, 0.5 * rNumY + 1 * rNumY + player->model->rigidBody->getLinearVelocity().y() * 0.1, 0);
-			particlePtr->velocity = XMFLOAT3(xVel*randomNumPlus(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, yVel * randomNumPlus(numberGenerator), 0);
+			particlePtr->velocity = XMFLOAT3(xVel*randomNumPlus(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, yVel * randomNumPlus(numberGenerator), randomNum(numberGenerator));
 			sceneManager.addParticle(particlePtr);
 		}
 	}
@@ -237,6 +237,12 @@ void Engine::updatePlayerMovement(double deltaTime)
 		player->stepAnim(deltaTime);
 	else
 		player->model->remaining = 0;
+
+	if (movementVector.x() > 0)
+		this->player->model->setRotation(XMFLOAT3(0, 3.14/2, 0));
+	else
+		if ((movementVector.x() < 0))
+		this->player->model->setRotation(XMFLOAT3(0, -3.14/2, 0));
 
 	XMFLOAT3 playerPos = player->model->getTranslation();
 	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
@@ -939,7 +945,7 @@ void Engine::renderParticles()
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
 	DxHandler::particlePixel->useThis(DxHandler::contextPtr);
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
-	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, DxHandler::depthStencil);//, DxHandler::depthStencil); //Application screen
 	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	for (Particle* model : sceneManager.particles) //Draw transparent stuff
 	{

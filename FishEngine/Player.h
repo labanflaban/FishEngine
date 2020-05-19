@@ -18,7 +18,8 @@ private:
 	int HEIGHT = 1280;
 	InputHandler* inputhandler = nullptr;
 public:
-	int health = 100;
+	int maxHealth = 5;
+	int health = maxHealth;
 	unsigned int points = 0;
 
 	DirectX::XMFLOAT3 fishingRodPos = DirectX::XMFLOAT3(0, 0, 0);
