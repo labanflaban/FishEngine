@@ -35,7 +35,6 @@ public:
 	bool decrementT = false;
 	bool manualUpdate = false;
 
-	double last = 0.0;
 	int fromIndex = 0;
 	int targetPoseIndex = 0; //Neutral
 	double t = 0.0;

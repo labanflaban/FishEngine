@@ -14,9 +14,16 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 {
 	btTransform transform;
 	rope->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
+
+	//Update position for rod
+	XMVECTOR lerpPosition = XMVectorLerp(handPositions[this->model->fromIndex], handPositions[this->model->targetPoseIndex], this->linearTime);
+	currentHandPosition = XMVector3Transform(lerpPosition, this->model->getWorldMatrix());//XMVectorLerp(handPositions[this->model->fromIndex], handPositions[this->model->targetPoseIndex], this->linearTime);
+	currentHandPosition += XMVectorSet(6, 0, 0, 0);
+	fishingRodPos = XMFLOAT3(XMVectorGetX(this->currentHandPosition), XMVectorGetY(this->currentHandPosition), XMVectorGetZ(this->currentHandPosition));
+	//
 	
 	//fishingrod position
-	fishingRodPos = XMFLOAT3(model->getTranslation().x + 3, model->getTranslation().y + 10, model->getTranslation().z);
+	//fishingRodPos = XMFLOAT3(model->getTranslation().x + 3, model->getTranslation().y + 10, model->getTranslation().z);
 	//Rope position
 	ropePos = XMFLOAT3(model->getTranslation().x + 10, model->getTranslation().y + 20, model->getTranslation().z);
 	//Hook position
@@ -47,6 +54,8 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 
 void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTime)
 {
+	
+
 	XMFLOAT3 currentRotation = rod->model->getRotation();
 	XMFLOAT3 currentPosistion = hook->model->getTranslation();
 	hook->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
@@ -97,18 +106,24 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 		pull = false;
 	}
 
+	
 
 }
 
 void Player::stepAnim(double deltaT)
 {
+	this->linearTime += deltaT * this->model->animationSpeed;
+	
 	this->model->t = this->model->t + deltaT * this->model->animationSpeed;
+	
 
 	if (this->model->t > 0.99f)
 	{
 		this->model->t = 0.f;
 		this->model->remaining = 0.f;
+		this->linearTime = 0.0;
 
+		this->model->fromIndex = this->model->targetPoseIndex;
 		this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->model->nrOfPoses);
 		//std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
 		//this->model->decrementT = true;

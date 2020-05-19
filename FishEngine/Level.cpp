@@ -133,6 +133,22 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			//sceneManager->addLight(enemy->light);
 			//sceneManager->addMesh(enemy->model);
 
+			Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
+			sceneManager->addEnemy(enemy);
+			sceneManager->addAnimatedMesh(enemy->model);
+			sceneManager->addLight(enemy->light);
+			
+			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
+			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
+			enemy->model->targetPoseIndex = 1;
+			enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
+			enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
+			enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
+
 		}
 		else if (level->levelMeshVector.at(i).tag == "ground")
 		{

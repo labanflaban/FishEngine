@@ -7,7 +7,7 @@
 #include "Light.h"
 #include <Keyboard.h>
 
-
+using namespace DirectX;
 class Player : public Character
 {
 private:
@@ -21,6 +21,10 @@ public:
 	int maxHealth = 5;
 	int health = maxHealth;
 	unsigned int points = 0;
+
+	XMVECTOR handPositions[4] = { XMVectorSet(2.05, 10.90, 2.82, 0), XMVectorSet(3.14, 10.34, 0.64, 0), XMVectorSet(3.10, 10.05, -1.44, 0), XMVectorSet(3.07, 10.33, 0.91, 0) };
+	XMVECTOR currentHandPosition;
+	double linearTime = 0.0;
 
 	DirectX::XMFLOAT3 fishingRodPos = DirectX::XMFLOAT3(0, 0, 0);
 	DirectX::XMFLOAT3 hookPos = DirectX::XMFLOAT3(0, 0, 0);

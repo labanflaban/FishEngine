@@ -229,6 +229,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
 
 	}
+
 	player->updatePlayer(fishingRod,hook, rope);
 
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
@@ -713,7 +714,7 @@ void Engine::engineLoop()
 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		std::chrono::duration<double> gameTimer = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - startedGameTimer);
-		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds\n " + std::to_wstring((int)this->player->points) + L" points";
+		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds\n" + std::to_wstring((int)this->player->points) + L" points\n" + std::to_wstring(player->health) + L" health";
 		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 25), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 
 		directXHandler->spriteBatch->End();
