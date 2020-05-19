@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <cmath>
 using namespace DirectX;
 
 Player::Player(InputHandler* handler)
@@ -13,19 +14,16 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 {
 	btTransform transform;
 	rope->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
-
+	rope->updateRope(tool, hook, rope);
 	//fishingrod position
-	fishingRodPos = XMFLOAT3(model->getTranslation().x + rodOffsetX, model->getTranslation().y + rodOffsetY, model->getTranslation().z);
+	fishingRodPos = XMFLOAT3(model->getTranslation().x + 3, model->getTranslation().y + 10, model->getTranslation().z);
 	//Rope position
-	ropePos = XMFLOAT3(model->getTranslation().x + ropeOffsetX, model->getTranslation().y + ropeOffsetY, model->getTranslation().z);
+	ropePos = XMFLOAT3(model->getTranslation().x + 10, model->getTranslation().y + 20, model->getTranslation().z);
 	//Hook position
-	hookPos = XMFLOAT3(model->getTranslation().x + hookOffsetX, model->getTranslation().y + hookOffsetY, model->getTranslation().z);
-	if (hook->calculateRopePos)
-	{
-		rope->updateRope(tool, hook, rope);
-	}
+	hookPos = XMFLOAT3(model->getTranslation().x + 10, model->getTranslation().y + 20, model->getTranslation().z);
 
-	if (updateHook == true) // Set default position if not throwing
+
+	if (updateHook == true)
 	{
 		hook->model->setTranslation(hookPos);
 		transform.setOrigin(btVector3(hookPos.x, hookPos.y, hookPos.z));
@@ -39,6 +37,8 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 	tool->model->setTranslation(fishingRodPos);
 	tool->model->rigidBody->setWorldTransform(transform);
 
+	//transform = hook->model->rigidBody->getWorldTransform();
+	//std::cout << transform.getOrigin().x() << " " << transform.getOrigin().y() << " " << transform.getOrigin().z() << " " << std::endl;
 }
 
 void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTime)
@@ -60,19 +60,21 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 		hook->ableToThrowHook -= 10.f;
 		hook->ropeZipBack -= 10.f;
 		updateHook = false;
-		hook->calculateRopePos = true;
+
 		if (updateHook == false)
 		{
+
 			hook->throwHook(rod, hook, rope);
+
 		}
 	}
 	if (hook->ropeZipBack >= 1 && updateHook == false)
 	{
 		hook->zipBackRope(rod, hook, rope);
-		if (((hook->model->getTranslation().y) - (rod->model->getTranslation().y)) < hookPositionCheck && ((hook->model->getTranslation().x) - (rod->model->getTranslation().x)) < hookPositionCheck && ((rod->model->getTranslation().x) - (hook->model->getTranslation().x)) < hookPositionCheck && ((rod->model->getTranslation().y) - (hook->model->getTranslation().y)) < hookPositionCheck)
+		if (rod->model->getTranslation().y + 10 - hook->model->getTranslation().y < 0.001f && rod->model->getTranslation().x + 3 - hook->model->getTranslation().x < 0.001f)
 		{
+
 			updateHook = true;
-			hook->calculateRopePos = false;
 		}
 	}
 
@@ -89,5 +91,24 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	{
 		pull = false;
 	}
+
+
+}
+
+void Player::stepAnim(double deltaT)
+{
+	this->model->t = this->model->t + deltaT * this->model->animationSpeed;
+
+	if (this->model->t > 0.99f)
+	{
+		this->model->t = 0.f;
+		this->model->remaining = 0.f;
+
+		this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->model->nrOfPoses);
+		std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
+		//this->model->decrementT = true;
+	}
+	else
+		this->model->remaining = this->model->animationSpeed * deltaT / (1 - this->model->t);
 
 }

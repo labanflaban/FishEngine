@@ -40,7 +40,7 @@ class Engine
 private:
 	InputHandler inputHandler;
 	RenderWindow window;
-	DxHandler* directXHandler;
+	DxHandler* directXHandler = nullptr;
 	HWND primaryWindow;
 	double limitFPS = 1.0 / 60.0;
 	
@@ -73,6 +73,9 @@ public:
 	ID3D11ShaderResourceView* nullSRV = nullptr;
 
 	SceneManager sceneManager;
+
+	Mesh* particleMesh = nullptr;
+	std::chrono::high_resolution_clock::time_point startedGameTimer = std::chrono::high_resolution_clock::now();
 	
 	Player* player = nullptr;
 	Tool* fishingRod = nullptr;

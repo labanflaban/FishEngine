@@ -64,7 +64,11 @@ struct VS_CONSTANT_ANIM_BUFFER
 	double time = 0.0;
 	double animSpeed = 0.0;
 	int currentTargetIndex = 0;
+	double remaining = 0.0;
+	double padding = 0.0;
 };
+
+
 struct PS_CONSTANT_GUI_BUFFER
 {
 	BOOL selected = false;

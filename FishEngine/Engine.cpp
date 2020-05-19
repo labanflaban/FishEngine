@@ -96,14 +96,18 @@ void Engine::initialSetup()
 
 	//DxHandler::standardSampler = states->LinearWrap();
 
-	for (int i = 0; i < 50; i++)
-	{
-		Particle* particlePtr = new Particle(DxHandler::devicePtr);
-		particlePtr->readTextureFromFile(L"./Textures/bubble.png");
-		particlePtr->setScaling(DirectX::XMFLOAT3(2, 2, 2));
-		particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
-		particles.push_back(particlePtr);
-	}
+	particleMesh = new Mesh(DxHandler::devicePtr);
+	particleMesh->readTextureFromFile(L"./Textures/bubble.png");
+
+	particleMesh->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ 1, -1, 0.1f,    1, 1, 1, 1, 1, 1, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ -1,  -1, 0.1f,  1, 1, 1, 1, 0, 1, 0, 0, -1 });
+
+	particleMesh->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ 1,  1, 0.1f,   1, 1, 1, 1, 1, 0, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ 1,  -1, 0.1f, 1, 1, 1, 1, 1, 1, 0, 0, -1 });
+
+	particleMesh->createVertexBuffer();
 }
 
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
@@ -181,17 +185,31 @@ void Engine::updatePlayerMovement(double deltaTime)
 		//for (Particle* p : particles)
 		std::cout << "JUMP YEEET" << std::endl;
 
-		for(int i = 0; i < particles.size(); i++)
+		for (int i = 0; i < 100; i++)
 		{
+			Particle* particlePtr = new Particle(DxHandler::devicePtr);
+			//particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+			particlePtr->vertexBuffer = particleMesh->vertexBuffer;
+			particlePtr->textureView = particleMesh->textureView;
+			particlePtr->hasTexture = particleMesh->hasTexture;
+			particlePtr->nrOfVertices = particleMesh->nrOfVertices;
+
+
+			float randomNumber = (float)((rand() % 30) + 5) / 10;
+			particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
+			particlePtr->orgSize = particlePtr->getScaling();
+			particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
+
 			std::random_device randomSeed;
 			std::mt19937 numberGenerator(randomSeed());
-			std::uniform_real_distribution<> randomNum(-1.f, 1.f); //Between -1 - 1
-			std::uniform_real_distribution<> randomNumPlus(0.8f, 1.f); //Between 0.8 - 1
+			std::uniform_real_distribution<> randomNum(-0.5f, 0.5f); //Between -1 - 1
+			std::uniform_real_distribution<> randomNumPlus(0.2f, 0.5f); //Between 0.8 - 1
 
-			particles.at(i)->setTranslation(player->model->getTranslation());
+			particlePtr->setTranslation(player->model->getTranslation());
 			float rNum = randomNum(numberGenerator);
 			float rNumY = randomNumPlus(numberGenerator);
-			particles.at(i)->velocity = DirectX::XMFLOAT3(rNum * 0.5, 0.5*rNumY, 0);
+			particlePtr->velocity = DirectX::XMFLOAT3(rNum * 0.5 + randomNum(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, 0.5 * rNumY + 1 * rNumY + player->model->rigidBody->getLinearVelocity().y() * 0.1, 0);
+			sceneManager.addParticle(particlePtr);
 		}
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
@@ -236,9 +254,15 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 void Engine::updateParticles()
 {
-	for (Particle* p : particles)
+	for (int i = 0; i < sceneManager.particles.size(); i++)
 	{
+		Particle* p = sceneManager.particles.at(i);
 		p->updateParticle();
+
+		if (p->ticksLeft <= 0)
+		{
+			sceneManager.removeParticle(p);
+		}
 	}
 }
 
@@ -288,7 +312,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 			{
 				//H�mta hooken h�r, kolla om den �r active, kolla enum p� b�da collision och se vilken som har enum hook och sedan h�mta d�r
 				Tool* hook = nullptr;
-				if(collision->type == collisionEnums::Hook)
+				if (collision->type == collisionEnums::Hook)
 				{
 					hook = collision->hook;
 				}
@@ -298,7 +322,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				}
 
 				Enemy* myEnemy = nullptr; //S�tt denna i if-checken
-				if(collision->type == collisionEnums::Enemy)
+				if (collision->type == collisionEnums::Enemy)
 				{
 					myEnemy = collision->enemy;
 				}
@@ -307,8 +331,8 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy = collision1->enemy;
 				}
 
-				
-				if(myEnemy->damageDebounce >= myEnemy->maxDebounce)
+
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
 				{
 					myEnemy->health -= 10;
 					myEnemy->damageDebounce = 0;
@@ -317,8 +341,8 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				}
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
-			
-				
+
+
 
 				//std::cout << "Hook hit enemy" << std::endl;
 			}
@@ -326,7 +350,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 			if (((collision->type == collisionEnums::Rod) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Rod) && (collision->type == collisionEnums::Enemy)))
 			{
 				Tool* rod = nullptr;
-				if(collision->type == collisionEnums::Rod)
+				if (collision->type == collisionEnums::Rod)
 				{
 					rod = collision->rod;
 				}
@@ -336,7 +360,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				}
 
 				Enemy* myEnemy = nullptr;
-				if(collision->type == collisionEnums::Enemy)
+				if (collision->type == collisionEnums::Enemy)
 				{
 					myEnemy = collision->enemy;
 				}
@@ -345,7 +369,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy = collision1->enemy;
 				}
 
-				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce && rod->isActive)
 				{
 					myEnemy->health -= 30;
 					myEnemy->damageDebounce = 0;
@@ -357,8 +381,42 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
-		}
 
+			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Enemy)))
+			{
+				Player* myPlayer = nullptr;
+				if (collision->type == collisionEnums::Player)
+				{
+					myPlayer = collision->player;
+				}
+				else
+				{
+					myPlayer = collision1->player;
+				}
+
+				Enemy* myEnemy = nullptr;
+				if (collision->type == collisionEnums::Enemy)
+				{
+					myEnemy = collision->enemy;
+				}
+				else
+				{
+					myEnemy = collision1->enemy;
+				}
+
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				{
+					myPlayer->health -= 30;
+					myEnemy->damageDebounce = 0;
+					//std::cout << "Enemy hit" << std::endl;
+				}
+
+				if (myPlayer->health < 0)
+					std::cout << "Player should be dead " << myPlayer->health << std::endl;
+
+				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
+			}
+		}
 	}
 }
 
@@ -389,19 +447,22 @@ void Engine::engineLoop()
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
 	//--------------------------------------------------------------------------// 
 	AnimatedMesh* debugObject = new AnimatedMesh(DxHandler::devicePtr); //Body
-	//debugObject->readMeshFromFile("./Models/character.obj");
-	std::vector<Vertex> vertVectorPlr = FIDParser::readFromFID("./Models/Fish_Right.FID");
-	std::vector<Vertex> vertVectorPlr1 = FIDParser::readFromFID("./Models/Fish_Left.FID");
-	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1 };
-	debugObject->appendStructuredBuffer(plrArr, 2);
+	std::vector<Vertex> vertVectorPlr = ObjParser::readFromObj("./Models/characterStart.obj");//readFromFile("./Models/characterStart.FID");
+	std::vector<Vertex> vertVectorPlr1 = ObjParser::readFromObj("./Models/characterMiddle1.obj");
+	std::vector<Vertex> vertVectorPlr2 = ObjParser::readFromObj("./Models/characterMiddle2.obj");
+	std::vector<Vertex> vertVectorPlr3 = FIDParser::readFromFID("./Models/characterMiddle3.FID");
+
+	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1, &vertVectorPlr2, &vertVectorPlr3 };
+	debugObject->appendStructuredBuffer(plrArr, 4);
 	debugObject->createStructuredBuffer(DxHandler::devicePtr);
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject->setScaling(DirectX::XMFLOAT3(4, 4, 4));
-	debugObject->setRotation(DirectX::XMFLOAT3(0,  3.14, 3.14/2));
+	debugObject->setScaling(DirectX::XMFLOAT3(2, 2, 2));
+	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
 	debugObject->manualUpdate = true;
 	debugObject->readTextureFromFile(L"./Models/FISHCOLOR.png");
 	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
+	player->model->animationSpeed = 3;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->sceneManager.addAnimatedMesh(debugObject);
 	debugObject->targetPoseIndex = 1;
@@ -549,6 +610,7 @@ void Engine::engineLoop()
 	//animatedMeshes.push_back(animMesh);
 	sceneManager.addAnimatedMesh(animMesh);
 	
+	startedGameTimer = std::chrono::high_resolution_clock::now();
 	while (!shutdown)
 	{
 		directXHandler->contextPtr->RSSetViewports(1, &port);
@@ -560,7 +622,7 @@ void Engine::engineLoop()
 
 		renderSecondPass();
 		renderLightVolumes();
-		renderParticles();
+		//renderParticles();
 
 		//upp upp och iv����g
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -638,15 +700,11 @@ void Engine::engineLoop()
 		
 
 		directXHandler->spriteBatch->Begin();
-		std::wstring string1;
-		std::wstring string2;
-		std::wstring string3;
-		string1 = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
-		string2 = std::to_wstring((int)hook->ableToThrowHook) + L" \nhook recharge remaining";
-		string3 = std::to_wstring((int)hook->ropeZipBack) + L" \nRope zipback ";
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string2.data(), DirectX::XMFLOAT2(0, 50), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string3.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+
+		newTime = std::chrono::high_resolution_clock::now(); //Set new time
+		std::chrono::duration<double> gameTimer = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - startedGameTimer);
+		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds";
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 25), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 
 		directXHandler->spriteBatch->End();
 
@@ -763,6 +821,10 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	for (int i = 0; i < sceneManager.animatedMeshes.size(); i++)
 	{
 		AnimatedMesh* animMesh = sceneManager.animatedMeshes.at(i);
+
+		ID3D11UnorderedAccessView* views[] = { animMesh->vertexStateUAV };
+		DxHandler::contextPtr->OMSetRenderTargetsAndUnorderedAccessViews(3, arr, DxHandler::depthStencil, 4, ARRAYSIZE(views), views, nullptr);
+
 		if (!animMesh->manualUpdate)
 		{
 			animMesh->stepAnim(1/60.00);

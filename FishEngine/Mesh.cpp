@@ -7,14 +7,19 @@ void Mesh::updateWorldMatrix()
 }
 
 
-void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass)
+void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape)
 {
 	//rigidBody stuff
 	btTransform rigidBodyTransform;
 
 	rigidBodyTransform.setIdentity();
 	rigidBodyTransform.setOrigin(btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z));
-	btCollisionShape* rigidBodyCollider = new btBoxShape(btVector3(btScalar(this->getScaling().x), btScalar(this->getScaling().y), btScalar(this->getScaling().z)));
+
+	btCollisionShape* rigidBodyCollider = nullptr;
+	if (collShape == nullptr)
+		rigidBodyCollider = new btBoxShape(btVector3(btScalar(this->getScaling().x), btScalar(this->getScaling().y), btScalar(this->getScaling().z)));
+	else
+		rigidBodyCollider = collShape;
 	collisionShapes->push_back(rigidBodyCollider);
 
 	bool isDynamic = (mass != 0.f);
@@ -22,6 +27,11 @@ void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObject
 	if (isDynamic)
 		rigidBodyCollider->calculateLocalInertia(mass, localInertia);
 
+	btQuaternion xRot = btQuaternion(btVector3(1, 0, 0), getRotation().x);
+	btQuaternion yRot = btQuaternion(btVector3(0, 1, 0), getRotation().y);
+	btQuaternion zRot = btQuaternion(btVector3(0, 0, 1), getRotation().z);
+
+	rigidBodyTransform.setRotation(xRot * yRot * zRot);
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(rigidBodyTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, rigidBodyCollider, localInertia);
 
@@ -106,6 +116,7 @@ ID3D11Buffer* Mesh::createVertexBuffer()
 
 	vertexBuffer = vertexBufferPtr;
 
+	this->nrOfVertices = vertices.size();
 	return vertexBufferPtr;
 }
 
@@ -202,7 +213,10 @@ Mesh::~Mesh()
 		this->vertexBuffer->Release();
 	}
 	if (this->textureView)
+	{
 		this->textureView->Release();
+	}
+
 	//delete this->rigidBody;
 	//delete this->collider;
 }

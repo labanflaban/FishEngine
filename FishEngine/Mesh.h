@@ -50,13 +50,14 @@ public:
 
 	btRigidBody* rigidBody = nullptr;
 	btCollisionShape* collider = nullptr;
-	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass);
+	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr);
 
 	ID3D11ShaderResourceView* textureView = nullptr;
 	ID3D11ShaderResourceView* NormalView = nullptr;
 
 	ID3D11Buffer* vertexBuffer = NULL;
 	std::vector<Vertex> vertices;
+	int nrOfVertices = 0;
 
 	void setRotation(DirectX::XMFLOAT3 rotation);
 	void setTranslation(DirectX::XMFLOAT3 translation);
@@ -77,11 +78,11 @@ public:
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
 	void readNormalMapFromFile(std::wstring NormalMapName);
-	
+
 
 	bool isSky = false;
 	Mesh(ID3D11Device* device);
-	~Mesh();
+	virtual ~Mesh();
 
 	int vectorIndex = 0;
 };

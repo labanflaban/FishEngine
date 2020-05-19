@@ -66,13 +66,14 @@ void DxHandler::initalizeDeviceContextAndSwapChain()
 {
 	//Create device and initial DX11 interface.
 		//Swapchain has 2 frame buffers, while it displays one it is drawing to the other.
+	D3D_FEATURE_LEVEL version[] = { D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_1 }; //Which version we're running
 	HRESULT succ = D3D11CreateDeviceAndSwapChain(
 		nullptr,
 		D3D_DRIVER_TYPE_HARDWARE,
 		nullptr,
 		D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_BGRA_SUPPORT,
-		nullptr,
-		0,
+		version,
+		ARRAYSIZE(version),
 		D3D11_SDK_VERSION,
 		&DxHandler::swapDesc,
 		&DxHandler::swapChainPtr,
@@ -448,6 +449,7 @@ void DxHandler::draw(AnimatedMesh* drawMesh, Camera drawFromCamera, Light* light
 	animBuff.time = drawMesh->t;
 	animBuff.currentTargetIndex = drawMesh->targetPoseIndex;
 	animBuff.vertexOffsetPerModel = drawMesh->nrOfVertices;
+	animBuff.remaining = drawMesh->remaining;
 
 	contextPtr->VSSetShaderResources(0, 1, &drawMesh->srv);
 
@@ -485,7 +487,7 @@ DxHandler::DxHandler(HWND hWnd)
 void DxHandler::configureSwapChain(HWND& hWnd)
 {
 	D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE; //The hardware driver we'd like to use.
-	D3D_FEATURE_LEVEL version[] = { D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 }; //Which version we're running
+	//D3D_FEATURE_LEVEL version[] = { D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 }; //Which version we're running
 	// CREATING OUR CHAIN DESC
 
 	//BUFFERDESC
