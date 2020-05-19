@@ -392,10 +392,10 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 		lightBuff.lightPos = DirectX::XMVectorSet(light->pos.x, light->pos.y, light->pos.z, 0);
 		lightBuff.lightColor = light->lightColor;
 	}
-		
+
 
 	GS_CONSTANT_MATRIX_BUFFER gBuff;
-	gBuff.camPos = drawFromCamera.cameraPosition;  
+	gBuff.camPos = drawFromCamera.cameraPosition;
 	//std::cout << DirectX::XMVectorGetX(gBuff.camPos) << " " << DirectX::XMVectorGetY(gBuff.camPos) << " " << DirectX::XMVectorGetZ(gBuff.camPos) << std::endl;
 
 	DxHandler::contextPtr->UpdateSubresource(constantPixelBuffer, 0, NULL, &lightBuff, 0, 0);
@@ -406,7 +406,7 @@ void DxHandler::draw(Mesh* drawMesh, Camera drawFromCamera, bool isSky, Light* l
 	DxHandler::contextPtr->IASetVertexBuffers(0, 1, &drawMesh->vertexBuffer,
 		&stride, &offset);
 	//Draw it
-	DxHandler::contextPtr->Draw(drawMesh->vertices.size(), 0);
+	DxHandler::contextPtr->Draw(drawMesh->nrOfVertices, 0);
 
 }
 

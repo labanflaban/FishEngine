@@ -15,8 +15,6 @@ Engine::~Engine()
 	delete DxHandler::firstPassVertex;
 	delete DxHandler::secondPassVertex;
 
-	lights.clear();
-
 	YSE::System().close();
 }
 
@@ -194,7 +192,6 @@ void Engine::updatePlayerMovement(double deltaTime)
 			particlePtr->hasTexture = particleMesh->hasTexture;
 			particlePtr->nrOfVertices = particleMesh->nrOfVertices;
 
-
 			float randomNumber = (float)((rand() % 30) + 5) / 10;
 			particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
 			particlePtr->orgSize = particlePtr->getScaling();
@@ -236,7 +233,9 @@ void Engine::updatePlayerMovement(double deltaTime)
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
 	if (!movementVector.isZero())
-		player->model->stepAnim(deltaTime);
+		player->stepAnim(deltaTime);
+	else
+		player->model->remaining = 0;
 
 	XMFLOAT3 playerPos = player->model->getTranslation();
 	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
@@ -463,7 +462,7 @@ void Engine::engineLoop()
 	debugObject->readTextureFromFile(L"./Models/FISHCOLOR.png");
 	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
-	player->model->animationSpeed = 3;
+	player->model->animationSpeed = 5;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	collisionStruct* plrCollStruct = new collisionStruct(player, collisionEnums::Player);
 	player->model->rigidBody->setUserPointer(plrCollStruct);

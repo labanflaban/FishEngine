@@ -88,12 +88,5 @@ public:
 	void renderLightVolumes();
 	void renderParticles();
 
-	std::vector<Mesh*> scene;
-	std::vector<AnimatedMesh*> animatedMeshes;
-	std::vector<Light*> lights;
-	std::vector<Mesh*> transparentSceneObjects;
-	std::vector<Enemy*> enemies;
-	std::vector<Particle*> particles;
-
 	//void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes);
 };

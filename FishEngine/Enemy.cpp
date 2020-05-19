@@ -16,7 +16,7 @@ Enemy::Enemy(ID3D11Device* device)
 	//
 
 	this->light = new Light(device);
-	light->lightColor = DirectX::XMVectorSet(0, 0, 1, 0); //Blue
+	light->lightColor = DirectX::XMVectorSet(0, 0, 3, 0); //Blue
 }
  
 Enemy::~Enemy()
