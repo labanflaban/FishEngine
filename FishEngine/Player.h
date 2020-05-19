@@ -26,6 +26,17 @@ public:
 	Player(InputHandler* handler);
 	Light* playerLight = nullptr;
 
+	float rodOffsetX = 3.0f;
+	float rodOffsetY = 10.0f;
+
+	float ropeOffsetX = 10.0f;
+	float ropeOffsetY = 20.0f;
+
+	float hookOffsetX = 10.0f;
+	float hookOffsetY = 20.0f;
+
+	float hookPositionCheck = 10.0f;
+
 	YSE::sound jumpSound;
 	void updatePlayer(Tool* tool, Tool* hook, Tool* rope);
 	void updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTime);

@@ -14,7 +14,7 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 {
 	btTransform transform;
 	rope->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
-	rope->updateRope(tool, hook, rope);
+	
 	//fishingrod position
 	fishingRodPos = XMFLOAT3(model->getTranslation().x + 3, model->getTranslation().y + 10, model->getTranslation().z);
 	//Rope position
@@ -22,7 +22,10 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 	//Hook position
 	hookPos = XMFLOAT3(model->getTranslation().x + 10, model->getTranslation().y + 20, model->getTranslation().z);
 
-
+	if (hook->calculateRopePos)
+	{
+		rope->updateRope(tool, hook, rope);
+	}
 	if (updateHook == true)
 	{
 		hook->model->setTranslation(hookPos);
@@ -59,6 +62,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	{
 		hook->ableToThrowHook -= 10.f;
 		hook->ropeZipBack -= 10.f;
+		hook->calculateRopePos = true;
 		updateHook = false;
 
 		if (updateHook == false)
@@ -71,10 +75,10 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	if (hook->ropeZipBack >= 1 && updateHook == false)
 	{
 		hook->zipBackRope(rod, hook, rope);
-		if (rod->model->getTranslation().y + 10 - hook->model->getTranslation().y < 0.001f && rod->model->getTranslation().x + 3 - hook->model->getTranslation().x < 0.001f)
+		if (((hook->model->getTranslation().y) - (rod->model->getTranslation().y)) < hookPositionCheck && ((hook->model->getTranslation().x) - (rod->model->getTranslation().x)) < hookPositionCheck && ((rod->model->getTranslation().x) - (hook->model->getTranslation().x)) < hookPositionCheck && ((rod->model->getTranslation().y) - (hook->model->getTranslation().y)) < hookPositionCheck)
 		{
-
 			updateHook = true;
+			hook->calculateRopePos = false;
 		}
 	}
 

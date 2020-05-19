@@ -254,6 +254,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 void Engine::updateParticles()
 {
+	std::cout << "Particle count: " << sceneManager.particles.size() << std::endl;
 	for (int i = 0; i < sceneManager.particles.size(); i++)
 	{
 		Particle* p = sceneManager.particles.at(i);
@@ -464,6 +465,9 @@ void Engine::engineLoop()
 	this->player->model = debugObject;
 	player->model->animationSpeed = 3;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
+	collisionStruct* plrCollStruct = new collisionStruct(player, collisionEnums::Player);
+	player->model->rigidBody->setUserPointer(plrCollStruct);
+
 	this->sceneManager.addAnimatedMesh(debugObject);
 	debugObject->targetPoseIndex = 1;
 
@@ -622,7 +626,7 @@ void Engine::engineLoop()
 
 		renderSecondPass();
 		renderLightVolumes();
-		//renderParticles();
+		renderParticles();
 
 		//upp upp och iv����g
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -728,12 +732,13 @@ void Engine::engineLoop()
 					delete collStruct;
 
 					sceneManager.removeEnemy(enemy);
+					std::cout << sceneManager.enemies.size() << std::endl;
 				}
 			}
 		}
 
 		updateParticles();
-
+		 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		fixedUpdate(frameTime.count());
@@ -936,9 +941,9 @@ void Engine::renderParticles()
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
 	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	DxHandler::contextPtr->PSSetShaderResources(0, 1, &particles.at(0)->textureView);
-	for (Particle* model : particles) //Draw transparent stuff
+	for (Particle* model : sceneManager.particles) //Draw transparent stuff
 	{
+		DxHandler::contextPtr->PSSetShaderResources(0, 1, &model->textureView);
 		directXHandler->draw(model, primaryCamera, false);
 	}
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
