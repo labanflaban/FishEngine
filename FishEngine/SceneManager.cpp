@@ -107,9 +107,22 @@ void SceneManager::removeEnemy(Enemy* enemy)
 
 void SceneManager::addParticle(Particle* particle)
 {
+	this->particles.push_back(particle);
+	particle->vectorIndex = this->particles.size() - 1;
 }
 
 void SceneManager::removeParticle(Particle* particle)
 {
+	Particle* tempPtr = nullptr;
+
+	int index = particle->vectorIndex;
+	tempPtr = particles.at(particles.size() - 1); //Save the back one
+	particles.at(particles.size() - 1) = particles.at(index); //Replace back with the one to be deleted.
+	particles.at(index) = tempPtr; //Replace index with what was at the back.
+	particles.at(index)->vectorIndex = index; //Update its index.
+
+	//Swap completed.
+	delete this->particles.at(particles.size() - 1); //Delete the object
+	this->particles.pop_back(); //Clear the pointer from vector
 }
 

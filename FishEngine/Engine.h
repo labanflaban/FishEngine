@@ -52,7 +52,9 @@ private:
 
 	int clientWidth = 0;
 	int clientHeight = 0;
-	
+
+	Mesh* particleMesh = nullptr;
+	std::chrono::high_resolution_clock::time_point startedGameTimer = std::chrono::high_resolution_clock::now();
 public:
 	Engine();
 	~Engine();

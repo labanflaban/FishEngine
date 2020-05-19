@@ -18,6 +18,8 @@ private:
 	int HEIGHT = 1280;
 	InputHandler* inputhandler = nullptr;
 public:
+	int health = 100;
+
 	DirectX::XMFLOAT3 fishingRodPos = DirectX::XMFLOAT3(0,0,0);
 	DirectX::XMFLOAT3 hookPos = DirectX::XMFLOAT3(0, 0, 0);
 	DirectX::XMFLOAT3 ropePos = DirectX::XMFLOAT3(0, 0, 0);
@@ -27,7 +29,7 @@ public:
 	YSE::sound jumpSound;
 	void updatePlayer(Tool* tool, Tool* hook, Tool* rope);
 	void updatePlayerTools(Tool * rod, Tool* hook, Tool* rope, double deltaTime);
-
-	
 	float boostReserve = 10.f;
+
+	void stepAnim(double deltaT);
 };

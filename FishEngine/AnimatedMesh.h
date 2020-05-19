@@ -60,6 +60,7 @@ public:
 	ID3D11ShaderResourceView* textureView = nullptr;
 	ID3D11ShaderResourceView* NormalView = nullptr;
 	ID3D11Buffer* vertexBuffer = NULL;
+
 	//std::vector<Vertex> vertices;
 	bool hasTexture = false;
 	bool hasNormalMap = false;

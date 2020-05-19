@@ -96,14 +96,31 @@ void Engine::initialSetup()
 
 	//DxHandler::standardSampler = states->LinearWrap();
 
-	for (int i = 0; i < 50; i++)
-	{
-		Particle* particlePtr = new Particle(DxHandler::devicePtr);
-		particlePtr->readTextureFromFile(L"./Textures/bubble.png");
-		particlePtr->setScaling(DirectX::XMFLOAT3(2, 2, 2));
-		particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
-		particles.push_back(particlePtr);
-	}
+	//for (int i = 0; i < 50; i++)
+	//{
+	//	Particle* particlePtr = new Particle(DxHandler::devicePtr);
+	//	particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+	//	float randomNumber = (float)((rand() % 30) + 5)/10;
+	//	particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
+	//	particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
+	//	sceneManager.addParticle(particlePtr);
+	//	//particles.push_back(particlePtr);
+	//}
+
+	particleMesh = new Mesh(DxHandler::devicePtr);
+	particleMesh->readTextureFromFile(L"./Textures/bubble.png");
+	
+	particleMesh->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ 1, -1, 0.1f,    1, 1, 1, 1, 1, 1, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ -1,  -1, 0.1f,  1, 1, 1, 1, 0, 1, 0, 0, -1 });
+
+	particleMesh->vertices.push_back(Vertex{ -1,  1, 0.1f,  1, 1, 1, 1, 0, 0, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ 1,  1, 0.1f,   1, 1, 1, 1, 1, 0, 0, 0, -1 });
+	particleMesh->vertices.push_back(Vertex{ 1,  -1, 0.1f, 1, 1, 1, 1, 1, 1, 0, 0, -1 });
+
+	particleMesh->createVertexBuffer();
+	 
+
 }
 
 void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
@@ -178,20 +195,32 @@ void Engine::updatePlayerMovement(double deltaTime)
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
 
-		//for (Particle* p : particles)
-		std::cout << "JUMP YEEET" << std::endl;
 
-		for(int i = 0; i < particles.size(); i++)
+		for(int i = 0; i < 100; i++)
 		{
+			Particle* particlePtr = new Particle(DxHandler::devicePtr);
+			//particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+			particlePtr->vertexBuffer = particleMesh->vertexBuffer;
+			particlePtr->textureView = particleMesh->textureView;
+			particlePtr->hasTexture = particleMesh->hasTexture;
+			particlePtr->nrOfVertices = particleMesh->nrOfVertices;
+
+
+			float randomNumber = (float)((rand() % 30) + 5)/10;
+			particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
+			particlePtr->orgSize = particlePtr->getScaling();
+			particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
+
 			std::random_device randomSeed;
 			std::mt19937 numberGenerator(randomSeed());
-			std::uniform_real_distribution<> randomNum(-1.f, 1.f); //Between -1 - 1
-			std::uniform_real_distribution<> randomNumPlus(0.8f, 1.f); //Between 0.8 - 1
+			std::uniform_real_distribution<> randomNum(-0.5f, 0.5f); //Between -1 - 1
+			std::uniform_real_distribution<> randomNumPlus(0.2f, 0.5f); //Between 0.8 - 1
 
-			particles.at(i)->setTranslation(player->model->getTranslation());
+			particlePtr->setTranslation(player->model->getTranslation());
 			float rNum = randomNum(numberGenerator);
 			float rNumY = randomNumPlus(numberGenerator);
-			particles.at(i)->velocity = DirectX::XMFLOAT3(rNum * 0.5, 0.5*rNumY, 0);
+			particlePtr->velocity = DirectX::XMFLOAT3(rNum * 0.5 + randomNum(numberGenerator) + player->model->rigidBody->getLinearVelocity().x()*0.1, 0.5 * rNumY + 1 * rNumY + player->model->rigidBody->getLinearVelocity().y() * 0.1, 0);
+			sceneManager.addParticle(particlePtr);
 		}
 	}
 	if (GetAsyncKeyState(0x41)) //A-key
@@ -218,7 +247,11 @@ void Engine::updatePlayerMovement(double deltaTime)
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
 	if (!movementVector.isZero())
-		player->model->stepAnim(deltaTime);
+		player->stepAnim(deltaTime);
+	else
+		player->model->remaining = 0;
+		//player->model->stepAnim(deltaTime);
+		
 
 	XMFLOAT3 playerPos = player->model->getTranslation();
 	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
@@ -235,9 +268,15 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 void Engine::updateParticles()
 {
-	for (Particle* p : particles)
+	for (int i = 0; i < sceneManager.particles.size(); i++)
 	{
+		Particle* p = sceneManager.particles.at(i);
 		p->updateParticle();
+		
+		if (p->ticksLeft <= 0)
+		{
+			sceneManager.removeParticle(p);
+		}
 	}
 }
 
@@ -344,7 +383,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy = collision1->enemy;
 				}
 
-				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce && rod->isActive)
 				{
 					myEnemy->health -= 30;
 					myEnemy->damageDebounce = 0;
@@ -353,6 +392,41 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				if (myEnemy->health < 0)
 					std::cout << "Should be dead" << std::endl;
+
+				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
+			}
+
+			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Enemy)))
+			{
+				Player* myPlayer = nullptr;
+				if (collision->type == collisionEnums::Player)
+				{
+					myPlayer = collision->player;
+				}
+				else
+				{
+					myPlayer = collision1->player;
+				}
+
+				Enemy* myEnemy = nullptr;
+				if (collision->type == collisionEnums::Enemy)
+				{
+					myEnemy = collision->enemy;
+				}
+				else
+				{
+					myEnemy = collision1->enemy;
+				}
+
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				{
+					myPlayer->health -= 30;
+					myEnemy->damageDebounce = 0;
+					//std::cout << "Enemy hit" << std::endl;
+				}
+
+				if (myPlayer->health < 0)
+					std::cout << "Player should be dead " << myPlayer->health << std::endl;
 
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
@@ -391,18 +465,31 @@ void Engine::engineLoop()
 	//--------------------------------------------------------------------------// 
 	AnimatedMesh* debugObject = new AnimatedMesh(DxHandler::devicePtr); //Body
 	//debugObject->readMeshFromFile("./Models/character.obj");
-	std::vector<Vertex> vertVectorPlr = FIDParser::readFromFID("./Models/Fish_Right.FID");
-	std::vector<Vertex> vertVectorPlr1 = FIDParser::readFromFID("./Models/Fish_Left.FID");
-	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1 };
-	debugObject->appendStructuredBuffer(plrArr, 2);
+	//std::vector<Vertex> vertVectorPlr = FIDParser::readFromFID("./Models/Fish_Right.FID");
+	//std::vector<Vertex> vertVectorPlr1 = FIDParser::readFromFID("./Models/Fish_Left.FID");
+	//std::vector<Vertex> vertVectorPlr = FIDParser::readFromFID("./Models/characterStart.FID");
+	//std::vector<Vertex> vertVectorPlr2 = FIDParser::readFromFID("./Models/characterMiddle2.FID");
+	//std::vector<Vertex> vertVectorPlr3 = FIDParser::readFromFID("./Models/characterMiddle2.FID");
+	//Only need start, middle1 & 2
+	//Index 251
+
+	std::vector<Vertex> vertVectorPlr = ObjParser::readFromObj("./Models/characterStart.obj");//readFromFile("./Models/characterStart.FID");
+	std::vector<Vertex> vertVectorPlr1 = ObjParser::readFromObj("./Models/characterMiddle1.obj");
+	std::vector<Vertex> vertVectorPlr2 = ObjParser::readFromObj("./Models/characterMiddle2.obj");
+	std::vector<Vertex> vertVectorPlr3 = FIDParser::readFromFID("./Models/characterMiddle3.FID");
+
+	//std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1, &vertVectorPlr2, &vertVectorPlr3};
+	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1, &vertVectorPlr2, &vertVectorPlr3 };
+	debugObject->appendStructuredBuffer(plrArr, 4);
 	debugObject->createStructuredBuffer(DxHandler::devicePtr);
 	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
-	debugObject->setScaling(DirectX::XMFLOAT3(4, 4, 4));
-	debugObject->setRotation(DirectX::XMFLOAT3(0,  3.14, 3.14/2));
+	debugObject->setScaling(DirectX::XMFLOAT3(2, 2, 2));
+	debugObject->setRotation(DirectX::XMFLOAT3(0,  3.14/2, 0));
 	debugObject->manualUpdate = true;
 	debugObject->readTextureFromFile(L"./Models/FISHCOLOR.png");
 	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
+	player->model->animationSpeed = 3;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
 	this->sceneManager.addAnimatedMesh(debugObject);
 	debugObject->targetPoseIndex = 1;
@@ -469,11 +556,9 @@ void Engine::engineLoop()
 
 	AnimatedMesh* groundObject5= new AnimatedMesh(DxHandler::devicePtr); //Ground
 	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
-	//groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject5->setTranslation(DirectX::XMFLOAT3(20, 15, 75));
 	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
 	groundObject5->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	std::vector<Vertex> jellyFish1 = FIDParser::readFromFID("./Models/JellyFishRight.FID");
 	std::vector<Vertex> jellyFish2 = FIDParser::readFromFID("./Models/JellyFishLeft.FID");
 	std::vector<Vertex>* fishArr[] = { &jellyFish1, &jellyFish2 };
@@ -490,14 +575,6 @@ void Engine::engineLoop()
 	groundObject6->setScaling(DirectX::XMFLOAT3(60, 60, 60));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	sceneManager.addTransparentObject(groundObject6);
-
-	/*Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject8->readMeshFromFile("./Models/actualCube.obj");
-	groundObject8->readNormalMapFromFile(L"./Textures/scales.jpg");
-	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
-	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
-	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->sceneManager.addMesh(groundObject8);*/
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
@@ -520,9 +597,6 @@ void Engine::engineLoop()
 
 	MSG msg;
 	bool shutdown = false;
-
-	//std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
-	//std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
 	
 	std::vector<Vertex> vertVector = FIDParser::readFromFID("./Models/Fish_Right.FID");
 	std::vector<Vertex> vertVector2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
@@ -537,9 +611,9 @@ void Engine::engineLoop()
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
 	animMesh->setRotation(XMFLOAT3(0, 0, 3.14 / 2));
 	animMesh->targetPoseIndex = 1;
-	//animatedMeshes.push_back(animMesh);
 	sceneManager.addAnimatedMesh(animMesh);
 	
+	startedGameTimer = std::chrono::high_resolution_clock::now();
 	while (!shutdown)
 	{
 		directXHandler->contextPtr->RSSetViewports(1, &port);
@@ -635,10 +709,14 @@ void Engine::engineLoop()
 		string1 = std::to_wstring((int)player->boostReserve) + L" jump reserve remaining";
 		string2 = std::to_wstring((int)hook->ableToThrowHook) + L" \nhook recharge remaining";
 		string3 = std::to_wstring((int)hook->ropeZipBack) + L" \nRope zipback ";
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string2.data(), DirectX::XMFLOAT2(0, 50), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string3.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 
+		newTime = std::chrono::high_resolution_clock::now(); //Set new time
+		std::chrono::duration<double> gameTimer = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - startedGameTimer);
+		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds";
+		//directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		//directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string2.data(), DirectX::XMFLOAT2(0, 50), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		//directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string3.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 150), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 		directXHandler->spriteBatch->End();
 
 		DxHandler::swapChainPtr->Present(1, 0); 
@@ -748,12 +826,16 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	}
 
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	//animatedMeshes.at(0)->setRotation(rot);
+
 	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
 	//for (auto animMesh : sceneManager.animatedMeshes) //Draw all meshes 
 	for (int i = 0; i < sceneManager.animatedMeshes.size(); i++)
 	{
 		AnimatedMesh* animMesh = sceneManager.animatedMeshes.at(i);
+
+		ID3D11UnorderedAccessView* views[] = { animMesh->vertexStateUAV };
+		DxHandler::contextPtr->OMSetRenderTargetsAndUnorderedAccessViews(3, arr, DxHandler::depthStencil, 4, ARRAYSIZE(views), views, nullptr);
+
 		if (!animMesh->manualUpdate)
 		{
 			animMesh->stepAnim(1/60.00);
@@ -761,6 +843,8 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		}
 		directXHandler->draw(animMesh, primaryCamera);
 	}
+
+	//std::cout << "Player t: " << player->model->t << " Player last: " << player->model->last << std::endl;
 
 	//Set to null
 	ID3D11RenderTargetView* arrNull[1] =
@@ -851,8 +935,6 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &nullSRV); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &nullSRV); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &nullSRV); //Position
-
-	
 }
 
 void Engine::renderParticles()
@@ -865,9 +947,9 @@ void Engine::renderParticles()
 	DxHandler::transparencyVertex->useThis(DxHandler::contextPtr);
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
 	//DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
-	DxHandler::contextPtr->PSSetShaderResources(0, 1, &particles.at(0)->textureView);
-	for (Particle* model : particles) //Draw transparent stuff
+	for (Particle* model : sceneManager.particles) //Draw transparent stuff
 	{
+		DxHandler::contextPtr->PSSetShaderResources(0, 1, &model->textureView);
 		directXHandler->draw(model, primaryCamera, false);
 	}
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);

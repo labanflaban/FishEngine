@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <cmath>
 using namespace DirectX;
 
 Player::Player(InputHandler* handler)
@@ -90,5 +91,24 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	{
 		pull = false;
 	}
+
+
+}
+
+void Player::stepAnim(double deltaT)
+{
+	this->model->t = this->model->t + deltaT*this->model->animationSpeed;
+
+	if (this->model->t > 0.99f)
+	{
+		this->model->t = 0.f;
+		this->model->remaining = 0.f;
+
+		this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->model->nrOfPoses);
+		std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
+		//this->model->decrementT = true;
+	}
+	else
+		this->model->remaining = this->model->animationSpeed * deltaT / (1 - this->model->t);
 
 }
