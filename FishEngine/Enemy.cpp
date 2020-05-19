@@ -38,7 +38,6 @@ void Enemy::update(Player* plr)
 
 	this->light->setPosition(this->model->getTranslation());
 
-	//std::cout << dX << " " << dY << std::endl;
 
 	xVel = sin(angle) * 1.2f;
 	yVel = cos(angle) * 0.5f;

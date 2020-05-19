@@ -32,6 +32,7 @@ void Player::updatePlayer(Tool* tool, Tool* hook, Tool* rope)
 		transform.setOrigin(btVector3(hookPos.x, hookPos.y, hookPos.z));
 		hook->model->rigidBody->setWorldTransform(transform);
 		hook->zipBackRope(tool, hook, rope);
+		hook->isActive = false;
 	}
 
 	transform.setOrigin(btVector3(fishingRodPos.x, fishingRodPos.y, fishingRodPos.z));
@@ -109,7 +110,7 @@ void Player::stepAnim(double deltaT)
 		this->model->remaining = 0.f;
 
 		this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->model->nrOfPoses);
-		std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
+		//std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
 		//this->model->decrementT = true;
 	}
 	else

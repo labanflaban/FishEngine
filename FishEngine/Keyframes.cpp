@@ -127,7 +127,6 @@ void Keyframes::stepAnim(double deltaT)
 		this->remaining = 0.f;
 
 		this->targetPoseIndex = ((++this->targetPoseIndex) % this->nrOfPoses);
-		std::cout << "Index: " << this->targetPoseIndex << std::endl;
 		//this->decrementT = true;
 	}
 	else

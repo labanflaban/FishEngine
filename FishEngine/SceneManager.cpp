@@ -21,7 +21,7 @@ void SceneManager::addAnimatedMesh(AnimatedMesh* animMesh)
 {
 	this->animatedMeshes.push_back(animMesh);
 	animMesh->vectorIndex = this->animatedMeshes.size() - 1;
-	std::cout << "Index " << animMesh->vectorIndex << std::endl;
+	//std::cout << "Index " << animMesh->vectorIndex << std::endl;
 }
 
 void SceneManager::removeAnimatedMesh(AnimatedMesh* animMesh)

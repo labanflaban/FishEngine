@@ -76,7 +76,7 @@ float InputHandler::getMousePosY()
 		ScreenToClient(*(this->primaryWindow), &point);
 
 
-		std::cout << point.x << " " << point.y << std::endl;
+		//std::cout << point.x << " " << point.y << std::endl;
 
 		return point.y;
 	}

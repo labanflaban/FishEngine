@@ -80,7 +80,7 @@ DirectX::XMFLOAT3 Level::degreesToRadians(DirectX::XMFLOAT3 degrees)
 	degrees.x = (degrees.x / 180) * DirectX::XM_PI;
 	degrees.y = (degrees.y / 180) * DirectX::XM_PI;
 	degrees.z = (degrees.z / 180) * DirectX::XM_PI;
-	std::cout << degrees.x << "," << degrees.y << "," << degrees.z << std::endl;
+	//std::cout << degrees.x << "," << degrees.y << "," << degrees.z << std::endl;
 	return degrees;
 }
 
