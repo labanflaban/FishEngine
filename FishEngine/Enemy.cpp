@@ -19,7 +19,6 @@ Enemy::~Enemy()
 void Enemy::update(Player* plr)
 {
 	model->rigidBody->setActivationState(ACTIVE_TAG);
-	model->rigidBody->clearGravity();
 
 	//model->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
 
@@ -49,6 +48,20 @@ void Enemy::update(Player* plr)
 		{ 
 			//model->move(DirectX::XMFLOAT3(-xVel, 0.2*(-dY/abs(dY)), 0));
 			model->rigidBody->setLinearVelocity(btVector3(-xVel, 3.0f* -dY / abs(dY), 0));
+		model->rigidBody->setLinearVelocity(btVector3(-xVel * 4, -yVel * 4, 0));
+	}
+	else
+	{
+		if (model->getTranslation().y < baseHeight + 25.0f)//If not diving, then return to original height
+		{
+			//model->move(DirectX::XMFLOAT3(-xVel, 0.2*(-dY/abs(dY)), 0));
+			//model->rigidBody->setLinearVelocity(btVector3(-xVel, 3.0f * -dY / abs(dY), 0));
+
+			if (model->rigidBody->getLinearVelocity().y() < 3)
+				model->rigidBody->setLinearVelocity(btVector3(-xVel, model->rigidBody->getLinearVelocity().y() + 0.1, 0));
+			else
+				model->rigidBody->setLinearVelocity(btVector3(-xVel, model->rigidBody->getLinearVelocity().y(), 0));
+
 		}
 		else
 		{
@@ -66,4 +79,6 @@ void Enemy::update(Player* plr)
 
 	model->rigidBody->clearGravity();
 	
+}
+
 }
