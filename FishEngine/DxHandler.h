@@ -68,11 +68,6 @@ struct VS_CONSTANT_ANIM_BUFFER
 	double padding = 0.0;
 };
 
-
-struct PS_CONSTANT_GUI_BUFFER
-{
-	BOOL selected = false;
-};
 struct PS_CONSTANT_GUI_BUFFER
 {
 	BOOL selected = false;
