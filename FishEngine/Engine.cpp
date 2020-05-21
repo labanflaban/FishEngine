@@ -28,6 +28,7 @@ void Engine::initialSetup()
 
 	this->createWindow();
 	createDirectX();
+
 	DxHandler::firstPassPixel->compileShader(L"./FirstPassPixel.hlsl", DxHandler::devicePtr);
 	DxHandler::firstPassVertex->compileShader(L"./FirstPassVertex.hlsl", DxHandler::devicePtr);
 
@@ -48,6 +49,9 @@ void Engine::initialSetup()
 
 	DxHandler::particlePixel->compileShader(L"./ForwardParticlePixel.hlsl", DxHandler::devicePtr);
 
+	DxHandler::GuiShaderVertex->compileShader(L"./GuiShaderVertex.hlsl", DxHandler::devicePtr);
+	DxHandler::GuiShaderPixel->compileShader(L"./GuiShaderPixel.hlsl", DxHandler::devicePtr);
+
 	//DxHandler::skyboxVertexShader->compileShader(L"./SkyboxVertex", DxHandler::devicePtr);
 	//DxHandler::skyboxPixelShader->compileShader(L"./SkyboxPixel.hlsl", DxHandler::devicePtr);
 	deferredBufferHandler.init(clientWidth, clientHeight);
@@ -62,16 +66,22 @@ void Engine::initialSetup()
 	DxHandler::contextPtr->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DxHandler::contextPtr->IASetInputLayout((ID3D11InputLayout*)DxHandler::input_layout_ptr);
 
+	createGUIHandler();
+
 	directXHandler->generateFullScreenQuad();
 
 	PS_CONSTANT_LIGHT_BUFFER ps_buff;
 	VS_CONSTANT_MATRIX_BUFFER vs_buff;
+
 	VS_CONSTANT_ANIM_BUFFER vs_anim_buff;
+
+	PS_CONSTANT_GUI_BUFFER ps_gui_buff;
+
 	directXHandler->createPSConstBuffer(ps_buff);
 	directXHandler->createVSConstBuffer(vs_buff);
 	directXHandler->createVSAnimBuffer(vs_anim_buff);
 	directXHandler->createGSConstBuffer();
-
+	directXHandler->createPSGuiBuffer(ps_gui_buff);
 	directXHandler->initAdditiveBlendState();
 	
 	this->primaryCamera = Camera(WIDTH, HEIGHT);
@@ -131,6 +141,11 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
+
+	if(player->boostReserve <= 0.2f)
+	{
+		guiHandler->currentHealth = guiHandler->currentHealth--;
+	}
 }
 
 void Engine::createWindow()
@@ -271,6 +286,22 @@ void Engine::updateParticles()
 			sceneManager.removeParticle(p);
 		}
 	}
+}
+
+void Engine::updateGUI()
+{
+	if(guiHandler->checkButtons() == 1)
+	{
+		gameOver = false;
+		cout << "STARTING GAME!" << endl;
+	}
+
+	else if(guiHandler->checkButtons() == 2)
+	{
+		cout << "QUITING APP!" << endl;
+	}
+
+	guiHandler->updateHUD();
 }
 
 collisionStruct* getCollStruct(void* ptr)
@@ -596,6 +627,18 @@ void Engine::engineLoop()
 	Level* level = new Level();
 	level->createLevel(dynamicsWorld, collisionShapes, &sceneManager);
 
+	guiHandler->initMainMenu();
+	guiHandler->initHUD();
+	/*Enemy* enemy = new Enemy(DxHandler::devicePtr);
+	this->enemies.push_back(enemy);
+	this->scene.push_back(enemy->model);
+	this->lights.push_back(enemy->light);
+
+	Enemy* enemy2 = new Enemy(DxHandler::devicePtr);
+	this->enemies.push_back(enemy2);
+	this->scene.push_back(enemy2->model);
+	this->lights.push_back(enemy2->light);
+	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));*/
 
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
@@ -636,6 +679,8 @@ void Engine::engineLoop()
 		renderSecondPass();
 		renderLightVolumes();
 		renderParticles();
+		updateGUI();
+		renderGUI();
 
 		//upp upp och iv����g
 		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -796,6 +841,11 @@ void Engine::engineLoop()
 	*/
 }
 
+void Engine::createGUIHandler()
+{
+	this->guiHandler = new GUIhandler(this->directXHandler, &this->inputHandler);
+}
+
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
 	DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
@@ -905,6 +955,19 @@ void Engine::renderSecondPass()
 	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL); //Application screen
 }
 
+void Engine::renderGUI()
+{
+	float blendingFactor[4] = { 0.0f, 1.0f, 0.0f, 1.0f };
+
+	DxHandler::contextPtr->OMSetBlendState(DxHandler::alphaBlendState, blendingFactor, 0xFFFFFFFF);
+	DxHandler::GuiShaderPixel->useThis(DxHandler::contextPtr);
+	DxHandler::GuiShaderVertex->useThis(DxHandler::contextPtr);
+	directXHandler->contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);//, DxHandler::depthStencil); //Application screen
+	DxHandler::contextPtr->PSSetShaderResources(0, 1, &guiHandler->guiElements.at(0)->mesh->textureView);
+	guiHandler->drawGuiElements(this->primaryCamera);
+	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
+}
+
 void Engine::renderLightVolumes()
 {
 	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
@@ -957,6 +1020,5 @@ void Engine::renderParticles()
 	}
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
+
 }
-
-

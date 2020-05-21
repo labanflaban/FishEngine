@@ -9,4 +9,5 @@ class FIDParser
 {
 public:
 	static std::vector<Vertex> readFromFID(std::string fileName);
+	static std::vector<std::string> readTexturesFromFID(std::string fileName);
 };

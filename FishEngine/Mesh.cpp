@@ -132,6 +132,14 @@ void Mesh::readMeshFromFile(std::string fileName)
 	createVertexBuffer();
 }
 
+void Mesh::printTextureFromFile(std::string fileName)
+{
+	for(std::string s : fidParser.readTexturesFromFID(fileName))
+	{
+		std::cout << s << std::endl;
+	}
+}
+
 void Mesh::readTextureFromFile(std::wstring textureName)
 {
 	HRESULT readTextureResult = DirectX::CreateWICTextureFromFile(device, textureName.data(), &texture, &textureView, 0);

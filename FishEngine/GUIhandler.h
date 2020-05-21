@@ -2,24 +2,31 @@
 #include "Mesh.h"
 #include "DxHandler.h"
 #include "InputHandler.h"
+#include "GUIElement.h"
+#include "GUIButton.h"
 class GUIhandler
 {
 private :
 	DxHandler* dxHandler;
 	InputHandler* inputHandler = nullptr;
+
+	GUIButton* startButton = nullptr;
+	GUIButton* exitButton = nullptr;
+	int heartCap = 5;
+	int nrOfHearts = 5;
+	std::vector<GUIElement> hearts;
 public :
-	std::vector<Mesh*> GuiElements;
-	Mesh* generateGUIElement();
+	int currentHealth = 5;
+	std::vector<GUIElement*> guiElements;
 	void drawGuiElements(Camera &camera);
 	GUIhandler(DxHandler* dxHandler, InputHandler* inputHandler);
-	bool isSelected(Mesh* guiElement);
+	void initMainMenu();
+	void showMainMenu();
+	void hideMainMenu();
+	void showHUD();
+	void fixHUD();
+	void hideHUD();
+	void initHUD();
+	void updateHUD();
+	int checkButtons();
 };
-//class GUIElement
-//{
-//
-//};
-//
-//class GUIButton : public GUIElement
-//{
-//
-//};

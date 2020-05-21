@@ -73,6 +73,11 @@ struct PS_CONSTANT_GUI_BUFFER
 {
 	BOOL selected = false;
 };
+struct PS_CONSTANT_GUI_BUFFER
+{
+	BOOL selected = false;
+	BOOL isButton = false;
+};
 
 struct PS_CONSTANT_LIGHT_BUFFER
 {
