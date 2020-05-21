@@ -68,6 +68,9 @@ public:
 	DirectX::XMFLOAT3 getTranslation();
 	DirectX::XMFLOAT3 getScaling();
 	DirectX::XMMATRIX& getWorldMatrix();
+	DirectX::XMMATRIX& getTransMatrix();
+	DirectX::XMMATRIX& getScaleMatrix();
+	DirectX::XMMATRIX& getRotationMatrix();
 
 	void setRotation(DirectX::XMFLOAT3 rotation);
 	void setTranslation(DirectX::XMFLOAT3 translation);
