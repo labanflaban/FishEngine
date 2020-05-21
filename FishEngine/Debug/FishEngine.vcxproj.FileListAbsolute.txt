@@ -1,6 +1,0 @@
-C:\Users\Chris\Documents\Visual Studio 2019\Visual Studio Projects\Fish Engine\MergedTest\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
-C:\Users\DaveM\Documents\GitHub\FishEngineBRUUUUUUUUUUU\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
-C:\Users\DaveM\Documents\GitHub\FishEngineBACKUP(GUI FIXED)\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
-C:\Users\DaveM\Documents\GitHub\FishEngine\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
-C:\Users\DaveM\Documents\GitHub\FishEngine - BACKUPLATEST\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
-C:\Users\DaveM\Documents\GitHub\FishEngine - Before KRAKEN\FishEngine\Debug\FishEngine.vcxproj.CopyComplete
