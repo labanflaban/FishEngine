@@ -12,11 +12,21 @@ private :
 
 	GUIButton* startButton = nullptr;
 	GUIButton* exitButton = nullptr;
+	int heartCap = 5;
+	int nrOfHearts = 5;
+	std::vector<GUIElement> hearts;
 public :
+	int currentHealth = 5;
 	std::vector<GUIElement*> guiElements;
 	void drawGuiElements(Camera &camera);
 	GUIhandler(DxHandler* dxHandler, InputHandler* inputHandler);
 	void initMainMenu();
+	void showMainMenu();
+	void hideMainMenu();
+	void showHUD();
+	void fixHUD();
+	void hideHUD();
 	void initHUD();
+	void updateHUD();
 	int checkButtons();
 };

@@ -44,11 +44,11 @@ float4 main(PS_INPUT input) : SV_Target
     {
         if (selected)
         {
-            bruh = (input.vUV.x, (input.vUV.y + 1) / 2);
+            bruh = float2(input.vUV.x, ((input.vUV.y + 1) / 2));
         }
         else
         {
-            bruh = (input.vUV.x, input.vUV.y / 2);
+            bruh = float2(input.vUV.x, (input.vUV.y / 2));
         }
     }
     else

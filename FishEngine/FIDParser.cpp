@@ -29,3 +29,14 @@ std::vector<Vertex> FIDParser::readFromFID(std::string fileName)
 
 	return vertexList;
 }
+
+std::vector<std::string> FIDParser::readTexturesFromFID(std::string fileName)
+{
+	std::vector<std::string> textureList;
+	FID::Texture* tempTexture = new FID::Texture(fileName);
+
+	textureList.push_back(tempTexture->getTextureName(0));
+	textureList.push_back(tempTexture->getTextureFilePath(0));
+
+	return textureList;
+}

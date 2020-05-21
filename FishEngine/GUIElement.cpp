@@ -14,6 +14,15 @@ GUIElement::GUIElement(DxHandler* dxHandler)
 	mesh->createVertexBuffer();
 }
 
+GUIElement::GUIElement()
+{
+}
+
+void GUIElement::setDxHandler(DxHandler* dxHandler)
+{
+	this->dxHandler = dxHandler;
+}
+
 void GUIElement::draw(Camera& camera)
 {
 	PS_CONSTANT_GUI_BUFFER guiBuff;

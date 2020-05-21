@@ -139,6 +139,11 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
+
+	if(player->boostReserve <= 0.2f)
+	{
+		guiHandler->currentHealth = guiHandler->currentHealth--;
+	}
 }
 
 void Engine::createWindow()
@@ -263,6 +268,8 @@ void Engine::updateGUI()
 	{
 		cout << "QUITING APP!" << endl;
 	}
+
+	guiHandler->updateHUD();
 }
 
 collisionStruct* getCollStruct(void* ptr)
@@ -545,6 +552,7 @@ void Engine::engineLoop()
 	bool shutdown = false;
 
 
+
 	//std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
 	//std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
 	
@@ -564,7 +572,8 @@ void Engine::engineLoop()
 	//animatedMeshes.push_back(animMesh);
 	sceneManager.addAnimatedMesh(animMesh);
 	
-
+	/*Mesh* meshu = new Mesh(DxHandler::devicePtr);
+	meshu->printTextureFromFile("./Models/TextureBOX.FID");*/
 
 
 	while (!shutdown)
@@ -696,7 +705,6 @@ void Engine::engineLoop()
 		}
 
 		updateParticles();
-
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		fixedUpdate(frameTime.count());
@@ -795,9 +803,6 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		}
 		directXHandler->draw(animMesh, primaryCamera);
 	}
-
-	//guiHandler->drawGuiElements(primaryCamera);
-
 
 	//Set to null
 	ID3D11RenderTargetView* arrNull[1] =
