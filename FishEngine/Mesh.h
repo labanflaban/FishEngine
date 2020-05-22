@@ -19,9 +19,6 @@ const int FLOATS_PER_VERTEX = 15;
 class Mesh
 {
 private:
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixIdentity();
-	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixIdentity();
-	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMFLOAT3 rotation;
 	DirectX::XMFLOAT3 translation;
@@ -41,6 +38,10 @@ private:
 	void updateWorldMatrix();
 public:
 	ID3D11Device* device = nullptr;
+
+	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixIdentity();
+	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixIdentity();
 
 	DirectX::XMFLOAT4 ambientMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);
 	DirectX::XMFLOAT4 diffuseMeshColor = DirectX::XMFLOAT4(1, 1, 1, 1);

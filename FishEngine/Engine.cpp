@@ -245,14 +245,18 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 	}
 
-	player->updatePlayer(fishingRod,hook, rope);
-
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
-	if (!movementVector.isZero())
-		player->stepAnim(deltaTime);
+	if (!movementVector.isZero() || player->attacking)
+	{
+
+	}
 	else
-		player->model->remaining = 0;
+		player->model->targetPoseIndex = 0;
+		//player->model->remaining = 0;
+
+	player->stepAnim(deltaTime);
+	player->updatePlayer(fishingRod, hook, rope, movementVector.x());
 
 	if (movementVector.x() > 0)
 		this->player->model->setRotation(XMFLOAT3(0, 3.14/2, 0));
@@ -293,6 +297,7 @@ void Engine::updateGUI()
 	if(guiHandler->checkButtons() == 1)
 	{
 		gameOver = false;
+		guiHandler->hideMainMenu();
 		cout << "STARTING GAME!" << endl;
 	}
 
@@ -408,6 +413,9 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy = collision1->enemy;
 				}
 
+				//std::cout << myEnemy->damageDebounce << std::endl;
+				//std::cout << "Health: " << myEnemy->health << std::endl;
+				//std::cout << "Debounce " << myEnemy->damageDebounce << std::endl;
 				if (myEnemy->damageDebounce >= myEnemy->maxDebounce && rod->isActive)
 				{
 					myEnemy->health -= 30;
@@ -417,8 +425,8 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->justHit = true;
 				}
 
-				if (myEnemy->health < 0)
-					std::cout << "Should be dead" << std::endl;
+				//if (myEnemy->health < 0)
+					//std::cout << "Should be dead" << std::endl;
 			}
 
 			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Enemy)))
@@ -445,13 +453,13 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
 				{
-					myPlayer->health -= 30;
+					myPlayer->health -= 1;
 					myEnemy->damageDebounce = 0;
 					//std::cout << "Enemy hit" << std::endl;
 				}
 
-				if (myPlayer->health < 0)
-					std::cout << "Player should be dead " << myPlayer->health << std::endl;
+				//if (myPlayer->health < 0)
+					//std::cout << "Player should be dead " << myPlayer->health << std::endl;
 
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
@@ -490,14 +498,20 @@ void Engine::engineLoop()
 	std::vector<Vertex> vertVectorPlr1 = ObjParser::readFromObj("./Models/characterMiddle1.obj");
 	std::vector<Vertex> vertVectorPlr2 = ObjParser::readFromObj("./Models/characterMiddle2.obj");
 	std::vector<Vertex> vertVectorPlr3 = ObjParser::readFromObj("./Models/characterMiddle3.obj");
+
+	std::vector<Vertex> vertVectorPlr4 = ObjParser::readFromObj("./Models/characterFishingStart.obj");
+	std::vector<Vertex> vertVectorPlr5 = ObjParser::readFromObj("./Models/characterFishingMiddle.obj");
+	std::vector<Vertex> vertVectorPlr6 = ObjParser::readFromObj("./Models/characterFishingEnd.obj");
+	std::vector<Vertex> vertVectorPlr7 = ObjParser::readFromObj("./Models/characterFishingMiddle.obj");
+	std::vector<Vertex> vertVectorPlr8 = ObjParser::readFromObj("./Models/characterFishingStart.obj");
 	//std::vector<Vertex> vertVectorPlr4 = ObjParser::readFromObj("./Models/characterEnd.obj");
 	
 	//std::vector<Vertex> vertVectorPlr3 = FIDParser::readFromFID("./Models/characterEmd.FID");
 
-	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1, &vertVectorPlr2, &vertVectorPlr3};
-	debugObject->appendStructuredBuffer(plrArr, 4);
+	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1, &vertVectorPlr2, &vertVectorPlr3, &vertVectorPlr4, &vertVectorPlr5, &vertVectorPlr6, &vertVectorPlr7, &vertVectorPlr8};
+	debugObject->appendStructuredBuffer(plrArr, 9);
 	debugObject->createStructuredBuffer(DxHandler::devicePtr);
-	debugObject->setTranslation(DirectX::XMFLOAT3(3, 0, 4));
+	debugObject->setTranslation(DirectX::XMFLOAT3(200, 0, 4));
 	debugObject->setScaling(DirectX::XMFLOAT3(2, 2, 2));
 	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
 	debugObject->manualUpdate = true;
@@ -513,9 +527,9 @@ void Engine::engineLoop()
 	debugObject->targetPoseIndex = 1;
 
 	Mesh* hookObject = new Mesh(DxHandler::devicePtr); //Hook
-	hookObject->readMeshFromFile("./Models/actualCube.obj");
-	hookObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
-	hookObject->setRotation(DirectX::XMFLOAT3(0, 0, 0.5));
+	hookObject->readMeshFromFile("./Models/hook.obj");
+	hookObject->setScaling(DirectX::XMFLOAT3(2, 2, 2));
+	hookObject->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
 	this->hook = new Tool(&inputHandler);
 	this->hook->model = hookObject;
 	collisionStruct* hookCollStruct = new collisionStruct(hook, collisionEnums::Hook);
@@ -551,8 +565,9 @@ void Engine::engineLoop()
 	this->sceneManager.addAnimatedMesh(enemy->model);
 	sceneManager.addLight(enemy->light);
 	enemy->model->setTranslation(XMFLOAT3(30, 20, 0));
+	enemy->model->setRotation(XMFLOAT3(3.14 / 2, 0, 0));
 	collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x+5), btScalar(enemy->model->getScaling().y+5), btScalar(enemy->model->getScaling().z)+5)));
+	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x+10), btScalar(enemy->model->getScaling().y+6), btScalar(enemy->model->getScaling().z)+6)));
 	enemy->model->targetPoseIndex = 1;
 	enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
 	enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
@@ -560,13 +575,22 @@ void Engine::engineLoop()
 
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
+	//fishingRodObject->readMeshFromFile("./Models/actualCube.obj");
 	fishingRodObject->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	this->fishingRod = new Tool(&inputHandler);
 	this->fishingRod->model = fishingRodObject;
 	collisionStruct* fishingRodCollStruct = new collisionStruct(fishingRod, collisionEnums::Rod);
-	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1);
+	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1, new btBoxShape(btVector3(4, 4, 4)));
 	fishingRodObject->rigidBody->setUserPointer(fishingRodCollStruct);
+	this->fishingRod->model->rigidBody->setGravity(btVector3(0, 0, 0));
 	this->sceneManager.addMesh(fishingRodObject);
+
+
+	Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
+	//fishingRodObject->readMeshFromFile("./Models/rod.obj");
+	block->readMeshFromFile("./Models/actualCube.obj");
+	block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+	sceneManager.addMesh(block);
 	
 
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
@@ -581,13 +605,17 @@ void Engine::engineLoop()
 	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
 	//groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject5->setTranslation(DirectX::XMFLOAT3(20, 15, 75));
-	groundObject5->setScaling(DirectX::XMFLOAT3(60, 60, 60));
+	groundObject5->setScaling(DirectX::XMFLOAT3(30, 30, 30));
 	groundObject5->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
 	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	std::vector<Vertex> jellyFish1 = FIDParser::readFromFID("./Models/JellyFishRight.FID");
-	std::vector<Vertex> jellyFish2 = FIDParser::readFromFID("./Models/JellyFishLeft.FID");
-	std::vector<Vertex>* fishArr[] = { &jellyFish1, &jellyFish2 };
-	groundObject5->appendStructuredBuffer(fishArr, 2);
+	//std::vector<Vertex> jellyFish1 = FIDParser::readFromFID("./Models/JellyFishRight.FID");
+	//std::vector<Vertex> jellyFish2 = FIDParser::readFromFID("./Models/JellyFishLeft.FID");
+	std::vector<Vertex> jellyFish0 = ObjParser::readFromObj("./Models/JellyAnimPartOne.obj");
+	std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
+	std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
+	std::vector<Vertex> jellyFish3 = ObjParser::readFromObj("./Models/JellyAnimPartFour.obj");
+	std::vector<Vertex>* fishArr[] = { &jellyFish0, &jellyFish1, &jellyFish2, &jellyFish3 };
+	groundObject5->appendStructuredBuffer(fishArr, 4);
 	groundObject5->createStructuredBuffer(DxHandler::devicePtr);
 	groundObject5->targetPoseIndex = 1;
 	groundObject5->animationSpeed = 0.3;
@@ -778,7 +806,7 @@ void Engine::engineLoop()
 			if (enemy)
 			{
 				enemy->update(player);
-				//std::cout << enemy->health << std::endl;
+				//std::cout << "Health: " << enemy->health << std::endl;
 				if (enemy->health < 0)
 				{
 					std::cout << "Died" << std::endl;
@@ -791,6 +819,12 @@ void Engine::engineLoop()
 				}
 			}
 		}
+		
+		//XMVECTOR handPos = DirectX::XMVector3Transform(player->currentHandPosition, SimpleMath::Matrix(this->player->model->getWorldMatrix()));
+		//block->setTranslation(XMFLOAT3(XMVectorGetX(handPos), XMVectorGetY(handPos), XMVectorGetZ(handPos)));
+		//block->setTranslation(XMFLOAT3(hook->model->rigidBody->getWorldTransform().getOrigin().x(), hook->model->rigidBody->getWorldTransform().getOrigin().y(), hook->model->rigidBody->getWorldTransform().getOrigin().z()));
+		//block->setTranslation(XMFLOAT3(enemy->model->rigidBody->getWorldTransform().getOrigin().x(), enemy->model->rigidBody->getWorldTransform().getOrigin().y(), enemy->model->rigidBody->getWorldTransform().getOrigin().z()));
+	
 
 		updateParticles();
 		 

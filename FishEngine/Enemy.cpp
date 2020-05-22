@@ -51,6 +51,7 @@ void Enemy::update(Player* plr)
 		}
 	}
 	model->rigidBody->setActivationState(ACTIVE_TAG);
+	model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
 	model->rigidBody->clearGravity();
 
 

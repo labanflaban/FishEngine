@@ -1,6 +1,5 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib hook.mtl
 g default
 v -0.106728 -0.500000 0.227778
 v -0.118474 -0.504563 0.209222

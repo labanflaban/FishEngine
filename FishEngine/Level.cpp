@@ -121,23 +121,12 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		}
 		else if (level->levelMeshVector.at(i).tag == "enemy")
 		{
-			//Enemy* enemy = new Enemy(DxHandler::devicePtr);
-			//enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-			//enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-			//enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-	
-			//collisionStruct* enemyCollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-			//enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 1);
-			//enemy->model->rigidBody->setUserPointer(enemyCollStruct);
-			//sceneManager->addEnemy(enemy);
-			//sceneManager->addLight(enemy->light);
-			//sceneManager->addMesh(enemy->model);
 
 			Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
 			sceneManager->addEnemy(enemy);
 			sceneManager->addAnimatedMesh(enemy->model);
 			sceneManager->addLight(enemy->light);
-			
+
 			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
@@ -150,24 +139,55 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
 
 		}
-		else if (level->levelMeshVector.at(i).tag == "ground")
+		else if (level->levelMeshVector.at(i).tag == "GroundOne")
 		{
 			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
-			groundObject->readMeshFromFID("./Models/ground.FID");
+			groundObject->readMeshFromFile("./Models/GroundOne.Obj");
 
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 
-			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x + 10), btScalar(groundObject->getScaling().y - 12), btScalar(groundObject->getScaling().z) + 6));
+			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+
 			sceneManager->addMesh(groundObject);
 		}
-		else if(level->levelMeshVector.at(i).tag == "light")
+		else if (level->levelMeshVector.at(i).tag == "GroundTwo")
+		{
+			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->readMeshFromFile("./Models/GroundTwo.Obj");
+
+			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x + 10), btScalar(groundObject->getScaling().y - 12), btScalar(groundObject->getScaling().z) + 6));
+			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+
+			sceneManager->addMesh(groundObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "GroundThree")
+		{
+			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->readMeshFromFile("./Models/GroundThree.Obj");
+
+			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x + 50), btScalar(groundObject->getScaling().y - 20), btScalar(groundObject->getScaling().z) + 6));
+			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			sceneManager->addMesh(groundObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "light")
 		{
 			Light* lightObject = new Light(DxHandler::devicePtr);
 			lightObject->setPosition(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			sceneManager->addLight(lightObject);
 		}
+
 	}
 }
 

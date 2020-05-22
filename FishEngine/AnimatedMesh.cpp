@@ -88,6 +88,21 @@ DirectX::XMMATRIX& AnimatedMesh::getWorldMatrix()
 	return this->worldMatrix;
 }
 
+DirectX::XMMATRIX& AnimatedMesh::getTransMatrix()
+{
+	return this->translationMatrix;
+}
+
+DirectX::XMMATRIX& AnimatedMesh::getScaleMatrix()
+{
+	return this->scalingMatrix;
+}
+
+DirectX::XMMATRIX& AnimatedMesh::getRotationMatrix()
+{
+	return this->rotationMatrix;
+}
+
 void AnimatedMesh::readMeshFromFID(std::string fileName)
 {
 	//this->vertices = fidParser.readFromFID(fileName);
