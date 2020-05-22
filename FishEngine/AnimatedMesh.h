@@ -76,7 +76,7 @@ public:
 	void setTranslation(DirectX::XMFLOAT3 translation);
 	void setScaling(DirectX::XMFLOAT3 scaling);
 	void move(DirectX::XMFLOAT3 deltaTranslation);
-	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr);
+	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr, btVector3 offset = btVector3(0,0,0));
 	void readMeshFromFID(std::string fileName);
 	void readMeshFromFile(std::string fileName);
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function

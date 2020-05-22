@@ -252,8 +252,11 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 	}
 	else
+	{
 		player->model->targetPoseIndex = 0;
-		//player->model->remaining = 0;
+		player->model->remaining = 0;
+	}
+		
 
 	player->stepAnim(deltaTime);
 	player->updatePlayer(fishingRod, hook, rope, movementVector.x());
@@ -304,6 +307,8 @@ void Engine::updateGUI()
 	else if(guiHandler->checkButtons() == 2)
 	{
 		cout << "QUITING APP!" << endl;
+		
+		exit(1);
 	}
 
 	guiHandler->updateHUD();
@@ -518,8 +523,8 @@ void Engine::engineLoop()
 	debugObject->readTextureFromFile(L"./Models/FISHCOLOR.png");
 	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
-	player->model->animationSpeed = 5;
-	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10);
+	player->model->animationSpeed = 7;
+	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10, nullptr, btVector3(0,500,0));
 	collisionStruct* plrCollStruct = new collisionStruct(player, collisionEnums::Player);
 	player->model->rigidBody->setUserPointer(plrCollStruct);
 
@@ -560,7 +565,7 @@ void Engine::engineLoop()
 	rope->initRigidbody(dynamicsWorld, &collisionShapes, 5);
 	this->sceneManager.addMesh(rope);
 	
-	Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
+	/*Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
 	this->sceneManager.addEnemy(enemy);
 	this->sceneManager.addAnimatedMesh(enemy->model);
 	sceneManager.addLight(enemy->light);
@@ -571,7 +576,7 @@ void Engine::engineLoop()
 	enemy->model->targetPoseIndex = 1;
 	enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
 	enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
-	enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
+	enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));*/
 
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
@@ -679,18 +684,22 @@ void Engine::engineLoop()
 	//std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
 	//std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
 	
-	std::vector<Vertex> vertVector = FIDParser::readFromFID("./Models/Fish_Right.FID");
-	std::vector<Vertex> vertVector2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
+	//std::vector<Vertex> vertVector = FIDParser::readFromFID("./Models/Fish_Right.FID");
+	//std::vector<Vertex> vertVector2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
 
+	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/ANGLA1.obj");
+	std::vector<Vertex> vertVector1 = ObjParser::readFromObj("./Models/ANGLA2.obj");
+	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/ANGLA3.obj");
+	std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/ANGLA4.obj");
 	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
-	animMesh->readTextureFromFile(L"./Models/FISHCOLOR.png");
+	animMesh->readTextureFromFile(L"./Models/ANGLAColor.png");
 
-	std::vector<Vertex>* arr[] = { &vertVector, &vertVector2 };
-	animMesh->appendStructuredBuffer(arr, 2);
+	std::vector<Vertex>* arr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
+	animMesh->appendStructuredBuffer(arr, 1);
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
 	animMesh->setTranslation(XMFLOAT3(-25, -20, 10));
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
-	animMesh->setRotation(XMFLOAT3(0, 0, 3.14 / 2));
+	//animMesh->setRotation(XMFLOAT3(0, 0, 3.14 / 2));
 	animMesh->targetPoseIndex = 1;
 	//animatedMeshes.push_back(animMesh);
 	sceneManager.addAnimatedMesh(animMesh);
@@ -921,15 +930,19 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	{
 		AnimatedMesh* animMesh = sceneManager.animatedMeshes.at(i);
 
-		ID3D11UnorderedAccessView* views[] = { animMesh->vertexStateUAV };
-		DxHandler::contextPtr->OMSetRenderTargetsAndUnorderedAccessViews(3, arr, DxHandler::depthStencil, 4, ARRAYSIZE(views), views, nullptr);
-
-		if (!animMesh->manualUpdate)
+		if (abs(animMesh->getTranslation().x - player->model->getTranslation().x) < 300)
 		{
-			animMesh->stepAnim(1/60.00);
-			//std::cout << "Anim " << animMesh->t << std::endl;
+
+			ID3D11UnorderedAccessView* views[] = { animMesh->vertexStateUAV };
+			DxHandler::contextPtr->OMSetRenderTargetsAndUnorderedAccessViews(3, arr, DxHandler::depthStencil, 4, ARRAYSIZE(views), views, nullptr);
+
+			if (!animMesh->manualUpdate && abs(animMesh->getTranslation().x - player->model->getTranslation().x) < 300)
+			{
+				animMesh->stepAnim(1 / 60.00);
+				//std::cout << "Anim " << animMesh->t << std::endl;
+			}
+			directXHandler->draw(animMesh, primaryCamera);
 		}
-		directXHandler->draw(animMesh, primaryCamera);
 	}
 
 	//Set to null

@@ -22,7 +22,7 @@ public:
 			0.35f * 3.14f,					//FovAngleY, height angle of perspective in radians
 			(float)WIDTH / (float)HEIGHT,	//AspectRatio, width/height of window
 			0.1f,							//NearZ, how close we render
-			10000.f							//FarZ how far we render
+			1000000.f							//FarZ how far we render
 		);
 	}
 

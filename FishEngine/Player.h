@@ -28,8 +28,8 @@ public:
 	unsigned int points = 0;
 									//Walk start								//Walk middle1						//Middle2						//Middle3							//FishingStart							Fishing Mid						//Fishing End						//Fishing mid						//Fishing start
 	XMVECTOR handPositions[9] = { XMVectorSet(2.05, 10.90, 2.82, 1), XMVectorSet(3.14, 10.34, 1.64, 1), XMVectorSet(3.10, 10.05, -1.44, 1), XMVectorSet(3.07, 10.33, 1.91, 1), XMVectorSet(2.14, 12.44, 4.44, 1), XMVectorSet(2.30, 17.07, 3.97, 1), XMVectorSet(2.30, 17.45, 1.09, 1), XMVectorSet(2.30, 17.07, 3.97, 1), XMVectorSet(2.14, 12.44, 4.44, 1) };
-										//Walk start							//Walk middle1									//Walk middle2						//Walk middle 3										//FishingStart								//FishingMid							//FishingEnd
-	XMVECTOR handRotations[9] = { XMVectorSet(0, -114.76, 19.262, 1), XMVectorSet(101.477, -50.173, 0, 1), XMVectorSet(61.567, -25.359, -19, 1), XMVectorSet(93.726, -49.806, -30, 1), XMVectorSet(31.14, -81.223,-29.069, 1), XMVectorSet(-84.336, -11.804, 86.006, 1), XMVectorSet(-186.225, 51.287, 270, 1) };
+										//Walk start							//Walk middle1									//Walk middle2						//Walk middle 3										//FishingStart					//FishingMid							//FishingEnd
+	XMVECTOR handRotations[9] = { XMVectorSet(0, -114.76, 19.262, 1), XMVectorSet(101.477, -50.173, 0, 1), XMVectorSet(61.567, -25.359, -19, 1), XMVectorSet(93.726, -49.806, -30, 1), XMVectorSet(31.14, -81.223,-29.069, 1), XMVectorSet(-84.336, -11.804, 130.006, 1), XMVectorSet(-186.225, 51.287, 270, 1) };
 
 	XMVECTOR currentHandPosition;
 	double linearTime = 0.0;

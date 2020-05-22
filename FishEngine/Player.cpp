@@ -167,7 +167,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	{
 		attacking = true;
 		this->model->targetPoseIndex = 5;
-		this->model->animationSpeed = 5;
+		this->model->animationSpeed = 7;
 		rod->isActive = true;
 		rod->slapSound.play();
 	}

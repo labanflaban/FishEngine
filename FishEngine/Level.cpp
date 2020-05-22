@@ -95,16 +95,33 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 
 		if (level->levelMeshVector.at(i).tag == "platform")
 		{
-			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
-			groundObject->readMeshFromFID("./Models/JellyFish.FID");
+			AnimatedMesh* groundObject = new AnimatedMesh(DxHandler::devicePtr);
+			//groundObject->readMeshFromFID("./Models/JellyFish.FID");
+			std::vector<Vertex> jellyFish0 = ObjParser::readFromObj("./Models/JellyAnimPartOne.obj");
+			std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
+			std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
+			std::vector<Vertex> jellyFish3 = ObjParser::readFromObj("./Models/JellyAnimPartFour.obj");
+			std::vector<Vertex>* fishArr[] = { &jellyFish0, &jellyFish1, &jellyFish2, &jellyFish3 };
+			groundObject->appendStructuredBuffer(fishArr, 4);
+			groundObject->createStructuredBuffer(DxHandler::devicePtr);
+			groundObject->targetPoseIndex = 1;
+			groundObject->animationSpeed = 0.3;
+
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			std::cout << "Animated jelly " << level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi).x << " " << level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi).y << std::endl;
 
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 
+			XMFLOAT3 jellyScale = level->levelMeshVector.at(i).getScale();
+			groundObject->setScaling(level->multiplyFloat3XYZ(XMFLOAT3(jellyScale.x*0.75, jellyScale.y*0.5, jellyScale.z*0.75), multi));
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-			sceneManager->addMesh(groundObject);
+			sceneManager->addAnimatedMesh(groundObject);
+
+			Light* light = new Light(DxHandler::devicePtr);
+			light->lightColor = XMVectorSet(1, 1, 0, 0);
+			light->setPosition(XMFLOAT3(groundObject->getTranslation().x, groundObject->getTranslation().y+25, groundObject->getTranslation().z));
+			sceneManager->addLight(light);
+			//sceneManager->addMesh(groundObject);
 
 		}
 		else if (level->levelMeshVector.at(i).tag == "background")
@@ -132,7 +149,7 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 
 			collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
+			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
 			enemy->model->targetPoseIndex = 1;
 			enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
 			enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
@@ -147,8 +164,9 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			groundObject->readNormalMapFromFile(L"./Textures/StoneNormal.png");
 
-			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x + 10), btScalar(groundObject->getScaling().y - 12), btScalar(groundObject->getScaling().z) + 6));
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x * 3.2f), btScalar(groundObject->getScaling().y * 0.1), btScalar(groundObject->getScaling().z) + 6));
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
 
 			sceneManager->addMesh(groundObject);
@@ -161,9 +179,9 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			groundObject->readNormalMapFromFile(L"./Textures/StoneNormal.png");
 
-
-			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x + 10), btScalar(groundObject->getScaling().y - 12), btScalar(groundObject->getScaling().z) + 6));
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x * 3.2f), btScalar(groundObject->getScaling().y * 0.1), btScalar(groundObject->getScaling().z) + 6));
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
 
 			sceneManager->addMesh(groundObject);
@@ -176,8 +194,10 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			groundObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			groundObject->readNormalMapFromFile(L"./Textures/StoneNormal.png");
 
-			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x + 50), btScalar(groundObject->getScaling().y - 20), btScalar(groundObject->getScaling().z) + 6));
+
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(groundObject->getScaling().x * 3.2f), btScalar(groundObject->getScaling().y * 0.1), btScalar(groundObject->getScaling().z) + 6));
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
 			sceneManager->addMesh(groundObject);
 		}
@@ -186,6 +206,20 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			Light* lightObject = new Light(DxHandler::devicePtr);
 			lightObject->setPosition(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			sceneManager->addLight(lightObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "Rock")
+		{
+			Mesh* rockObject = new Mesh(DxHandler::devicePtr);
+			rockObject->readMeshFromFile("./Models/Rock.Obj");
+
+			rockObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			rockObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			rockObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			rockObject->readNormalMapFromFile(L"./Textures/StoneNormal.png");
+
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(rockObject->getScaling().x * 3.2f), btScalar(rockObject->getScaling().y * 0.1), btScalar(rockObject->getScaling().z) + 6));
+			rockObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			sceneManager->addMesh(rockObject);
 		}
 
 	}

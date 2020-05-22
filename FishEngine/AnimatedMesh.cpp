@@ -7,13 +7,17 @@ void AnimatedMesh::updateWorldMatrix()
 }
 
 
-void AnimatedMesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape)
+void AnimatedMesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape, btVector3 offset)
 {
 	//rigidBody stuff
 	btTransform rigidBodyTransform;
 
 	rigidBodyTransform.setIdentity();
-	rigidBodyTransform.setOrigin(btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z));
+
+	btVector3 origin = btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z) + offset;
+	rigidBodyTransform.setOrigin(origin);
+
+	//std::cout << offset.x() << " " << offset.y() << " " << offset.z() << " " << std::endl;
 
 	btCollisionShape* rigidBodyCollider = nullptr;
 	if (collShape == nullptr)
