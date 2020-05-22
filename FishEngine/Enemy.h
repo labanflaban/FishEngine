@@ -15,10 +15,14 @@ public:
 	Enemy(ID3D11Device* device);
 	~Enemy();
 
-	bool justHit = false;
-
+	int randomDirr;
 	int health = 100;
-	
+
+	float justHit = false;
+
+	float enemyHitMove = 5.f;
+	float AmountOfTimeToMove = 5.0f;
+
 	float damageDebounce = 5.0f;
 	float maxDebounce = 5.0f;
 
@@ -27,4 +31,5 @@ public:
 	int vectorIndex = 0;
 
 	virtual void update(Player* plr);
+	void getHitMove();
 };

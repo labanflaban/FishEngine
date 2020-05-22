@@ -376,7 +376,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
 					//std::cout << "Enemy hit" << std::endl;
-
+					myEnemy->justHit = true;
 
 				}
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
@@ -414,6 +414,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
 					//std::cout << "Enemy hit" << std::endl;
+					myEnemy->justHit = true;
 				}
 
 				if (myEnemy->health < 0)
@@ -551,7 +552,7 @@ void Engine::engineLoop()
 	sceneManager.addLight(enemy->light);
 	enemy->model->setTranslation(XMFLOAT3(30, 20, 0));
 	collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x+5), btScalar(enemy->model->getScaling().y+5), btScalar(enemy->model->getScaling().z)+5)));
+	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x+5), btScalar(enemy->model->getScaling().y+5), btScalar(enemy->model->getScaling().z)+5)));
 	enemy->model->targetPoseIndex = 1;
 	enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
 	enemy->model->rigidBody->setActivationState(ACTIVE_TAG);

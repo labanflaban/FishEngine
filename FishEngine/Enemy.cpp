@@ -18,7 +18,7 @@ Enemy::Enemy(ID3D11Device* device)
 	this->light = new Light(device);
 	light->lightColor = DirectX::XMVectorSet(0, 0, 3, 0); //Blue
 }
- 
+
 Enemy::~Enemy()
 {
 	//delete this->model;
@@ -27,59 +27,93 @@ Enemy::~Enemy()
 
 void Enemy::update(Player* plr)
 {
+	if (enemyHitMove < 5.f)
+		enemyHitMove += 0.1f;
+	if (AmountOfTimeToMove < 5.f)
+		AmountOfTimeToMove += 0.1f;
+
+	if (enemyHitMove >= 5.0f)
+	{
+		enemyHitMove -= 5.0f;
+		randomDirr = rand() % 2 + 1;
+	}
+
+	//Notice that enemy is hit and moves with getHitMove function
+	if (justHit == true && AmountOfTimeToMove >= 5.0f)
+	{
+		int randomNumber;
+		randomNumber = rand() % 2 + 1;
+		AmountOfTimeToMove -= 5.0f;
+		getHitMove();
+		if (randomNumber == 1)
+		{
+			justHit = false;
+		}
+	}
 	model->rigidBody->setActivationState(ACTIVE_TAG);
 	model->rigidBody->clearGravity();
 
-	//model->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
 
 	float dX = model->getTranslation().x - plr->model->getTranslation().x;
-	float dY = model->getTranslation().y - plr->model->getTranslation().y - 20.f;
+	float dY = model->getTranslation().y - plr->model->getTranslation().y;
 	float angle = atan2f(dX, dY);//math.atan(deltaX, deltaY)
 
 	this->light->setPosition(this->model->getTranslation());
 
 
-	xVel = sin(angle) * 1.2f;
-	yVel = cos(angle) * 0.5f;
+	xVel = sin(angle) * 1.5f;
+	yVel = cos(angle) * 0.7f;
 
 	float baseHeight = plr->model->getTranslation().y;
-	float diveRange = 30.f;
+	float diveRange = 50.f;
 
 	int randomNr = rand() % 10;
-	if (abs(dX) < diveRange)//If close enough to dive
+
+
+	if (justHit == false)
 	{
-		//model->move(DirectX::XMFLOAT3(-xVel, -yVel, 0));
-		model->rigidBody->setLinearVelocity(btVector3(-xVel * 3, -yVel * 3, 0));
-	}
-	else
-	{
-		if (model->getTranslation().y < baseHeight)//If not diving, then return to original height
+		if (dX < diveRange)//If close enough to dive
 		{
-			//model->move(DirectX::XMFLOAT3(-xVel, 0.2*(-dY/abs(dY)), 0));
-			model->rigidBody->setLinearVelocity(btVector3(-xVel, 3.0f * -dY / abs(dY), 0));
+			model->rigidBody->setLinearVelocity(btVector3(-xVel * 3, -yVel * 3, 0));
 		}
 		else
 		{
-			//model->move(DirectX::XMFLOAT3(-xVel, 0, 0));
 
-
-			model->rigidBody->setLinearVelocity(btVector3(-xVel, 0, 0));
-
+			if (model->getTranslation().y < baseHeight + 25.0f)//If not diving, then return to original height
+			{
+				model->rigidBody->setLinearVelocity(btVector3(-xVel, 5.0f, 0));
+			}
+			else
+			{
+				model->rigidBody->setLinearVelocity(btVector3(-xVel, 0, 0));
+			}
 		}
+		model->setRotation(DirectX::XMFLOAT3(0, 0, angle));
 	}
 
-	//model->setRotation(DirectX::XMFLOAT3(0, 0, angle));
-
+	//Rotate the model by direction
 	if (model->getTranslation().x < plr->model->getTranslation().x)
 	{
-		model->setRotation(DirectX::XMFLOAT3(0, -3.14, 3.14/2));
+		model->setRotation(DirectX::XMFLOAT3(0, -3.14, 3.14 / 2));
 	}
 	else
-		model->setRotation(DirectX::XMFLOAT3(0, 0, 3.14/2));
-
-	//btTransform transform = model->rigidBody->getWorldTransform();
-	//std::cout << transform.getOrigin().x() << " " << transform.getOrigin().y() << " " << transform.getOrigin().z() << " " << std::endl;
+		model->setRotation(DirectX::XMFLOAT3(0, 0, 3.14 / 2));
 
 	model->rigidBody->clearGravity();
 
+}
+
+
+void Enemy::getHitMove()
+{
+
+
+	if (randomDirr == 1)
+	{
+		model->rigidBody->setLinearVelocity(btVector3(2.0f, 1.0f, 0));
+	}
+	else
+	{
+		model->rigidBody->setLinearVelocity(btVector3(-2.0f, 1.0f, 0));
+	}
 }
