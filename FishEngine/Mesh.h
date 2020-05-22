@@ -80,6 +80,7 @@ public:
 	void readTextureFromFile(std::wstring textureName); //No need for each instance to hold this function
 	void readNormalMapFromFile(std::wstring NormalMapName);
 
+	void printTextureFromFile(std::string fileName);
 
 	bool isSky = false;
 	Mesh(ID3D11Device* device);

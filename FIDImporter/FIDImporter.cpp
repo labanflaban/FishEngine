@@ -65,4 +65,34 @@ namespace FID
 	{
 		delete[] this->vertices;
 	}
+
+	std::string Texture::getTextureName(int index)
+	{
+		return this->textures[index].name;
+	}
+
+	std::string Texture::getTextureFilePath(int index)
+	{
+		return this->textures[index].filePath;
+	}
+
+	Texture::Texture(std::string filePath)
+	{
+		ifstream infile(filePath, ios::out | ios::binary);
+
+		if (!infile)
+		{
+			cout << "Cannot open file!" << endl;
+		}
+		else
+		{
+			infile.read((char*)&textureHeader, sizeof(FIDHeader::TextureHeader));
+			this->textures = new FIDHeader::Texture[2];
+			infile.read((char*)&this->textures->filePath, sizeof(FIDHeader::Texture) * 2);
+		}
+	}
+	Texture::~Texture()
+	{
+		delete[] this->textures;
+	}
 }

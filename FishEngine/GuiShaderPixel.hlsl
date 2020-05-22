@@ -24,6 +24,7 @@ cbuffer PS_CONSTANT_BUFFER : register(b0)
 cbuffer PS_GUI_BUFFER : register(b1)
 {
     bool selected;
+    bool isButton;
 };
 
 struct PS_INPUT //Output from geometry shader
@@ -39,13 +40,22 @@ struct PS_INPUT //Output from geometry shader
 float4 main(PS_INPUT input) : SV_Target
 {
     float2 bruh;
-    if (selected)
+    if (isButton)
     {
-        bruh = (input.vUV.x, (input.vUV.y + 1) / 2);
+        if (selected)
+        {
+            bruh = float2(input.vUV.x, ((input.vUV.y + 1) / 2));
+        }
+        else
+        {
+            bruh = float2(input.vUV.x, (input.vUV.y / 2));
+        }
     }
     else
     {
-        bruh = (input.vUV.x, input.vUV.y / 2);
+        bruh = input.vUV;
     }
+    
     return colorMap.Sample(mysampler, bruh); //Change last value to change opacity
+    //return float4(input.vUV.x, input.vUV.y, 0 ,0);
 }

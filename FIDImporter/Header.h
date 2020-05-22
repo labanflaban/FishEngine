@@ -1,10 +1,10 @@
 #pragma once
 
-#define MESH_NAME_MAX_LENGTH 128
-#define MATERIAL_NAME_MAX_LENGTH 64
-#define SHADING_MODE_NAME_MAX_LENGTH 64
-#define TEXTURE_NAME_MAX_LENGTH 64
-#define FILE_PATH_NAME_MAX_LENGTH 512
+#define MESH_NAME_MAX_LENGTH 64
+#define MATERIAL_NAME_MAX_LENGTH 32
+#define SHADING_MODEL_NAME_MAX_LENGTH 32
+#define TEXTURE_NAME_MAX_LENGTH 24
+#define FILE_PATH_NAME_MAX_LENGTH 128
 #define SURFACE_TYPE_NAME_MAX_LENGTH 64
 #define TYPE_NAME 32
 #define MAX_TEXTURE_CONNECTIONS 4
@@ -64,6 +64,24 @@ namespace FIDHeader
 		float biTangents[3];
 	};
 
+	struct BlendShapeVertex
+	{
+		float position[3];
+		float normal[3];
+	};
+
+	struct BlendTimeAndValue
+	{
+		float keyframe;
+		int keytime;
+	};
+
+	struct BlendShape
+	{
+		int BlendShapevertexCount;
+		int KeyframeCount;
+	};
+
 	struct MeshHeader : SectionHeader
 	{
 		int vertexCount;
@@ -78,7 +96,7 @@ namespace FIDHeader
 	struct MaterialHeader : SectionHeader
 	{
 		char name[MATERIAL_NAME_MAX_LENGTH];
-		char shadingModel[SHADING_MODE_NAME_MAX_LENGTH];
+		char shadingModel[SHADING_MODEL_NAME_MAX_LENGTH];
 
 		float ambient[3];
 		float diffuse[3];
@@ -91,17 +109,23 @@ namespace FIDHeader
 		MaterialHeader() : SectionHeader(MATERIAL) {}
 	};
 
-	struct TextureHeader : SectionHeader
+	struct Texture
 	{
+		char textureTyp[TYPE_NAME];
 		char name[TEXTURE_NAME_MAX_LENGTH];
 		char filePath[FILE_PATH_NAME_MAX_LENGTH];
-		unsigned int ID;
+	};
+
+	struct TextureHeader : SectionHeader
+	{
+		unsigned int textureCount;
 
 		TextureHeader() : SectionHeader(TEXTURE) {}
 	};
 
 	struct AnimationHeader : SectionHeader
 	{
+		int BlendShapeCount;
 		AnimationHeader() : SectionHeader(ANIMATION) {}
 	};
 
