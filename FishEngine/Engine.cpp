@@ -297,6 +297,7 @@ void Engine::updateGUI()
 	if(guiHandler->checkButtons() == 1)
 	{
 		gameOver = false;
+		guiHandler->hideMainMenu();
 		cout << "STARTING GAME!" << endl;
 	}
 

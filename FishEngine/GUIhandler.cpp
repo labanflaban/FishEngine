@@ -113,7 +113,7 @@ void GUIhandler::drawGuiElements(Camera& camera)
 		if (hearts.at(i).active)
 		{
 			hearts.at(i).draw(camera);
-			std::cout << hearts.at(i).active << std::endl;
+			//std::cout << hearts.at(i).active << std::endl;
 		}
 	}
 }
