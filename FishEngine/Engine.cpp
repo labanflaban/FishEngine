@@ -233,10 +233,14 @@ void Engine::updatePlayerMovement(double deltaTime)
 	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
 	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
 	if (!movementVector.isZero() || player->attacking)
-		player->stepAnim(deltaTime);
-	else
-		player->model->remaining = 0;
+	{
 
+	}
+	else
+		player->model->targetPoseIndex = 0;
+		//player->model->remaining = 0;
+
+	player->stepAnim(deltaTime);
 	player->updatePlayer(fishingRod, hook, rope, movementVector.x());
 
 	if (movementVector.x() > 0)
