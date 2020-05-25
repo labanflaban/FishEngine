@@ -108,8 +108,6 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->animationSpeed = 0.3;
 
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-			std::cout << "Animated jelly " << level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi).x << " " << level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi).y << std::endl;
-
 			groundObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 
 			XMFLOAT3 jellyScale = level->levelMeshVector.at(i).getScale();
@@ -133,20 +131,31 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			background->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 
 			sceneManager->addMesh(background);
-			cout << endl;
 
 		}
-		else if (level->levelMeshVector.at(i).tag == "enemy")
+		else if (level->levelMeshVector.at(i).tag == "enemyTwo")
 		{
 
 			Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
 			sceneManager->addEnemy(enemy);
-			sceneManager->addAnimatedMesh(enemy->model);
-			sceneManager->addLight(enemy->light);
 
+			std::vector<Vertex> target1 = ObjParser::readFromObj("./Models/FishLeft.Obj");
+			std::vector<Vertex> target2 = ObjParser::readFromObj("./Models/FishRight.Obj");
+
+			enemy->model = new AnimatedMesh(DxHandler::devicePtr);
+			enemy->model->readTextureFromFile(L"./Models/FISHCOLOR.png");
+			std::vector<Vertex>* fishArr[] = { &target1, &target2 };
+			enemy->model->appendStructuredBuffer(fishArr, 2);
+			enemy->model->createStructuredBuffer(DxHandler::devicePtr);
+			enemy->model->targetPoseIndex = 1;
+			enemy->model->animationSpeed = 0.3;
 			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			enemy->model->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+
+			sceneManager->addAnimatedMesh(enemy->model);
+			sceneManager->addLight(enemy->light);
 
 			collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
 			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
@@ -155,6 +164,40 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
 			enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
 
+		}
+		else if (level->levelMeshVector.at(i).tag == "enemy")
+		{
+			Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
+			sceneManager->addEnemy(enemy);
+
+
+			enemy->model = new AnimatedMesh(DxHandler::devicePtr);
+			std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/AnglerOne.obj");
+			std::vector<Vertex> vertVector1 = ObjParser::readFromObj("./Models/AnglerTwo.obj");
+			std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/AnglerThree.obj");
+			std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/AnglerFour.obj");
+			enemy->model->readTextureFromFile(L"./Models/ANGLAColor.png");
+
+			std::vector<Vertex>* fishArr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
+
+			enemy->model->appendStructuredBuffer(fishArr, 4);
+			enemy->model->createStructuredBuffer(DxHandler::devicePtr);
+			enemy->model->targetPoseIndex = 1;
+			enemy->model->animationSpeed = 2;
+			enemy->model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			enemy->model->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+
+			sceneManager->addAnimatedMesh(enemy->model);
+			sceneManager->addLight(enemy->light);
+
+			collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
+			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
+			enemy->model->targetPoseIndex = 1;
+			enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
+			enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
+			enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));
 		}
 		else if (level->levelMeshVector.at(i).tag == "GroundOne")
 		{
@@ -201,12 +244,6 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
 			sceneManager->addMesh(groundObject);
 		}
-		else if (level->levelMeshVector.at(i).tag == "light")
-		{
-			Light* lightObject = new Light(DxHandler::devicePtr);
-			lightObject->setPosition(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-			sceneManager->addLight(lightObject);
-		}
 		else if (level->levelMeshVector.at(i).tag == "Rock")
 		{
 			Mesh* rockObject = new Mesh(DxHandler::devicePtr);
@@ -221,7 +258,51 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			rockObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
 			sceneManager->addMesh(rockObject);
 		}
+		else if (level->levelMeshVector.at(i).tag == "light")
+		{
+			std::cout << "MAKING LIGHT" << std::endl;
+			Light* lightObject = new Light(DxHandler::devicePtr);
+			lightObject->setPosition(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			lightObject->lightColor = XMVectorSet(5, 5, 5, 0);
+			sceneManager->addLight(lightObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "respawn")
+		{
+			respawn = level->levelMeshVector.at(i).translation.y;
+		}
+		else if (level->levelMeshVector.at(i).tag == "goal")
+		{
+			goal = level->levelMeshVector.at(i).translation.x; 
+		}
+		else if (level->levelMeshVector.at(i).tag == "heart")
+		{
+			Heartdrop* drop = new Heartdrop;
+			
+			Mesh* model = new Mesh(DxHandler::devicePtr);
+			model->vertexBuffer = masterHeart->vertexBuffer;
+			model->nrOfVertices = masterHeart->nrOfVertices;
+			model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			model->setScaling(XMFLOAT3(5, 5, 5));
+
+			drop->model = model; 
+			collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Heart);
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(model->getScaling().x), btScalar(model->getScaling().y), btScalar(model->getScaling().z)));
+			model->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			model->rigidBody->setUserPointer(dropCollStruct);
+
+			sceneManager->addMesh(model);
+			sceneManager->addHeart(drop);
+		}
 
 	}
+}
+
+Level::Level()
+{
+	masterHeart = new Mesh(DxHandler::devicePtr);
+	masterHeart->readMeshFromFile("./Models/actualCube.obj");
+	
 }
 

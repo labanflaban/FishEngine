@@ -58,14 +58,13 @@ private:
 	int clientHeight = 0;
 
 	GUIhandler* guiHandler;
-	
+	bool shutdown = false;
 public:
 	Engine();
 	~Engine();
 	void initialSetup();
 	void fixedUpdate(double deltaTime); //deltaTime being time in (seconds) since last frame
 	void updatePlayerMovement(double deltaTime);
-	void updatePlayerTools(double deltaTime);
 	void updateParticles();
 	void updateGUI();
 

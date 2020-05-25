@@ -98,6 +98,14 @@ int GUIhandler::checkButtons()
 	}
 }
 
+void GUIhandler::resetHealth()
+{
+	for (int i = 0; i < hearts.size(); i++)
+	{
+		hearts.at(i).active = true;
+	}
+}
+
 void GUIhandler::drawGuiElements(Camera& camera)
 {
 	for(int i = 0; i < guiElements.size(); i++)

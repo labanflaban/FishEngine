@@ -45,6 +45,7 @@ private:
 	void updateWorldMatrix();
 public:
 	ID3D11Device* device = nullptr;
+	bool isTransparent = false;
 
 	int vectorIndex = 0;
 

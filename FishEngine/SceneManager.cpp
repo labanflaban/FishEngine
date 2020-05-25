@@ -126,3 +126,59 @@ void SceneManager::removeParticle(Particle* particle)
 	this->particles.pop_back(); //Clear the pointer from vector
 }
 
+void SceneManager::addHeart(Heartdrop* drop)
+{
+	this->hearts.push_back(drop);
+	drop->vectorIndex = this->hearts.size() - 1;
+}
+
+void SceneManager::removeHeart(Heartdrop* drop)
+{
+	Heartdrop* tempPtr = nullptr;
+
+	int index = drop->vectorIndex;
+	tempPtr = hearts.at(hearts.size() - 1); //Save the back one
+	hearts.at(hearts.size() - 1) = hearts.at(index); //Replace back with the one to be deleted.
+	hearts.at(index) = tempPtr; //Replace index with what was at the back.
+	hearts.at(index)->vectorIndex = index; //Update its index.
+	drop->model->vertexBuffer = nullptr;
+
+	removeMesh(drop->model);
+
+	//Swap completed.
+	delete this->hearts.at(hearts.size() - 1); //Delete the object
+	this->hearts.pop_back(); //Clear the pointer from vector
+}
+
+SceneManager::SceneManager()
+{
+
+}
+
+SceneManager::~SceneManager()
+{
+	for (int i = 0; i < sceneMeshes.size(); i++)
+		delete sceneMeshes.at(i);
+	sceneMeshes.clear();
+
+	for (int i = 0; i < animatedMeshes.size(); i++)
+		delete animatedMeshes.at(i);
+	animatedMeshes.clear();
+
+	for (int i = 0; i < lights.size(); i++)
+		delete lights.at(i);
+	lights.clear();
+
+	for (int i = 0; i < transparentSceneObjects.size(); i++)
+		delete transparentSceneObjects.at(i);
+	transparentSceneObjects.clear();
+
+	for (int i = 0; i < enemies.size(); i++)
+		delete enemies.at(i);
+	enemies.clear();
+
+	for (int i = 0; i < particles.size(); i++)
+		delete particles.at(i);
+	particles.clear();
+}
+

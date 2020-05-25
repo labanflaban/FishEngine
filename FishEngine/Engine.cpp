@@ -118,36 +118,6 @@ void Engine::initialSetup()
 	particleMesh->createVertexBuffer();
 }
 
-void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
-{
-	//game logic here thanks
-	
-	updatePlayerMovement(deltaTime);
-	player->updatePlayerTools(fishingRod,hook,rope, deltaTime);
-	if (fishingRod->pullback < 10.f)
-	fishingRod->pullback += 0.1f;
-
-	if (hook->ableToThrowHook < 10.f)
-		hook->ableToThrowHook += 0.1f;
-	
-	for(int i = 0; i < sceneManager.enemies.size(); i++)
-	{
-		if (sceneManager.enemies.at(i)->damageDebounce < sceneManager.enemies.at(i)->maxDebounce) //L�gg 3 i enemy i en variabel
-			sceneManager.enemies.at(i)->damageDebounce += 0.1;
-	}
-	
-	if (hook->ropeZipBack < 10.f)
-		hook->ropeZipBack += 0.1f;
-
-	if (player->boostReserve < 10.f)
-		player->boostReserve += 0.1f;
-
-	if(player->boostReserve <= 0.2f)
-	{
-		guiHandler->currentHealth = guiHandler->currentHealth--;
-	}
-}
-
 void Engine::createWindow()
 {
 	this->window = RenderWindow();
@@ -184,6 +154,11 @@ void Engine::updatePlayerMovement(double deltaTime)
 	fishingRod->model->rigidBody->setActivationState(ACTIVE_TAG);
 
 	btVector3 movementVector(0,0,0);
+	if (inputHandler.isKeyDown(VK_ESCAPE))
+	{
+		guiHandler->showMainMenu();
+	}
+
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
 	{
 
@@ -274,10 +249,9 @@ void Engine::updatePlayerMovement(double deltaTime)
 	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
 	player->playerLight->setPosition(XMFLOAT3(playerPos.x, playerPos.y + 25, playerPos.z));
 	hook->hookLight->setPosition(DirectX::XMFLOAT3(hook->model->getTranslation().x, hook->model->getTranslation().y, hook->model->getTranslation().z));
-
-	
-	
 }
+
+
 
 	
 
@@ -307,9 +281,12 @@ void Engine::updateGUI()
 	else if(guiHandler->checkButtons() == 2)
 	{
 		cout << "QUITING APP!" << endl;
-		
-		exit(1);
+		this->shutdown = true;
+		//exit(1);
 	}
+
+	if (inputHandler.windowClosed)
+		this->shutdown = true;
 
 	guiHandler->updateHUD();
 }
@@ -343,8 +320,6 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 		btPersistentManifold* manif = myWorld->getDispatcher()->getManifoldByIndexInternal(i);
 		btCollisionObject* colliderA = const_cast<btCollisionObject*>(manif->getBody0());
 		btCollisionObject* colliderB = const_cast<btCollisionObject*>(manif->getBody1());
-		//btCollisionObject* colliderA = static_cast<btCollisionObject*>(manif->getBody0());
-		//btCollisionObject* colliderB = static_cast<btCollisionObject*>(manif->getBody1());
 
 		collisionStruct* collision = nullptr;
 		collisionStruct* collision1 = nullptr;
@@ -389,11 +364,6 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->justHit = true;
 
 				}
-				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
-
-
-
-				//std::cout << "Hook hit enemy" << std::endl;
 			}
 
 			if (((collision->type == collisionEnums::Rod) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Rod) && (collision->type == collisionEnums::Enemy)))
@@ -468,8 +438,107 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
+
+			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Heart)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Heart)))
+			{
+				Player* myPlayer = nullptr;
+				if (collision->type == collisionEnums::Player)
+				{
+					myPlayer = collision->player;
+				}
+				else
+				{
+					myPlayer = collision1->player;
+				}
+
+				Heartdrop* heartDrop = nullptr;
+				if (collision->type == collisionEnums::Heart)
+				{
+					//myEnemy = collision->enemy;
+					heartDrop = collision->heartDrop;
+				}
+				else
+				{
+					heartDrop = collision1->heartDrop;
+				}
+
+				if (!heartDrop->usedUp)
+				{
+					if (myPlayer->health < myPlayer->maxHealth)
+						myPlayer->health++;
+
+					std::cout << "GIVE HEALTH" << std::endl;
+					heartDrop->usedUp = true;
+				}
+				
+
+			}
 		}
 	}
+}
+
+void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
+{
+	//game logic here thanks
+	
+
+	updatePlayerMovement(deltaTime);
+	player->updatePlayerTools(fishingRod, hook, rope, deltaTime);
+	if (fishingRod->pullback < 10.f)
+		fishingRod->pullback += 0.1f;
+
+	if (hook->ableToThrowHook < 10.f)
+		hook->ableToThrowHook += 0.1f;
+
+	for (int i = 0; i < sceneManager.enemies.size(); i++)
+	{
+		if (sceneManager.enemies.at(i)->damageDebounce < sceneManager.enemies.at(i)->maxDebounce) //L�gg 3 i enemy i en variabel
+			sceneManager.enemies.at(i)->damageDebounce += 0.1;
+	}
+
+	if (hook->ropeZipBack < 10.f)
+		hook->ropeZipBack += 0.1f;
+
+	if (player->boostReserve < 10.f)
+		player->boostReserve += 0.1f;
+
+	if (player->boostReserve <= 0.2f)
+	{
+
+	}
+
+	for (int i = 0; i < sceneManager.enemies.size(); i++)
+	{
+		Enemy* enemy = sceneManager.enemies.at(i);
+		if (enemy)
+		{
+			enemy->update(player);
+			//std::cout << "Health: " << enemy->health << std::endl;
+			if (enemy->health < 0)
+			{
+				std::cout << "Died" << std::endl;
+
+				collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
+				delete collStruct;
+
+				sceneManager.removeEnemy(enemy);
+				this->player->points += 100;
+			}
+		}
+	}
+
+	if (player->health <= 0)
+	{
+		player->resetPlayer();
+		guiHandler->showMainMenu();
+		guiHandler->resetHealth();
+
+		player->health = player->maxHealth;
+
+		std::cout << "Resetting" << std::endl;
+	}
+
+	guiHandler->currentHealth = player->health;
 }
 
 void Engine::engineLoop()
@@ -549,13 +618,7 @@ void Engine::engineLoop()
 	this->hook->hookLight = new Light(DxHandler::devicePtr);
 	this->hook->hookLight->lightColor = XMVectorSet(1.f, 249 / 255.f, 10 / 255.f, 0.f);
 	sceneManager.addLight(hook->hookLight);
-
 	sceneManager.addLight(player->playerLight);
-
-	//debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
-
-	//this->sceneManager.addMesh(debugObject);
-
 
 	Mesh* rope = new Mesh(DxHandler::devicePtr); //Rope
 	rope->readMeshFromFile("./Models/actualCube.obj");
@@ -564,19 +627,6 @@ void Engine::engineLoop()
 	this->rope->model = rope;
 	rope->initRigidbody(dynamicsWorld, &collisionShapes, 5);
 	this->sceneManager.addMesh(rope);
-	
-	/*Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
-	this->sceneManager.addEnemy(enemy);
-	this->sceneManager.addAnimatedMesh(enemy->model);
-	sceneManager.addLight(enemy->light);
-	enemy->model->setTranslation(XMFLOAT3(30, 20, 0));
-	enemy->model->setRotation(XMFLOAT3(3.14 / 2, 0, 0));
-	collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-	enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 2, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x+10), btScalar(enemy->model->getScaling().y+6), btScalar(enemy->model->getScaling().z)+6)));
-	enemy->model->targetPoseIndex = 1;
-	enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
-	enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
-	enemy->model->rigidBody->setGravity(btVector3(0, 0, 0));*/
 
 	Mesh* fishingRodObject = new Mesh(DxHandler::devicePtr); // fishing rod
 	fishingRodObject->readMeshFromFile("./Models/rod.obj");
@@ -585,7 +635,7 @@ void Engine::engineLoop()
 	this->fishingRod = new Tool(&inputHandler);
 	this->fishingRod->model = fishingRodObject;
 	collisionStruct* fishingRodCollStruct = new collisionStruct(fishingRod, collisionEnums::Rod);
-	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1, new btBoxShape(btVector3(4, 4, 4)));
+	fishingRodObject->initRigidbody(dynamicsWorld, &collisionShapes, 1, new btBoxShape(btVector3(4, 8, 4)));
 	fishingRodObject->rigidBody->setUserPointer(fishingRodCollStruct);
 	this->fishingRod->model->rigidBody->setGravity(btVector3(0, 0, 0));
 	this->sceneManager.addMesh(fishingRodObject);
@@ -594,7 +644,7 @@ void Engine::engineLoop()
 	Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
 	//fishingRodObject->readMeshFromFile("./Models/rod.obj");
 	block->readMeshFromFile("./Models/actualCube.obj");
-	block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+	block->setScaling(DirectX::XMFLOAT3(1, 1, 1));
 	sceneManager.addMesh(block);
 	
 
@@ -612,9 +662,7 @@ void Engine::engineLoop()
 	groundObject5->setTranslation(DirectX::XMFLOAT3(20, 15, 75));
 	groundObject5->setScaling(DirectX::XMFLOAT3(30, 30, 30));
 	groundObject5->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	//std::vector<Vertex> jellyFish1 = FIDParser::readFromFID("./Models/JellyFishRight.FID");
-	//std::vector<Vertex> jellyFish2 = FIDParser::readFromFID("./Models/JellyFishLeft.FID");
+
 	std::vector<Vertex> jellyFish0 = ObjParser::readFromObj("./Models/JellyAnimPartOne.obj");
 	std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
 	std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
@@ -628,34 +676,17 @@ void Engine::engineLoop()
 
 	Mesh* groundObject6 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject6->readMeshFromFile("./Models/JellyFishObj.obj");
-	//groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject6->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
 	groundObject6->setScaling(DirectX::XMFLOAT3(60, 60, 60));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
 	sceneManager.addTransparentObject(groundObject6);
-
-	/*Mesh* groundObject8 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject8->readMeshFromFile("./Models/actualCube.obj");
-
-	groundObject8->readTextureFromFile(L"./Textures/SandTexture.png");
-	groundObject8->readNormalMapFromFile(L"./NormalMapSand.png");
-
-	groundObject8->readNormalMapFromFile(L"./Textures/scales.jpg");
-
-	groundObject8->setTranslation(DirectX::XMFLOAT3(250, -50, 4));
-	groundObject8->setScaling(DirectX::XMFLOAT3(500, 10, 10));
-	groundObject8->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	this->sceneManager.addMesh(groundObject8);*/
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
 	Skybox::sphereModel->setScaling(XMFLOAT3(3000, 3000, 3000));
 	Skybox::sphereModel->isSky = true;
-	//sceneManager.addMesh(Skybox::sphereModel);
 
 	Light* light = new Light(DxHandler::devicePtr);
 	light->setPosition(XMFLOAT3(0, 0, -10));
-	//this->lights.push_back(light);
 	sceneManager.addLight(light);
 
 	Level* level = new Level();
@@ -663,45 +694,26 @@ void Engine::engineLoop()
 
 	guiHandler->initMainMenu();
 	guiHandler->initHUD();
-	/*Enemy* enemy = new Enemy(DxHandler::devicePtr);
-	this->enemies.push_back(enemy);
-	this->scene.push_back(enemy->model);
-	this->lights.push_back(enemy->light);
-
-	Enemy* enemy2 = new Enemy(DxHandler::devicePtr);
-	this->enemies.push_back(enemy2);
-	this->scene.push_back(enemy2->model);
-	this->lights.push_back(enemy2->light);
-	enemy2->model->setTranslation(XMFLOAT3(70, 10, 0));*/
 
 	//--------------------------------------------------------------------------------------------------- 
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 
 	MSG msg;
-	bool shutdown = false;
-
-	//std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/actualCube.obj");
-	//std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/targetCube.obj");
-	
-	//std::vector<Vertex> vertVector = FIDParser::readFromFID("./Models/Fish_Right.FID");
-	//std::vector<Vertex> vertVector2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
-
-	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/ANGLA1.obj");
-	std::vector<Vertex> vertVector1 = ObjParser::readFromObj("./Models/ANGLA2.obj");
-	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/ANGLA3.obj");
-	std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/ANGLA4.obj");
+	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/AnglerOne.obj");
+	std::vector<Vertex> vertVector1 = ObjParser::readFromObj("./Models/AnglerTwo.obj");
+	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/AnglerThree.obj");
+	std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/AnglerFour.obj");
 	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
 	animMesh->readTextureFromFile(L"./Models/ANGLAColor.png");
 
 	std::vector<Vertex>* arr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
-	animMesh->appendStructuredBuffer(arr, 1);
+	animMesh->appendStructuredBuffer(arr, 4);
 	animMesh->createStructuredBuffer(DxHandler::devicePtr);
 	animMesh->setTranslation(XMFLOAT3(-25, -20, 10));
 	animMesh->setScaling(XMFLOAT3(10, 10, 10));
-	//animMesh->setRotation(XMFLOAT3(0, 0, 3.14 / 2));
+	animMesh->setRotation(XMFLOAT3(0, -3.14/2, 0));
 	animMesh->targetPoseIndex = 1;
-	//animatedMeshes.push_back(animMesh);
 	sceneManager.addAnimatedMesh(animMesh);
 	
 	startedGameTimer = std::chrono::high_resolution_clock::now();
@@ -711,6 +723,7 @@ void Engine::engineLoop()
 		inputHandler.handleInput();
 		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top / limitFstd::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime) / limitFPS;
 		primaryCamera.updateCamera();
+
 		renderFirstPass(&sceneManager.sceneMeshes);
 		
 
@@ -736,10 +749,6 @@ void Engine::engineLoop()
 		for (int i = 0; i < 15; i++)
 		{
 			dynamicsWorld->stepSimulation(1/60.f);
-			//std::cout << frameTime.count() << std::endl;
-			//dynamicsWorld->stepSimulation(1/60, 1);
-
-			//print positions of all objects
 			for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
 			{
 				//std::cout << "Looping" << j << std::endl;
@@ -749,24 +758,14 @@ void Engine::engineLoop()
 				btTransform trans;
 				if (body && body->getMotionState())
 				{
-					body->getMotionState()->getWorldTransform(trans);
-					//printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-				}
+					body->getMotionState()->getWorldTransform(trans);				}
 				else
 				{
 					trans = obj->getWorldTransform();
 				}
-				//printf("world pos object %d = %f,%f,%f\n", j, float(trans.getOrigin().getX()), float(trans.getOrigin().getY()), float(trans.getOrigin().getZ()));
-
-				//if (j == 1)
-				//primaryCamera.cameraPosition = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), DirectX::XMVectorGetZ(primaryCamera.cameraPosition), 0);
-				//primaryCamera.cameraTarget = DirectX::XMVectorSet(DirectX::XMVectorGetX(primaryCamera.cameraPosition), float(trans.getOrigin().getY()), 1, 0);
-				//primaryCamera.updateCamera();
 			}
 		}
 
-		//XMFLOAT3 debugpos = DirectX::XMFLOAT3(sceneManager.sceneMeshes.at(0)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.sceneMeshes.at(0)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.sceneMeshes.at(0)->rigidBody->getWorldTransform().getOrigin().z());
-		//std::cout << debugpos.x << " " << debugpos.y << " " << debugpos.z << " " << std::endl;
 		for (int i = 0; i < sceneManager.sceneMeshes.size(); i++) //Update according to rigid body
 		{
 			bool check = sceneManager.sceneMeshes.at(i)->rigidBody != nullptr;
@@ -793,14 +792,21 @@ void Engine::engineLoop()
         		                				
 		YSE::System().update();
 		
-		
+		for (int i = 0; i < sceneManager.hearts.size(); i++)
+		{
+			if (sceneManager.hearts.at(i)->usedUp)
+			{
+				dynamicsWorld->removeRigidBody(sceneManager.hearts.at(i)->model->rigidBody);
+				sceneManager.removeHeart(sceneManager.hearts.at(i));
+			}
+		}
 
 		directXHandler->spriteBatch->Begin();
 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		std::chrono::duration<double> gameTimer = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - startedGameTimer);
-		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds\n" + std::to_wstring((int)this->player->points) + L" points\n" + std::to_wstring(player->health) + L" health";
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 25), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds\n" + std::to_wstring((int)this->player->points) + L" points";
+		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 
 		directXHandler->spriteBatch->End();
 
@@ -809,30 +815,11 @@ void Engine::engineLoop()
 
 		directXHandler->setDefaultState();
 
-		for (int i = 0; i < sceneManager.enemies.size(); i++)
-		{
-			Enemy* enemy = sceneManager.enemies.at(i);
-			if (enemy)
-			{
-				enemy->update(player);
-				//std::cout << "Health: " << enemy->health << std::endl;
-				if (enemy->health < 0)
-				{
-					std::cout << "Died" << std::endl;
-
-					collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
-					delete collStruct;
-
-					sceneManager.removeEnemy(enemy);
-					this->player->points += 100;
-				}
-			}
-		}
+		
 		
 		//XMVECTOR handPos = DirectX::XMVector3Transform(player->currentHandPosition, SimpleMath::Matrix(this->player->model->getWorldMatrix()));
 		//block->setTranslation(XMFLOAT3(XMVectorGetX(handPos), XMVectorGetY(handPos), XMVectorGetZ(handPos)));
 		//block->setTranslation(XMFLOAT3(hook->model->rigidBody->getWorldTransform().getOrigin().x(), hook->model->rigidBody->getWorldTransform().getOrigin().y(), hook->model->rigidBody->getWorldTransform().getOrigin().z()));
-		//block->setTranslation(XMFLOAT3(enemy->model->rigidBody->getWorldTransform().getOrigin().x(), enemy->model->rigidBody->getWorldTransform().getOrigin().y(), enemy->model->rigidBody->getWorldTransform().getOrigin().z()));
 	
 
 		updateParticles();
@@ -842,10 +829,8 @@ void Engine::engineLoop()
 		fixedUpdate(frameTime.count());
 	}
 
-	
-	/*
-		//remove the rigidbodies from the dynamics world and delete them
-	for (i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	//CLEAN UP PHYSICS
+	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 	{
 		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
 		btRigidBody* body = btRigidBody::upcast(obj);
@@ -857,38 +842,27 @@ void Engine::engineLoop()
 		delete obj;
 	}
 
-	//delete collision shapes
-	for (int j = 0; j < collisionShapes.size(); j++)
+	for (int i = 0; i < collisionShapes.size(); i++)
 	{
-		btCollisionShape* shape = collisionShapes[j];
-		collisionShapes[j] = 0;
+		btCollisionShape* shape = collisionShapes[i];
+		collisionShapes[i] = 0;
 		delete shape;
 	}
 
-	//delete dynamics world
 	delete dynamicsWorld;
-
-	//delete solver
 	delete solver;
-
-	//delete broadphase
 	delete overlappingPairCache;
-
-	//delete dispatcher
 	delete dispatcher;
-
 	delete collisionConfiguration;
-
-	//next line is optional: it will be cleared by the destructor when the array goes out of scope
-	collisionShapes.clear();
-	
-	*/
+	// physics clean up complete
 }
 
 void Engine::createGUIHandler()
 {
 	this->guiHandler = new GUIhandler(this->directXHandler, &this->inputHandler);
 }
+
+
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {

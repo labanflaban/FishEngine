@@ -47,37 +47,38 @@ void Player::updatePlayer(Tool* rod, Tool* hook, Tool* rope, float xVel)
 			ropePos = XMFLOAT3(fishingRodPos.x - 6, fishingRodPos.y + 10, fishingRodPos.z);
 		}
 
+	Vector3 translation;
+	Quaternion rotation;
+	Vector3 scale;
+	//rodMatrix.Decompose(scale, rotation, translation);
 
+	Matrix hookWorld = Matrix(XMMatrixRotationRollPitchYaw(rotation.x, rotation.y + 3.14 / 2, rotation.z)) * Matrix(XMMatrixTranslation(hookOffset.x, hookOffset.y, hookOffset.z)) * rodMatrix;
+	hookWorld.Decompose(scale, rotation, translation);
+	this->hookAttach = XMVectorSet(translation.x, translation.y, translation.z, 0);
 
-
-	if (hook->calculateRopePos)
-	{
-		rope->updateRope(rod, hook, rope);
-	}
 	if (updateHook == true)
 	{
-		//hook->model->setTranslation(hookPos);
-		//transform.setOrigin(btVector3(hookPos.x, hookPos.y, hookPos.z));
-		//hook->model->rigidBody->setWorldTransform(transform);
-		Vector3 translation;
-		Quaternion rotation;
-		Vector3 scale;
+		
 
-		rodMatrix.Decompose(scale, rotation, translation);
-		//hook->model->getWorldMatrix() = rodMatrix * XMMatrixTranslation(4, 3, 0);
-		hook->model->setTranslation(translation + hookOffset);
-		//std::cout << Vector3(translation).x << " " << Vector3(translation).y << " " << Vector3(translation).z << std::endl;
-
+		hook->model->setTranslation(translation);
 		hook->model->setRotation(XMFLOAT3(rotation.x, rotation.y, rotation.z));
 		hook->model->setScaling(scale);
-		hook->model->getWorldMatrix() = Matrix(XMMatrixRotationRollPitchYaw(rotation.x, rotation.y + 3.14 / 2, rotation.z)) * rodMatrix * Matrix(XMMatrixTranslation(hookOffset.x, hookOffset.y, hookOffset.z));
-
+		
+		hook->model->getWorldMatrix() = hookWorld;
 		btTransform transform;
+
+		
 		transform.setOrigin(btVector3(translation.x, translation.y, translation.z));
-		//hook->model->rigidBody->setWorldTransform(transform);
+		hook->model->rigidBody->setWorldTransform(transform);
+
 
 		hook->zipBackRope(rod, hook, rope);
 		hook->isActive = false;
+	}
+
+	if (hook->calculateRopePos)
+	{
+		rope->updateRope(rod, hook, rope, this->hookAttach);
 	}
 
 	//transform.setOrigin(btVector3(fishingRodPos.x, fishingRodPos.y, fishingRodPos.z));
@@ -106,9 +107,10 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	rod->model->rigidBody->clearGravity();
 	hook->model->rigidBody->clearGravity();
 
+	this->hookOffset = Vector3(6, 5, 0);
 	if (this->xMov > 0)
 	{
-		this->hookOffset = Vector3(12, 5, 0);
+		
 
 		Vector3 translation;
 		Quaternion rotation;
@@ -122,7 +124,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	{
 		if (this->xMov < 0)
 		{
-			this->hookOffset = Vector3(-12, 5, 0);
+			//this->hookOffset = Vector3(-4, 5, 0);
 
 			Vector3 translation;
 			Quaternion rotation;
@@ -208,6 +210,14 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	{
 		pull = false;
 	}
+}
+
+void Player::resetPlayer()
+{
+	model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
+	btTransform transform;
+	transform.setOrigin(btVector3(100, 50, 0));
+	this->model->rigidBody->setWorldTransform(transform);
 }
 
 void Player::stepAnim(double deltaT)

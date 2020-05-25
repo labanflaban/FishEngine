@@ -31,6 +31,8 @@ private:
 	HWND* primaryWindow;
 
 public:
+	static bool windowClosed;
+
 	static std::unique_ptr<DirectX::Mouse> mouse;
 	static std::unique_ptr<DirectX::Keyboard> keyboard;
 	static Mesh* playerModel;

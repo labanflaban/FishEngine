@@ -15,7 +15,7 @@ public:
 	Enemy(ID3D11Device* device);
 	~Enemy();
 
-	int randomDirr;
+	int randomDirr = 0;
 	int health = 100;
 
 	float justHit = false;

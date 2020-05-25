@@ -2,17 +2,12 @@
 
 Enemy::Enemy(ID3D11Device* device)
 {
-	this->model = new AnimatedMesh(device);
 	//this->model->readMeshFromFile("./Models/actualCube.obj");
-	this->model->setScaling(DirectX::XMFLOAT3(5, 5, 5));
-	std::vector<Vertex> target1 = FIDParser::readFromFID("./Models/Fish_Right.FID");
-	std::vector<Vertex> target2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
-	this->model->readTextureFromFile(L"./Models/FISHCOLOR.png");
-	std::vector<Vertex>* fishArr[] = { &target1, &target2 };
-	model->appendStructuredBuffer(fishArr, 2);
-	model->createStructuredBuffer(DxHandler::devicePtr);
-	model->targetPoseIndex = 1;
-	model->animationSpeed = 0.3;
+	//this->model->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+	//std::vector<Vertex> target1 = FIDParser::readFromFID("./Models/Fish_Right.FID");
+	//std::vector<Vertex> target2 = FIDParser::readFromFID("./Models/Fish_Left.FID");
+
+	
 	//
 
 	this->light = new Light(device);
@@ -62,7 +57,7 @@ void Enemy::update(Player* plr)
 	this->light->setPosition(this->model->getTranslation());
 
 
-	xVel = sin(angle) * 1.5f;
+	xVel = sin(angle) * 0.75f;
 	yVel = cos(angle) * 0.7f;
 
 	float baseHeight = plr->model->getTranslation().y;
@@ -92,13 +87,13 @@ void Enemy::update(Player* plr)
 		model->setRotation(DirectX::XMFLOAT3(0, 0, angle));
 	}
 
-	//Rotate the model by direction
+	//Rotate the model to direction of player
 	if (model->getTranslation().x < plr->model->getTranslation().x)
 	{
-		model->setRotation(DirectX::XMFLOAT3(0, -3.14, 3.14 / 2));
+		model->setRotation(DirectX::XMFLOAT3(0, 3.14/2.f, 0));
 	}
 	else
-		model->setRotation(DirectX::XMFLOAT3(0, 0, 3.14 / 2));
+		model->setRotation(DirectX::XMFLOAT3(0, -3.14 / 2.f, 0));
 
 	model->rigidBody->clearGravity();
 
@@ -107,8 +102,6 @@ void Enemy::update(Player* plr)
 
 void Enemy::getHitMove()
 {
-
-
 	if (randomDirr == 1)
 	{
 		model->rigidBody->setLinearVelocity(btVector3(2.0f, 1.0f, 0));

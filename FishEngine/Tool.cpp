@@ -32,13 +32,13 @@ void Tool::zipBackRope(Tool* rod, Tool* hook, Tool* rope)
 	
 }
 
-void Tool::updateRope(Tool* rod, Tool* hook, Tool* rope)
+void Tool::updateRope(Tool* rod, Tool* hook, Tool* rope, DirectX::XMVECTOR hookAttach)
 {
 
 	rope->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
 
-	float deltaX = hook->model->rigidBody->getWorldTransform().getOrigin().x() - rod->model->rigidBody->getWorldTransform().getOrigin().x();
-	float deltaY = hook->model->rigidBody->getWorldTransform().getOrigin().y() - rod->model->rigidBody->getWorldTransform().getOrigin().y();
+	float deltaX = hook->model->rigidBody->getWorldTransform().getOrigin().x() - DirectX::XMVectorGetX(hookAttach);//rod->model->rigidBody->getWorldTransform().getOrigin().x();
+	float deltaY = hook->model->rigidBody->getWorldTransform().getOrigin().y() - DirectX::XMVectorGetY(hookAttach); //rod->model->rigidBody->getWorldTransform().getOrigin().y();
 
 	float hypotenuse = sqrt((pow(deltaX, 2) + pow(deltaY, 2)));
 
@@ -46,7 +46,7 @@ void Tool::updateRope(Tool* rod, Tool* hook, Tool* rope)
 
 	rope->model->setRotation(DirectX::XMFLOAT3(0, 0, -angleOfRope));
 	rope->model->setScaling(DirectX::XMFLOAT3(0.1, hypotenuse / 2, 0.1));
-	rope->model->setTranslation(DirectX::XMFLOAT3(rod->model->getTranslation().x + (deltaX / 2), rod->model->getTranslation().y + (deltaY / 2), rod->model->getTranslation().z));
+	rope->model->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(hookAttach) + (deltaX / 2), DirectX::XMVectorGetY(hookAttach) + (deltaY / 2), DirectX::XMVectorGetZ(hookAttach)));
 	rope->model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
 }
 

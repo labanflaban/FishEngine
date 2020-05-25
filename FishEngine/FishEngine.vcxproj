@@ -184,6 +184,7 @@
     <ClInclude Include="GUIButton.h" />
     <ClInclude Include="GUIElement.h" />
     <ClInclude Include="GUIhandler.h" />
+    <ClInclude Include="Heartdrop.h" />
     <ClInclude Include="Keyframes.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Light.h" />

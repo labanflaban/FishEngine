@@ -31,6 +31,7 @@ public:
 										//Walk start							//Walk middle1									//Walk middle2						//Walk middle 3										//FishingStart					//FishingMid							//FishingEnd
 	XMVECTOR handRotations[9] = { XMVectorSet(0, -114.76, 19.262, 1), XMVectorSet(101.477, -50.173, 0, 1), XMVectorSet(61.567, -25.359, -19, 1), XMVectorSet(93.726, -49.806, -30, 1), XMVectorSet(31.14, -81.223,-29.069, 1), XMVectorSet(-84.336, -11.804, 130.006, 1), XMVectorSet(-186.225, 51.287, 270, 1) };
 
+	XMVECTOR hookAttach;
 	XMVECTOR currentHandPosition;
 	double linearTime = 0.0;
 	float xMov = 1;
@@ -59,6 +60,8 @@ public:
 	void updatePlayer(Tool* rod, Tool* hook, Tool* rope, float xVel);
 	void updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTime);
 	float boostReserve = 10.f;
+
+	void resetPlayer();
 
 	void stepAnim(double deltaT);
 };

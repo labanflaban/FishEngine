@@ -48,6 +48,6 @@ public:
 	Mesh* model = nullptr;
 
 	void zipBackRope(Tool* rod, Tool* hook, Tool* rope);
-	void updateRope(Tool* rod, Tool* hook, Tool* rope);
+	void updateRope(Tool* rod, Tool* hook, Tool* rope, DirectX::XMVECTOR hookAttach);
 	void throwHook(Tool* rod, Tool* hook, Tool* rope);
 };

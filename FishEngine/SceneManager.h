@@ -4,16 +4,20 @@
 #include "Enemy.h"
 #include "Mesh.h"
 #include "Particle.h"
+#include "Heartdrop.h"
 
 class SceneManager
 {
 public:
+	Mesh* masterHeart;
+
 	std::vector<Mesh*> sceneMeshes;
 	std::vector<AnimatedMesh*> animatedMeshes;
 	std::vector<Light*> lights;
 	std::vector<Mesh*> transparentSceneObjects;
 	std::vector<Enemy*> enemies;
 	std::vector<Particle*> particles;
+	std::vector<Heartdrop*> hearts;
 
 	void addMesh(Mesh* mesh);
 	void removeMesh(Mesh* mesh);
@@ -32,6 +36,12 @@ public:
 
 	void addParticle(Particle* particle);
 	void removeParticle(Particle* particle);
+
+	void addHeart(Heartdrop* drop);
+	void removeHeart(Heartdrop* drop);
+
+	SceneManager();
+	~SceneManager();
 
 private:
 

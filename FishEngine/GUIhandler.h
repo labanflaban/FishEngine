@@ -29,4 +29,6 @@ public :
 	void initHUD();
 	void updateHUD();
 	int checkButtons();
+
+	void resetHealth();
 };

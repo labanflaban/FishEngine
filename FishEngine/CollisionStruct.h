@@ -1,6 +1,7 @@
 #pragma once
 #include "Tool.h"
 #include "Enemy.h"
+#include "Heartdrop.h"
 
 struct collisionEnums
 {
@@ -10,6 +11,7 @@ struct collisionEnums
 		Rod,
 		Enemy,
 		Player,
+		Heart,
 		Ignored
 	};
 };
@@ -22,6 +24,7 @@ public:
 	Tool* rod = nullptr;
 	Tool* hook = nullptr;
 	Player* player = nullptr;
+	Heartdrop* heartDrop = nullptr;
 
 	collisionStruct(Enemy* enemy = nullptr, collisionEnums::collisionType type = collisionEnums::Ignored)
 	{
@@ -47,5 +50,13 @@ public:
 
 		if (type == collisionEnums::Player)
 			this->player = plr;
+	}
+
+	collisionStruct(Heartdrop* mesh = nullptr, collisionEnums::collisionType type = collisionEnums::Ignored)
+	{
+		this->type = type;
+
+		if (type == collisionEnums::Heart)
+			this->heartDrop = mesh;
 	}
 };

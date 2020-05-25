@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include "Enemy.h"
 #include "Mesh.h"
+#include "Heartdrop.h"
 #include "DxHandler.h"
 #include "SceneManager.h"
 #include "CollisionStruct.h"
@@ -45,5 +46,9 @@ struct Level
 
 	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager);
 
+	Mesh* masterHeart = new Mesh(DxHandler::devicePtr);
+	Level();
 
+	float respawn;
+	float goal;
 };
