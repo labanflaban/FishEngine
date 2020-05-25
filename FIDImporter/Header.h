@@ -70,16 +70,9 @@ namespace FIDHeader
 		float normal[3];
 	};
 
-	struct BlendTimeAndValue
-	{
-		float keyframe;
-		int keytime;
-	};
-
 	struct BlendShape
 	{
 		int BlendShapevertexCount;
-		int KeyframeCount;
 	};
 
 	struct MeshHeader : SectionHeader

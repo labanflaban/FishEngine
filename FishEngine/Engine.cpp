@@ -25,7 +25,9 @@ void Engine::initialSetup()
 	//DxHandler::HEIGHT = HEIGHT;
 
 	YSE::System().init();
-
+	GameSoundtrack.create("./Sounds/SoundTrack.wav");
+	GameSoundtrack.play();
+	GameSoundtrack.isLooping();
 	this->createWindow();
 	createDirectX();
 

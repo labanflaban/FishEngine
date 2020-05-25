@@ -75,6 +75,8 @@ public:
 
 	void createGUIHandler();
 
+	YSE::sound GameSoundtrack;
+
 	std::unique_ptr<DirectX::CommonStates> states;
 
 	ID3D11RenderTargetView* nullRTV = nullptr;

@@ -95,4 +95,75 @@ namespace FID
 	{
 		delete[] this->textures;
 	}
+
+	void Animation::PrintBlendShapes()
+	{
+		int count = 0;
+		for (int x = 0; x < animHeader.BlendShapeCount * currentBlendShape.BlendShapevertexCount; x += 3)
+		{
+
+			if (count == currentBlendShape.BlendShapevertexCount)
+			{
+				count = 0;
+			}
+			count += 3;
+			cout << "POLYGON " << count / 3 << endl;
+			for (int j = 0; j < 3; j++)
+			{
+				int faceindex = x + j;
+				cout << "Coordinate " << blendVertex[faceindex].position[0] << " " << blendVertex[faceindex].position[1] << " " << blendVertex[faceindex].position[2] << " " << endl;
+				cout << "Normal" << blendVertex[faceindex].normal[0] << " " << blendVertex[faceindex].normal[1] << " " << blendVertex[faceindex].normal[2] << " " << endl << endl;
+			}
+		}
+	}
+
+
+
+	Animation::Animation(std::string filePath)
+	{
+		ifstream infile(filePath, ios::out | ios::binary);
+		if (!infile)
+		{
+			cout << "Cannot open Anim File" << endl;
+		}
+		else
+		{
+
+			infile.read((char*)&animHeader, sizeof(FIDHeader::AnimationHeader));
+
+			infile.read((char*)&currentBlendShape, sizeof(FIDHeader::BlendShape));
+
+			int allpoints = currentBlendShape.BlendShapevertexCount * animHeader.BlendShapeCount;
+
+			this->blendVertex = new FIDHeader::BlendShapeVertex[allpoints];
+
+			for (int x = 0; x < allpoints; x++)
+			{
+				infile.read((char*)&blendVertex[x], sizeof(FIDHeader::BlendShapeVertex));
+			}
+
+			//this->timeAndValue = new BlendTimeAndValue[currentBlendShape.KeyframeCount];
+
+			//for (int x = 0; x < 4/* currentBlendShape.KeyframeCount*/; x++)
+			//{
+			//	infile.read((char*)&timeAndValue[x], sizeof(BlendTimeAndValue));
+			//}
+
+			infile.close();
+		}
+	}
+
+	FIDHeader::BlendShapeVertex* Animation::getBlendShapeVertexPoints()
+	{
+		return blendVertex;
+	}
+
+	const int Animation::getBlendVertexCount()
+	{
+		return currentBlendShape.BlendShapevertexCount;
+	}
+	const int Animation::getBlendShapeCount()
+	{
+		return animHeader.BlendShapeCount;
+	}
 }
