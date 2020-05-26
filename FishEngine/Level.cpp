@@ -285,6 +285,8 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			winObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			winObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 
+			sceneManager->addMesh(winObject);
+
 			goal = level->levelMeshVector.at(i).translation.x * multi.x; 
 		}
 		else if (level->levelMeshVector.at(i).tag == "heart")
