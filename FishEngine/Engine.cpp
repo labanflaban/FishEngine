@@ -26,6 +26,7 @@ void Engine::initialSetup()
 
 	YSE::System().init();
 	GameSoundtrack.create("./Sounds/SoundTrack.wav");
+	GameSoundtrack.setVolume(0.02f);
 	GameSoundtrack.play();
 	GameSoundtrack.isLooping();
 	this->createWindow();
