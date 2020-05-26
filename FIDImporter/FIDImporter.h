@@ -33,5 +33,24 @@ namespace FID
 		~Mesh();
 	};
 
+	struct Animation
+	{
+		FIDHeader::AnimationHeader animHeader;
+		FIDHeader::BlendShape currentBlendShape;
+		FIDHeader::BlendShapeVertex* blendVertex;
+		/*BlendTimeAndValue* timeAndValue;*/
+
+		void PrintBlendShapes();
+
+		Animation(std::string filePath);
+
+		FIDHeader::BlendShapeVertex* getBlendShapeVertexPoints();
+		/*BlendTimeAndValue* getTimeAndValue();*/
+
+		const int getBlendVertexCount();
+		const int getBlendShapeCount();
+		/*const int getKeyFrameCount();*/
+	};
+
 	void printMessage();
 }
