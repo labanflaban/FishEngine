@@ -116,6 +116,8 @@ void Engine::initialSetup()
 	particleMesh->vertices.push_back(Vertex{ 1,  -1, 0.1f, 1, 1, 1, 1, 1, 1, 0, 0, -1 });
 
 	particleMesh->createVertexBuffer();
+
+	AssetLoader::devicePtr = DxHandler::devicePtr;
 }
 
 void Engine::createWindow()
@@ -157,6 +159,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 	if (inputHandler.isKeyDown(VK_ESCAPE))
 	{
 		guiHandler->showMainMenu();
+		pause = true;
 	}
 
 	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
@@ -276,6 +279,7 @@ void Engine::updateGUI()
 		gameOver = false;
 		guiHandler->hideMainMenu();
 		cout << "STARTING GAME!" << endl;
+		pause = false;
 	}
 
 	else if(guiHandler->checkButtons() == 2)
@@ -355,9 +359,9 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				}
 
 
-				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
+				if (myEnemy->damageDebounce >= myEnemy->maxDebounce && hook->isActive)
 				{
-					myEnemy->health -= 10;
+					myEnemy->health -= 100;
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
 					//std::cout << "Enemy hit" << std::endl;
@@ -393,7 +397,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				//std::cout << "Debounce " << myEnemy->damageDebounce << std::endl;
 				if (myEnemy->damageDebounce >= myEnemy->maxDebounce && rod->isActive)
 				{
-					myEnemy->health -= 30;
+					myEnemy->health -= 100;
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
 					//std::cout << "Enemy hit" << std::endl;
@@ -439,6 +443,34 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				//std::cout << "Enemy Health: " << myEnemy->health << "\nDebounce: " << myEnemy->damageDebounce << std::endl;
 			}
 
+			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::BounceObject)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::BounceObject)))
+			{
+				Player* myPlayer = nullptr;
+				if (collision->type == collisionEnums::Player)
+				{
+					myPlayer = collision->player;
+				}
+				else
+				{
+					myPlayer = collision1->player;
+				}
+
+				AnimatedMesh* bounceObject = nullptr;
+				if (collision->type == collisionEnums::BounceObject)
+				{
+					bounceObject = collision->bounceObject;
+				}
+				else
+				{
+					bounceObject = collision1->bounceObject;
+				}
+
+				btVector3 currVel = myPlayer->model->rigidBody->getLinearVelocity();
+
+				btVector3 newVel = btVector3(currVel.x(), 17.f, currVel.z());
+				myPlayer->model->rigidBody->setLinearVelocity(newVel);
+			}
+
 			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Heart)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Heart)))
 			{
 				Player* myPlayer = nullptr;
@@ -466,18 +498,44 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 				{
 					if (myPlayer->health < myPlayer->maxHealth)
 						myPlayer->health++;
-
-					std::cout << "GIVE HEALTH" << std::endl;
 					heartDrop->usedUp = true;
 				}
-				
+			}
 
+			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Pointdrop)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Pointdrop)))
+			{
+				Player* myPlayer = nullptr;
+				if (collision->type == collisionEnums::Player)
+				{
+					myPlayer = collision->player;
+				}
+				else
+				{
+					myPlayer = collision1->player;
+				}
+
+				Pointdrop* pointDrop = nullptr;
+				if (collision->type == collisionEnums::Pointdrop)
+				{
+					//myEnemy = collision->enemy;
+					pointDrop = collision->pointDrop;
+				}
+				else
+				{
+					pointDrop = collision1->pointDrop;
+				}
+
+				if (!pointDrop->usedUp)
+				{
+					myPlayer->points += 100;
+					pointDrop->usedUp = true;
+				}
 			}
 		}
 	}
 }
 
-void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
+void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld) //time in seconds since last frame
 {
 	//game logic here thanks
 	
@@ -521,6 +579,8 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 				collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
 				delete collStruct;
 
+				dynamicWorld->removeRigidBody(enemy->model->rigidBody);
+
 				sceneManager.removeEnemy(enemy);
 				this->player->points += 100;
 			}
@@ -531,12 +591,15 @@ void Engine::fixedUpdate(double deltaTime) //time in seconds since last frame
 	{
 		player->resetPlayer();
 		guiHandler->showMainMenu();
-		guiHandler->resetHealth();
 
 		player->health = player->maxHealth;
+		guiHandler->resetHealth(player->health);
 
 		std::cout << "Resetting" << std::endl;
 	}
+
+	if (level != nullptr && player->model->getTranslation().y < level->respawn)
+		player->resetPlayer();
 
 	guiHandler->currentHealth = player->health;
 }
@@ -689,7 +752,7 @@ void Engine::engineLoop()
 	light->setPosition(XMFLOAT3(0, 0, -10));
 	sceneManager.addLight(light);
 
-	Level* level = new Level();
+	level = new Level();
 	level->createLevel(dynamicsWorld, collisionShapes, &sceneManager);
 
 	guiHandler->initMainMenu();
@@ -746,25 +809,30 @@ void Engine::engineLoop()
 		}
 
 		///-----stepsimulation_start-----
-		for (int i = 0; i < 15; i++)
+		if (!pause)
 		{
-			dynamicsWorld->stepSimulation(1/60.f);
-			for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+			for (int i = 0; i < 15; i++)
 			{
-				//std::cout << "Looping" << j << std::endl;
-				btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
-				btRigidBody* body = btRigidBody::upcast(obj);
+				dynamicsWorld->stepSimulation(1 / 60.f);
+				for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
+				{
+					//std::cout << "Looping" << j << std::endl;
+					btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
+					btRigidBody* body = btRigidBody::upcast(obj);
 
-				btTransform trans;
-				if (body && body->getMotionState())
-				{
-					body->getMotionState()->getWorldTransform(trans);				}
-				else
-				{
-					trans = obj->getWorldTransform();
+					btTransform trans;
+					if (body && body->getMotionState())
+					{
+						body->getMotionState()->getWorldTransform(trans);
+					}
+					else
+					{
+						trans = obj->getWorldTransform();
+					}
 				}
 			}
 		}
+		
 
 		for (int i = 0; i < sceneManager.sceneMeshes.size(); i++) //Update according to rigid body
 		{
@@ -796,18 +864,30 @@ void Engine::engineLoop()
 		{
 			if (sceneManager.hearts.at(i)->usedUp)
 			{
+				guiHandler->resetHealth(player->health);
 				dynamicsWorld->removeRigidBody(sceneManager.hearts.at(i)->model->rigidBody);
 				sceneManager.removeHeart(sceneManager.hearts.at(i));
 			}
 		}
 
+		for (int i = 0; i < sceneManager.points.size(); i++)
+		{
+			if (sceneManager.points.at(i)->usedUp)
+			{
+				dynamicsWorld->removeRigidBody(sceneManager.points.at(i)->model->rigidBody);
+				sceneManager.removePoint(sceneManager.points.at(i));
+			}
+		}
+
 		directXHandler->spriteBatch->Begin();
-
-		newTime = std::chrono::high_resolution_clock::now(); //Set new time
-		std::chrono::duration<double> gameTimer = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - startedGameTimer);
-		std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTimer.count()) + L" seconds\n" + std::to_wstring((int)this->player->points) + L" points";
-		directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-
+		
+		if (!pause)
+		{
+			gameTime += frameTime.count();
+			std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTime) + L" seconds\n" + std::to_wstring((int)this->player->points) + L" points";
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		}
+		
 		directXHandler->spriteBatch->End();
 
 		DxHandler::swapChainPtr->Present(1, 0); 
@@ -815,19 +895,26 @@ void Engine::engineLoop()
 
 		directXHandler->setDefaultState();
 
-		
-		
-		//XMVECTOR handPos = DirectX::XMVector3Transform(player->currentHandPosition, SimpleMath::Matrix(this->player->model->getWorldMatrix()));
-		//block->setTranslation(XMFLOAT3(XMVectorGetX(handPos), XMVectorGetY(handPos), XMVectorGetZ(handPos)));
-		//block->setTranslation(XMFLOAT3(hook->model->rigidBody->getWorldTransform().getOrigin().x(), hook->model->rigidBody->getWorldTransform().getOrigin().y(), hook->model->rigidBody->getWorldTransform().getOrigin().z()));
-	
 
 		updateParticles();
 		 
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
-		fixedUpdate(frameTime.count());
+		if (!pause)
+			fixedUpdate(frameTime.count(), dynamicsWorld);
 	}
+	//Begin cleanup
+	YSE::System().close();
+
+	//Clean assetmanager memory
+	auto it = AssetLoader::meshDictionary->begin();
+	for (std::pair<std::string, AssetReturnStruct*> element : *AssetLoader::meshDictionary)
+	{
+		AssetReturnStruct* returnVal = element.second;
+		returnVal->buffer->Release();
+	}
+	AssetLoader::meshDictionary->clear();
+	//
 
 	//CLEAN UP PHYSICS
 	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
@@ -866,6 +953,7 @@ void Engine::createGUIHandler()
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
+	
 	DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
@@ -910,11 +998,15 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 			ID3D11UnorderedAccessView* views[] = { animMesh->vertexStateUAV };
 			DxHandler::contextPtr->OMSetRenderTargetsAndUnorderedAccessViews(3, arr, DxHandler::depthStencil, 4, ARRAYSIZE(views), views, nullptr);
 
-			if (!animMesh->manualUpdate && abs(animMesh->getTranslation().x - player->model->getTranslation().x) < 300)
+			if (!pause)
 			{
-				animMesh->stepAnim(1 / 60.00);
-				//std::cout << "Anim " << animMesh->t << std::endl;
+				if (!animMesh->manualUpdate && abs(animMesh->getTranslation().x - player->model->getTranslation().x) < 300)
+				{
+					animMesh->stepAnim(1 / 60.00);
+					//std::cout << "Anim " << animMesh->t << std::endl;
+				}
 			}
+			
 			directXHandler->draw(animMesh, primaryCamera);
 		}
 	}

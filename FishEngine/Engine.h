@@ -28,6 +28,7 @@
 #include "CollisionStruct.h"
 #include "SceneManager.h"
 
+
 #include "GUIhandler.h"
 
 //#include <btBulletDynamicsCommon.h>
@@ -59,11 +60,13 @@ private:
 
 	GUIhandler* guiHandler;
 	bool shutdown = false;
+	bool pause = true;
+	double gameTime = 0.0;
 public:
 	Engine();
 	~Engine();
 	void initialSetup();
-	void fixedUpdate(double deltaTime); //deltaTime being time in (seconds) since last frame
+	void fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld); //deltaTime being time in (seconds) since last frame
 	void updatePlayerMovement(double deltaTime);
 	void updateParticles();
 	void updateGUI();
@@ -90,6 +93,8 @@ public:
 	Tool* hook = nullptr;
 	Tool* rope = nullptr;
 	bool pull = false;
+
+	Level* level = nullptr;
 
 	bool gameOver = true;
 

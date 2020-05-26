@@ -184,7 +184,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 
 		if (updateHook == false)
 		{
-
+			hook->isActive = true;
 			hook->throwHook(rod, hook, rope);
 
 		}

@@ -25,13 +25,11 @@ private:
 	float hookPosOnScreenX;
 	float hookPosOnScreenY;
 
-	float throwHookVelocityX = 25.0f;
-	float throwHookVelocityY = 25.0f;
+	float throwHookVelocityX = 45.0f;
+	float throwHookVelocityY = 45.0f;
 
-	float zipBackVelocityX = 25.0f;
-	float zipBackVelocityY = 25.0f;
-
-	float hookSpeed = 8.0;
+	float zipBackVelocityX = 45.0f;
+	float zipBackVelocityY = 45.0f;
 public:
 	Tool(InputHandler* handler);
 	YSE::sound slapSound;

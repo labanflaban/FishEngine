@@ -2,6 +2,7 @@
 #include "Tool.h"
 #include "Enemy.h"
 #include "Heartdrop.h"
+#include "Pointdrop.h"
 
 struct collisionEnums
 {
@@ -12,6 +13,8 @@ struct collisionEnums
 		Enemy,
 		Player,
 		Heart,
+		BounceObject,
+		Pointdrop,
 		Ignored
 	};
 };
@@ -25,6 +28,8 @@ public:
 	Tool* hook = nullptr;
 	Player* player = nullptr;
 	Heartdrop* heartDrop = nullptr;
+	AnimatedMesh* bounceObject = nullptr;
+	Pointdrop* pointDrop = nullptr;
 
 	collisionStruct(Enemy* enemy = nullptr, collisionEnums::collisionType type = collisionEnums::Ignored)
 	{
@@ -58,5 +63,21 @@ public:
 
 		if (type == collisionEnums::Heart)
 			this->heartDrop = mesh;
+	}
+
+	collisionStruct(AnimatedMesh* mesh = nullptr, collisionEnums::collisionType type = collisionEnums::Ignored)
+	{
+		this->type = type;
+
+		if (type == collisionEnums::BounceObject)
+			this->bounceObject = mesh;
+	}
+
+	collisionStruct(Pointdrop* mesh = nullptr, collisionEnums::collisionType type = collisionEnums::Ignored)
+	{
+		this->type = type;
+
+		if (type == collisionEnums::Pointdrop)
+			this->pointDrop = mesh;
 	}
 };

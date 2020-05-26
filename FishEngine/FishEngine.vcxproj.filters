@@ -126,6 +126,12 @@
     <ClInclude Include="Heartdrop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AssetLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pointdrop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FishEngine.rc">
@@ -226,6 +232,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GUIElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

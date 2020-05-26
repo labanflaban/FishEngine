@@ -11,9 +11,8 @@
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
 #include "Keyframes.h"
+#include "AssetLoader.h"
 
-
-const int FLOATS_PER_VERTEX = 15;
 
 
 class Mesh
@@ -38,6 +37,8 @@ private:
 	void updateWorldMatrix();
 public:
 	ID3D11Device* device = nullptr;
+
+	bool enemyCollIgnore = false;
 
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixIdentity();

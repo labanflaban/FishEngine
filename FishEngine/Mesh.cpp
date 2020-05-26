@@ -122,14 +122,19 @@ ID3D11Buffer* Mesh::createVertexBuffer()
 
 void Mesh::readMeshFromFID(std::string fileName)
 {
-	this->vertices = fidParser.readFromFID(fileName);
-	createVertexBuffer();
+	AssetReturnStruct* returnVal = AssetLoader::loadAssetFID(fileName);//fidParser.readFromFID(fileName);
+	this->nrOfVertices = returnVal->nrOfVerts;
+	this->vertexBuffer = returnVal->buffer;
+	//createVertexBuffer();
 }
 
 void Mesh::readMeshFromFile(std::string fileName)
 {
-	this->vertices = parser.readFromObj(fileName);
-	createVertexBuffer();
+	//this->vertices = //parser.readFromObj(fileName);
+	AssetReturnStruct* returnVal = AssetLoader::loadAssetObj(fileName);//fidParser.readFromFID(fileName);
+	this->nrOfVertices = returnVal->nrOfVerts;
+	this->vertexBuffer = returnVal->buffer;
+	//createVertexBuffer();
 }
 
 void Mesh::printTextureFromFile(std::string fileName)
@@ -218,7 +223,7 @@ Mesh::~Mesh()
 {
 	if (this->vertexBuffer)
 	{
-		this->vertexBuffer->Release();
+		//this->vertexBuffer->Release();
 	}
 	if (this->textureView)
 	{

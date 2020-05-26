@@ -30,5 +30,5 @@ public :
 	void updateHUD();
 	int checkButtons();
 
-	void resetHealth();
+	void resetHealth(int healthPoints);
 };
