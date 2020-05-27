@@ -138,6 +138,9 @@
     <ClInclude Include="Spike.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScoreHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="FishEngine.rc">
@@ -244,6 +247,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MovingPlatform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

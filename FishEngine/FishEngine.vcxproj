@@ -201,6 +201,7 @@
     <ClInclude Include="RenderWindow.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScoreHandler.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Spike.h" />
     <ClInclude Include="targetver.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScoreHandler.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="TextHandler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

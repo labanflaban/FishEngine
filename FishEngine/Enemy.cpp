@@ -9,7 +9,7 @@ Enemy::Enemy(ID3D11Device* device)
 
 	
 	//
-
+	GotHitSound.create("./Sounds/FishSplash.wav");
 	this->light = new Light(device);
 	light->lightColor = DirectX::XMVectorSet(0, 0, 3, 0); //Blue
 }
@@ -36,6 +36,7 @@ void Enemy::update(Player* plr)
 	//Notice that enemy is hit and moves with getHitMove function
 	if (justHit == true && AmountOfTimeToMove >= 5.0f)
 	{
+		GotHitSound.play();
 		int randomNumber;
 		randomNumber = rand() % 2 + 1;
 		AmountOfTimeToMove -= 5.0f;

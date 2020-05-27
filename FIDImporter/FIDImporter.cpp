@@ -166,4 +166,27 @@ namespace FID
 	{
 		return animHeader.BlendShapeCount;
 	}
+
+	Camera::Camera(std::string filepath)
+	{
+		ifstream infile(filepath, ios::out | ios::binary);
+		if (!infile)
+		{
+			cout << "Cannot open Anim File" << endl;
+		}
+		else
+		{
+			infile.read((char*)&CameraHead, sizeof(FIDHeader::CameraHeader));
+		}
+	}
+	void Camera::PrintCamera()
+	{
+		cout << "Position: " << CameraHead.position[0] << " " << CameraHead.position[1] << " " << CameraHead.position[2] << endl;
+		cout << "Interestpoistion: " << CameraHead.target[0] << " " << CameraHead.target[1] << " " << CameraHead.target[2] << endl;
+		cout << "UpVetor: " << CameraHead.upVector[0] << " " << CameraHead.upVector[1] << " " << CameraHead.upVector[2] << endl;
+		cout << "AspectRatio: " << CameraHead.aspectRatio << endl;
+		cout << "NearPlane: " << CameraHead.nearPlane << endl;
+		cout << "FarPlane: " << CameraHead.farPlane << endl;
+		cout << "FieldOfView: " << CameraHead.fieldOfView << endl;
+	}
 }

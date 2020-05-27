@@ -9,6 +9,7 @@
 #include <chrono>
 #include <ctime>
 #include "VertexShader.h"
+#include "ScoreHandler.h"
 #include "PixelShader.h"
 #include <string>
 #include <vector>
@@ -48,7 +49,7 @@ private:
 	DxHandler* directXHandler = nullptr;
 	HWND primaryWindow;
 	double limitFPS = 1.0 / 60.0;
-	
+	ScoreHandler scoreHandle;
 	std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 	
 	GBufferHandler deferredBufferHandler;
