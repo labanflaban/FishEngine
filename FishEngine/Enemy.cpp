@@ -57,8 +57,8 @@ void Enemy::update(Player* plr)
 	this->light->setPosition(this->model->getTranslation());
 
 
-	xVel = sin(angle) * 0.75f;
-	yVel = cos(angle) * 0.7f;
+	xVel = sin(angle) * 1.f;
+	yVel = cos(angle) * 1.f;
 
 	float baseHeight = plr->model->getTranslation().y;
 	float diveRange = 50.f;
@@ -68,23 +68,26 @@ void Enemy::update(Player* plr)
 
 	if (justHit == false)
 	{
-		if (dX < diveRange)//If close enough to dive
+		if (dX < 500)
 		{
-			model->rigidBody->setLinearVelocity(btVector3(-xVel * 3, -yVel * 3, 0));
-		}
-		else
-		{
-
-			if (model->getTranslation().y < baseHeight + 25.0f)//If not diving, then return to original height
+			if (dX < diveRange)//If close enough to dive
 			{
-				model->rigidBody->setLinearVelocity(btVector3(-xVel, 5.0f, 0));
+				model->rigidBody->setLinearVelocity(btVector3(-xVel * 3, -yVel * 3, 0));
 			}
 			else
 			{
-				model->rigidBody->setLinearVelocity(btVector3(-xVel, 0, 0));
+
+				if (model->getTranslation().y < baseHeight + 25.0f)//If not diving, then return to original height
+				{
+					model->rigidBody->setLinearVelocity(btVector3(-xVel, 5.0f, 0));
+				}
+				else
+				{
+					model->rigidBody->setLinearVelocity(btVector3(-xVel, 0, 0));
+				}
 			}
+			model->setRotation(DirectX::XMFLOAT3(0, 0, angle));
 		}
-		model->setRotation(DirectX::XMFLOAT3(0, 0, angle));
 	}
 
 	//Rotate the model to direction of player

@@ -165,13 +165,11 @@ void Engine::updatePlayerMovement(double deltaTime)
 		pause = true;
 	}
 
-	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 10.f)
+	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 5.f)
 	{
 
 		//std::cout << "Space" << std::endl;
-		movementVector += btVector3(0, 10.f, 0);
-
-		movementVector += btVector3(0, 5.f, 0);
+		movementVector += btVector3(0, 40.f, 0);
 
 		player->boostReserve -= 10.f;
 		player->jumpSound.play();
@@ -202,7 +200,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 			particlePtr->setTranslation(player->model->getTranslation());
 			//particlePtr->velocity = DirectX::XMFLOAT3(rNum * 0.5 + randomNum(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, 0.5 * rNumY + 1 * rNumY + player->model->rigidBody->getLinearVelocity().y() * 0.1, 0);
-			particlePtr->velocity = XMFLOAT3(xVel*randomNumPlus(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, yVel * randomNumPlus(numberGenerator), randomNum(numberGenerator));
+			particlePtr->velocity = XMFLOAT3(xVel*randomNumPlus(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.001, yVel * randomNumPlus(numberGenerator), randomNum(numberGenerator));
 			sceneManager.addParticle(particlePtr);
 		}
 	}
@@ -211,18 +209,11 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 		//std::cout << GetAsyncKeyState(0x41) << std::endl;
 		//std::cout << "A" << std::endl;
-		movementVector += btVector3(-10 * deltaTime * 40, 0, 0);
+		movementVector += btVector3(-130/5 * deltaTime * 40, 0, 0);
 	}
 	if(GetAsyncKeyState(0x44)) // D-key
 	{
-		//std::cout << "D" << std::endl;
-		movementVector += btVector3(10 * deltaTime * 40, 0, 0);
-
-		movementVector += btVector3(-30 * deltaTime * 40, 0, 0);
-	}
-	if(GetAsyncKeyState(0x44)) // D-key
-	{
-		movementVector += btVector3(30 * deltaTime * 40, 0, 0);
+		movementVector += btVector3(130/5 * deltaTime * 40, 0, 0);
 
 	}
 
@@ -234,8 +225,10 @@ void Engine::updatePlayerMovement(double deltaTime)
 	}
 	else
 	{
+		player->model->fromIndex = 0;
 		player->model->targetPoseIndex = 0;
 		player->model->remaining = 0;
+		player->model->t = 0;
 	}
 		
 
@@ -473,7 +466,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				btVector3 currVel = myPlayer->model->rigidBody->getLinearVelocity();
 
-				btVector3 newVel = btVector3(currVel.x(), 17.f, currVel.z());
+				btVector3 newVel = btVector3(currVel.x(), 45.f, currVel.z());
 				myPlayer->model->rigidBody->setLinearVelocity(newVel);
 			}
 
@@ -550,19 +543,25 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myPlayer = collision1->player;
 				}
 
-				Spike* pointDrop = nullptr;
+				Spike* spike = nullptr;
 				if (collision->type == collisionEnums::Spike)
 				{
 					//myEnemy = collision->enemy;
-					pointDrop = collision->spike;
+					spike = collision->spike;
 				}
 				else
 				{
-					pointDrop = collision1->spike;
+					spike = collision1->spike;
 				}
 
-				//myPlayer->health--;
-				myPlayer->resetPlayer();
+				std::cout << spike->debounce << std::endl;
+				if (spike->debounce >= spike->debounceLimit)
+				{
+					spike->debounce = 0;
+					myPlayer->health = 0;
+				}
+					
+				
 			}
 		}
 	}
@@ -584,6 +583,18 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 	{
 		if (sceneManager.enemies.at(i)->damageDebounce < sceneManager.enemies.at(i)->maxDebounce) //L�gg 3 i enemy i en variabel
 			sceneManager.enemies.at(i)->damageDebounce += 0.1;
+	}
+
+	for (int i = 0; i < sceneManager.enemies.size(); i++)
+	{
+		if (sceneManager.enemies.at(i)->damageDebounce < sceneManager.enemies.at(i)->maxDebounce) //L�gg 3 i enemy i en variabel
+			sceneManager.enemies.at(i)->damageDebounce += 0.1;
+	}
+
+	for (int i = 0; i < sceneManager.spikes.size(); i++)
+	{
+		if (sceneManager.spikes.at(i)->debounce <= sceneManager.spikes.at(i)->debounceLimit)
+			sceneManager.spikes.at(i)->debounce += 0.1;
 	}
 
 	if (hook->ropeZipBack < 10.f)
@@ -634,7 +645,11 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		player->resetPlayer();
 
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
+	{
 		player->resetPlayer();
+		gameOver = true;
+	}
+		
 
 	guiHandler->currentHealth = player->health;
 }
@@ -650,7 +665,7 @@ void Engine::engineLoop()
 	//btCollisionWorld* collisionWorld = new btCollisionWorld(dispatcher, overlappingPairCache, collisionConfiguration);
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 	dynamicsWorld->setInternalTickCallback(myTickCallback);
-	dynamicsWorld->setGravity(btVector3(0, -1.5, 0));
+	dynamicsWorld->setGravity(btVector3(0, -9.82f, 0));
 	//--------------------------------------------------------------------------------------------------- physics 
 
 	RECT viewportRect;
@@ -687,10 +702,9 @@ void Engine::engineLoop()
 	debugObject->setScaling(DirectX::XMFLOAT3(2, 2, 2));
 	debugObject->setRotation(DirectX::XMFLOAT3(0, 3.14 / 2, 0));
 	debugObject->manualUpdate = true;
-	debugObject->readTextureFromFile(L"./Models/FISHCOLOR.png");
 	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
-	player->model->animationSpeed = 7;
+	player->model->animationSpeed = 5;
 	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10, nullptr, btVector3(0,25,0));
 	collisionStruct* plrCollStruct = new collisionStruct(player, collisionEnums::Player);
 	player->model->rigidBody->setUserPointer(plrCollStruct);
@@ -869,7 +883,7 @@ void Engine::engineLoop()
 		///-----stepsimulation_start-----
 		if (!pause)
 		{
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				dynamicsWorld->stepSimulation(1 / 60.f);
 				for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
@@ -976,7 +990,9 @@ void Engine::engineLoop()
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		if (!pause)
+		{
 			fixedUpdate(frameTime.count(), dynamicsWorld);
+		}
 	}
 	//Begin cleanup
 	YSE::System().close();

@@ -25,8 +25,8 @@ private:
 	float hookPosOnScreenX;
 	float hookPosOnScreenY;
 
-	float throwHookVelocityX = 45.0f;
-	float throwHookVelocityY = 45.0f;
+	float throwHookVelocityX = 45.0f*2;
+	float throwHookVelocityY = 45.0f*2;
 
 	float zipBackVelocityX = 45.0f;
 	float zipBackVelocityY = 45.0f;

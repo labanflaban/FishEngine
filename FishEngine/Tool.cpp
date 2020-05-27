@@ -25,7 +25,7 @@ void Tool::zipBackRope(Tool* rod, Tool* hook, Tool* rope)
 	xVel = sin(angle) * zipBackVelocityX;
 	yVel = cos(angle) * zipBackVelocityY;
 
-	btVector3 velocityVector(-xVel, -yVel, 0);
+	btVector3 velocityVector(-xVel*2, -yVel*2, 0);
 
 	hook->model->rigidBody->setActivationState(ACTIVE_TAG);
 	hook->model->rigidBody->setLinearVelocity(velocityVector);

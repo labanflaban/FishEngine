@@ -88,7 +88,7 @@ public:
 	{
 		this->type = type;
 
-		if (type == collisionEnums::Pointdrop)
+		if (type == collisionEnums::Spike)
 			this->spike = mesh;
 	}
 };

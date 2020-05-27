@@ -98,11 +98,11 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			AnimatedMesh* groundObject = new AnimatedMesh(DxHandler::devicePtr);
 			//groundObject->readMeshFromFID("./Models/JellyFish.FID");
 			std::vector<Vertex> jellyFish0 = ObjParser::readFromObj("./Models/JellyAnimPartOne.obj");
-			std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
-			std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
+			//std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
+			//std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
 			std::vector<Vertex> jellyFish3 = ObjParser::readFromObj("./Models/JellyAnimPartFour.obj");
-			std::vector<Vertex>* fishArr[] = { &jellyFish0, &jellyFish1, &jellyFish2, &jellyFish3 };
-			groundObject->appendStructuredBuffer(fishArr, 4);
+			std::vector<Vertex>* fishArr[] = { &jellyFish0, &jellyFish3 };//, &jellyFish2, &jellyFish3 };
+			groundObject->appendStructuredBuffer(fishArr, 2);
 			groundObject->createStructuredBuffer(DxHandler::devicePtr);
 			groundObject->targetPoseIndex = 1;
 			groundObject->animationSpeed = 0.3;
