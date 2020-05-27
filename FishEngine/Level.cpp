@@ -311,28 +311,63 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			sceneManager->addTransparentObject(model);
 			sceneManager->addHeart(drop);
 		}
-
 		else if (level->levelMeshVector.at(i).tag == "point")
 		{
-		Pointdrop* drop = new Pointdrop;
+			Pointdrop* drop = new Pointdrop;
 
-		Mesh* model = new Mesh(DxHandler::devicePtr);
-		model->enemyCollIgnore = true;
-		model->vertexBuffer = masterPoint->vertexBuffer;
-		model->nrOfVertices = masterPoint->nrOfVertices;
-		model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-		//model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
-		model->setRotation(XMFLOAT3(0, 3.14/2, 0));
-		model->setScaling(XMFLOAT3(4, 4, 4));
+			Mesh* model = new Mesh(DxHandler::devicePtr);
+			model->enemyCollIgnore = true;
+			model->vertexBuffer = masterPoint->vertexBuffer;
+			model->nrOfVertices = masterPoint->nrOfVertices;
+			model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			//model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			model->setRotation(XMFLOAT3(0, 3.14/2, 0));
+			model->setScaling(XMFLOAT3(4, 4, 4));
 
-		drop->model = model;
-		collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Pointdrop);
-		btBoxShape* box = new btBoxShape(btVector3(btScalar(model->getScaling().x), btScalar(model->getScaling().y), btScalar(model->getScaling().z)));
-		model->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
-		model->rigidBody->setUserPointer(dropCollStruct);
+			drop->model = model;
+			collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Pointdrop);
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(model->getScaling().x), btScalar(model->getScaling().y), btScalar(model->getScaling().z)));
+			model->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			model->rigidBody->setUserPointer(dropCollStruct);
 
-		sceneManager->addTransparentObject(model);
-		sceneManager->addPoint(drop);
+			sceneManager->addTransparentObject(model);
+			sceneManager->addPoint(drop);
+		}
+		else if (level->levelMeshVector.at(i).tag == "spike")
+		{
+			Spike* spike = new Spike();
+			Mesh* spikeObject = new Mesh(DxHandler::devicePtr);
+			spikeObject->enemyCollIgnore = true;
+			spikeObject->readMeshFromFile("./Models/spike.obj");
+			spikeObject->readTextureFromFile(L"./Textures/red.png");
+
+			spikeObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			spikeObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			spikeObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			spike->model = spikeObject;
+
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(spikeObject->getScaling().x), btScalar(spikeObject->getScaling().y), btScalar(spikeObject->getScaling().z)));
+			collisionStruct* spikeColl = new collisionStruct(spike, collisionEnums::Spike);
+			spikeObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			spikeObject->rigidBody->setUserPointer(spikeColl);
+			sceneManager->addMesh(spikeObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "movingPlatform")
+		{
+			MovingPlatform* platform = new MovingPlatform;
+			Mesh* platformMesh = new Mesh(DxHandler::devicePtr);
+			platformMesh->readMeshFromFile("./Models/GroundThree.Obj");
+			platformMesh->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			platformMesh->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(platformMesh->getScaling().x * 3.2f), btScalar(platformMesh->getScaling().y * 0.1), btScalar(platformMesh->getScaling().z) + 6));
+			platformMesh->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			platformMesh->readNormalMapFromFile(L"./Textures/StoneNormal.png");
+			platform->startPos = platformMesh->getTranslation();
+			platform->platform = platformMesh;
+			platform->range = 250;//platformMesh->getScaling().x * 3.2f * 2;
+			sceneManager->addMesh(platformMesh);
+			sceneManager->addPlatform(platform);
 		}
 
 	}

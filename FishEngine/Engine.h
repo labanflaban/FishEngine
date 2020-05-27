@@ -27,6 +27,7 @@
 #include "Level.h"
 #include "CollisionStruct.h"
 #include "SceneManager.h"
+#include "MovingPlatform.h"
 
 
 #include "GUIhandler.h"
@@ -61,7 +62,6 @@ private:
 	GUIhandler* guiHandler;
 	bool shutdown = false;
 	bool pause = true;
-	double gameTime = 0.0;
 public:
 	Engine();
 	~Engine();

@@ -218,36 +218,38 @@ void Player::resetPlayer()
 	btTransform transform;
 	transform.setOrigin(btVector3(100, 50, 0));
 	this->model->rigidBody->setWorldTransform(transform);
+
+	gameTime = 0.0;
 }
 
 void Player::stepAnim(double deltaT)
 {
-	this->linearTime += deltaT * this->model->animationSpeed;
+
+		this->linearTime += deltaT * this->model->animationSpeed;
 	
-	this->model->t = this->model->t + deltaT * this->model->animationSpeed;
+		this->model->t = this->model->t + deltaT * this->model->animationSpeed;
 	
 
-	if (this->model->t > 0.99f)
-	{
-		this->model->t = 0.f;
-		this->model->remaining = 0.f;
-		this->linearTime = 0.0;
+		if (this->model->t > 0.98f)
+		{
+			this->model->t = 0.0001f;
+			this->model->remaining = 0.001f;
+			this->linearTime = 0.0;
 
-		this->model->fromIndex = this->model->targetPoseIndex;
+			this->model->fromIndex = this->model->targetPoseIndex;
 
-		if (!attacking)
-			this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->walkAnimPoses);
+			if (!attacking)
+				this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->walkAnimPoses);
+			else
+				this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->model->nrOfPoses); //When attacking, use entire range of poses
+
+			if (this->model->targetPoseIndex >= 5)
+				this->model->animationSpeed = 12;
+			else
+				this->model->animationSpeed = 5;
+			//std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
+			//this->model->decrementT = true;
+		}
 		else
-			this->model->targetPoseIndex = ((++this->model->targetPoseIndex) % this->model->nrOfPoses); //When attacking, use entire range of poses
-
-		if (this->model->targetPoseIndex >= 5)
-			this->model->animationSpeed = 12;
-		else
-			this->model->animationSpeed = 5;
-		//std::cout << "Index: " << this->model->targetPoseIndex << std::endl;
-		//this->model->decrementT = true;
-	}
-	else
-		this->model->remaining = this->model->animationSpeed * deltaT / (1 - this->model->t);
-
+			this->model->remaining = this->model->animationSpeed * deltaT / (1 - this->model->t);
 }

@@ -16,7 +16,10 @@ public:
 	~Enemy();
 
 	int randomDirr = 0;
-	int health = 100;
+	int maxHealth = 100;
+	int health = maxHealth;
+	bool active = false;
+	DirectX::SimpleMath::Vector3 startPos;
 
 	float justHit = false;
 

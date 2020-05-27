@@ -103,7 +103,7 @@ void DxHandler::initalizeDeviceContextAndSwapChain()
 	assert(SUCCEEDED(rendertargetSucc));
 
 	spriteBatch = std::make_unique<DirectX::SpriteBatch>(contextPtr);
-	spriteFont = std::make_unique<DirectX::SpriteFont>(devicePtr, L"./Fonts/Arial.spritefont");
+	spriteFont = std::make_unique<DirectX::SpriteFont>(devicePtr, L"./Fonts/arialLarge.spritefont");
 }
 
 void DxHandler::setupInputLayout()

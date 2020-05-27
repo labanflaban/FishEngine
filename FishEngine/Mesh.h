@@ -52,7 +52,7 @@ public:
 
 	btRigidBody* rigidBody = nullptr;
 	btCollisionShape* collider = nullptr;
-	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr);
+	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr, int collFlags = 0);
 
 	ID3D11ShaderResourceView* textureView = nullptr;
 	ID3D11ShaderResourceView* NormalView = nullptr;

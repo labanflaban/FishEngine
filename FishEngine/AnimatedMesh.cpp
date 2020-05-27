@@ -14,8 +14,8 @@ void AnimatedMesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlign
 
 	rigidBodyTransform.setIdentity();
 
-	btVector3 origin = btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z) + offset;
-	rigidBodyTransform.setOrigin(origin);
+	btVector3 origin = btVector3(this->getTranslation().x, this->getTranslation().y, this->getTranslation().z);
+	rigidBodyTransform.setOrigin(origin + offset);
 
 	//std::cout << offset.x() << " " << offset.y() << " " << offset.z() << " " << std::endl;
 

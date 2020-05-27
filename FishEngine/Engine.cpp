@@ -435,8 +435,11 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
 				{
-					myPlayer->health -= 1;
-					myEnemy->damageDebounce = 0;
+					if (myPlayer->model->getTranslation().y > myEnemy->model->getTranslation().y)
+						myEnemy->health = 0;
+					else
+						myPlayer->health -= 1;
+						myEnemy->damageDebounce = 0;
 					//std::cout << "Enemy hit" << std::endl;
 				}
 
@@ -534,6 +537,33 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					pointDrop->usedUp = true;
 				}
 			}
+
+			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Spike)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Spike)))
+			{
+				Player* myPlayer = nullptr;
+				if (collision->type == collisionEnums::Player)
+				{
+					myPlayer = collision->player;
+				}
+				else
+				{
+					myPlayer = collision1->player;
+				}
+
+				Spike* pointDrop = nullptr;
+				if (collision->type == collisionEnums::Spike)
+				{
+					//myEnemy = collision->enemy;
+					pointDrop = collision->spike;
+				}
+				else
+				{
+					pointDrop = collision1->spike;
+				}
+
+				//myPlayer->health--;
+				myPlayer->resetPlayer();
+			}
 		}
 	}
 }
@@ -541,7 +571,6 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld) //time in seconds since last frame
 {
 	//game logic here thanks
-	
 
 	updatePlayerMovement(deltaTime);
 	player->updatePlayerTools(fishingRod, hook, rope, deltaTime);
@@ -604,6 +633,9 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 	if (level != nullptr && player->model->getTranslation().y < level->respawn)
 		player->resetPlayer();
 
+	if (level != nullptr && player->model->getTranslation().x > level->goal)
+		player->resetPlayer();
+
 	guiHandler->currentHealth = player->health;
 }
 
@@ -659,7 +691,7 @@ void Engine::engineLoop()
 	this->player = new Player(&inputHandler);
 	this->player->model = debugObject;
 	player->model->animationSpeed = 7;
-	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10, nullptr, btVector3(0,500,0));
+	debugObject->initRigidbody(dynamicsWorld, &collisionShapes, 10, nullptr, btVector3(0,25,0));
 	collisionStruct* plrCollStruct = new collisionStruct(player, collisionEnums::Player);
 	player->model->rigidBody->setUserPointer(plrCollStruct);
 
@@ -677,6 +709,25 @@ void Engine::engineLoop()
 	hookObject->initRigidbody(dynamicsWorld, &collisionShapes, 5);
 	hookObject->rigidBody->setUserPointer(hookCollStruct);
 	this->sceneManager.addMesh(hookObject);
+
+	//MovingPlatform platform;
+	//Mesh* platformMesh = new Mesh(DxHandler::devicePtr);
+	//platformMesh->readMeshFromFile("./Models/GroundThree.Obj");
+	//platformMesh->setTranslation(XMFLOAT3(-25, 0, 0));
+	//platformMesh->setScaling(XMFLOAT3(20, 10, 10));
+	//btBoxShape* box = new btBoxShape(btVector3(btScalar(platformMesh->getScaling().x * 3.2f), btScalar(platformMesh->getScaling().y * 0.1), btScalar(platformMesh->getScaling().z) + 6));
+	//platformMesh->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+	////btCollisionObject* collObj = new btCollisionObject();
+	////btTransform colliderTrans;
+	////colliderTrans.setIdentity();
+	////colliderTrans.setOrigin(btVector3(platformMesh->getTranslation().x, platformMesh->getTranslation().y, platformMesh->getTranslation().z));
+	////collObj->setWorldTransform(colliderTrans);
+	////collObj->setCollisionShape(box);
+	////dynamicsWorld->addCollisionObject(collObj);
+	//platformMesh->readNormalMapFromFile(L"./Textures/StoneNormal.png");
+	//platform.startPos = platformMesh->getTranslation();
+	//platform.platform = platformMesh;
+	//sceneManager.addMesh(platformMesh);
 
 	player->playerLight = new Light(DxHandler::devicePtr);
 	player->playerLight->lightColor = XMVectorSet(1.f, 2, 0.5, 0.f);
@@ -710,7 +761,7 @@ void Engine::engineLoop()
 	Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
 	//fishingRodObject->readMeshFromFile("./Models/rod.obj");
 	block->readMeshFromFile("./Models/actualCube.obj");
-	block->setScaling(DirectX::XMFLOAT3(1, 1, 1));
+	block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
 	sceneManager.addMesh(block);
 	
 
@@ -785,6 +836,10 @@ void Engine::engineLoop()
 	startedGameTimer = std::chrono::high_resolution_clock::now();
 	while (!shutdown)
 	{
+		//platform.updatePlatform();
+		for (int i = 0; i < sceneManager.movingPlatforms.size(); i++)
+			sceneManager.movingPlatforms.at(i)->updatePlatform();
+
 		directXHandler->contextPtr->RSSetViewports(1, &port);
 		inputHandler.handleInput();
 		currentTime = std::chrono::high_resolution_clock::now(); //Reset time - always needs to be at top / limitFstd::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime) / limitFPS;
@@ -886,9 +941,23 @@ void Engine::engineLoop()
 		
 		if (!pause)
 		{
-			gameTime += frameTime.count();
-			std::wstring string4 = L"Game time: " + std::to_wstring((int)gameTime) + L" seconds\n" + std::to_wstring((int)this->player->points) + L" points";
-			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string4.data(), DirectX::XMFLOAT2(0, 100), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+			player->gameTime += frameTime.count();
+
+			int seconds = (int)fmod(player->gameTime, 60);
+			int minutes = (int)(player->gameTime / 60);
+
+			std::wstring timerText;
+			if (seconds > 9)
+				timerText = std::to_wstring(minutes) + L":" + std::to_wstring(seconds) + L"\n";// + std::to_wstring((int)this->player->points) + L" points";
+			else
+				timerText = std::to_wstring(minutes) + L":0" + std::to_wstring(seconds) + L"\n";// + std::to_wstring((int)this->player->points) + L" points";
+
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), timerText.data(), DirectX::XMFLOAT2((WIDTH/2)-50, 5), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+		
+			std::wstring pointCounter;
+			pointCounter = std::to_wstring((int)this->player->points) + L" points";
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 75), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+
 		}
 		
 		directXHandler->spriteBatch->End();
@@ -897,6 +966,9 @@ void Engine::engineLoop()
 		DxHandler::contextPtr->ClearState();
 
 		directXHandler->setDefaultState();
+		
+		//block->setTranslation(XMFLOAT3(platformMesh->rigidBody->getWorldTransform().getOrigin().x(), platformMesh->rigidBody->getWorldTransform().getOrigin().y(), platformMesh->rigidBody->getWorldTransform().getOrigin().z()));
+		//block->setTranslation(XMFLOAT3(platformMesh->rigidBody->getWorldTransform().getOrigin().x(), platformMesh->rigidBody->getWorldTransform().getOrigin().y(), platformMesh->rigidBody->getWorldTransform().getOrigin().z()));
 
 
 		updateParticles();
@@ -984,7 +1056,8 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 
 	for (auto model : *scene) //Draw all meshes 
 	{
-		directXHandler->draw(model, primaryCamera);
+		//if (abs(model->getTranslation().x - player->model->getTranslation().x) < 100)
+			directXHandler->draw(model, primaryCamera);
 	}
 
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
