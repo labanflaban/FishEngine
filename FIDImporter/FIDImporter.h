@@ -52,5 +52,13 @@ namespace FID
 		/*const int getKeyFrameCount();*/
 	};
 
+	struct Camera
+	{
+		FIDHeader::CameraHeader CameraHead;
+
+		Camera(std::string filepath);
+		void PrintCamera();
+	};
+
 	void printMessage();
 }

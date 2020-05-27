@@ -1,5 +1,6 @@
 #pragma once
 #include "Player.h"
+#include "yse.hpp"
 #include "Mesh.h"
 #include <math.h>
 #include "Light.h"
@@ -29,6 +30,8 @@ public:
 	float xVel, yVel = 0.f;
 
 	int vectorIndex = 0;
+
+	YSE::sound GotHitSound;
 
 	virtual void update(Player* plr);
 	void getHitMove();
