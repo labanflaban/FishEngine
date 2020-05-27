@@ -9,6 +9,7 @@
 #include <chrono>
 #include <ctime>
 #include "VertexShader.h"
+#include "ScoreHandler.h"
 #include "PixelShader.h"
 #include <string>
 #include <vector>
@@ -27,6 +28,8 @@
 #include "Level.h"
 #include "CollisionStruct.h"
 #include "SceneManager.h"
+#include "MovingPlatform.h"
+
 
 #include "GUIhandler.h"
 
@@ -46,7 +49,7 @@ private:
 	DxHandler* directXHandler = nullptr;
 	HWND primaryWindow;
 	double limitFPS = 1.0 / 60.0;
-	
+	ScoreHandler scoreHandle;
 	std::chrono::high_resolution_clock::time_point currentTime = std::chrono::high_resolution_clock::now();
 	
 	GBufferHandler deferredBufferHandler;
@@ -59,11 +62,12 @@ private:
 
 	GUIhandler* guiHandler;
 	bool shutdown = false;
+	bool pause = true;
 public:
 	Engine();
 	~Engine();
 	void initialSetup();
-	void fixedUpdate(double deltaTime); //deltaTime being time in (seconds) since last frame
+	void fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld); //deltaTime being time in (seconds) since last frame
 	void updatePlayerMovement(double deltaTime);
 	void updateParticles();
 	void updateGUI();
@@ -92,6 +96,8 @@ public:
 	Tool* hook = nullptr;
 	Tool* rope = nullptr;
 	bool pull = false;
+
+	Level* level = nullptr;
 
 	bool gameOver = true;
 

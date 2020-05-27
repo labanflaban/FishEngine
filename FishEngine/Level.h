@@ -10,6 +10,7 @@
 #include "DxHandler.h"
 #include "SceneManager.h"
 #include "CollisionStruct.h"
+#include "AssetLoader.h"
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
@@ -47,6 +48,7 @@ struct Level
 	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager);
 
 	Mesh* masterHeart = new Mesh(DxHandler::devicePtr);
+	Mesh* masterPoint = new Mesh(DxHandler::devicePtr);
 	Level();
 
 	float respawn;

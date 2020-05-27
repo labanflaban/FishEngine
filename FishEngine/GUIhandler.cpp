@@ -98,9 +98,10 @@ int GUIhandler::checkButtons()
 	}
 }
 
-void GUIhandler::resetHealth()
+void GUIhandler::resetHealth(int healthPoints)
 {
-	for (int i = 0; i < hearts.size(); i++)
+	this->nrOfHearts = healthPoints;
+	for (int i = 0; i < healthPoints; i++)
 	{
 		hearts.at(i).active = true;
 	}

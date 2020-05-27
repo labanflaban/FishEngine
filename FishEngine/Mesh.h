@@ -11,9 +11,8 @@
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
 #include "Keyframes.h"
+#include "AssetLoader.h"
 
-
-const int FLOATS_PER_VERTEX = 15;
 
 
 class Mesh
@@ -39,6 +38,8 @@ private:
 public:
 	ID3D11Device* device = nullptr;
 
+	bool enemyCollIgnore = false;
+
 	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixIdentity();
 	DirectX::XMMATRIX scalingMatrix = DirectX::XMMatrixIdentity();
@@ -51,7 +52,7 @@ public:
 
 	btRigidBody* rigidBody = nullptr;
 	btCollisionShape* collider = nullptr;
-	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr);
+	void initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape = nullptr, int collFlags = 0);
 
 	ID3D11ShaderResourceView* textureView = nullptr;
 	ID3D11ShaderResourceView* NormalView = nullptr;

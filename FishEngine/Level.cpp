@@ -112,7 +112,9 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 
 			XMFLOAT3 jellyScale = level->levelMeshVector.at(i).getScale();
 			groundObject->setScaling(level->multiplyFloat3XYZ(XMFLOAT3(jellyScale.x*0.75, jellyScale.y*0.5, jellyScale.z*0.75), multi));
+			collisionStruct* jellyCollStruct = new collisionStruct(groundObject, collisionEnums::BounceObject);
 			groundObject->initRigidbody(dynamicsWorld, &collisionShapes, 0);
+			groundObject->rigidBody->setUserPointer(jellyCollStruct);
 			sceneManager->addAnimatedMesh(groundObject);
 
 			Light* light = new Light(DxHandler::devicePtr);
@@ -193,7 +195,7 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			sceneManager->addLight(enemy->light);
 
 			collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
+			enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 15), btScalar(enemy->model->getScaling().y + 15), btScalar(enemy->model->getScaling().z) + 25)));
 			enemy->model->targetPoseIndex = 1;
 			enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
 			enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
@@ -202,6 +204,7 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		else if (level->levelMeshVector.at(i).tag == "GroundOne")
 		{
 			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->enemyCollIgnore = true;
 			groundObject->readMeshFromFile("./Models/GroundOne.Obj");
 
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
@@ -217,6 +220,7 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		else if (level->levelMeshVector.at(i).tag == "GroundTwo")
 		{
 			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->enemyCollIgnore = true;
 			groundObject->readMeshFromFile("./Models/GroundTwo.Obj");
 
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
@@ -232,6 +236,7 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		else if (level->levelMeshVector.at(i).tag == "GroundThree")
 		{
 			Mesh* groundObject = new Mesh(DxHandler::devicePtr);
+			groundObject->enemyCollIgnore = true;
 			groundObject->readMeshFromFile("./Models/GroundThree.Obj");
 
 			groundObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
@@ -247,6 +252,7 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		else if (level->levelMeshVector.at(i).tag == "Rock")
 		{
 			Mesh* rockObject = new Mesh(DxHandler::devicePtr);
+			rockObject->enemyCollIgnore = true;
 			rockObject->readMeshFromFile("./Models/Rock.Obj");
 
 			rockObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
@@ -268,23 +274,33 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		}
 		else if (level->levelMeshVector.at(i).tag == "respawn")
 		{
-			respawn = level->levelMeshVector.at(i).translation.y;
+			respawn = level->levelMeshVector.at(i).translation.y * multi.y;
 		}
 		else if (level->levelMeshVector.at(i).tag == "goal")
 		{
-			goal = level->levelMeshVector.at(i).translation.x; 
+			Mesh* winObject = new Mesh(DxHandler::devicePtr);
+			winObject->enemyCollIgnore = true;
+			winObject->readMeshFromFile("./Models/Medallion.Obj");
+			winObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			winObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			winObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			sceneManager->addMesh(winObject);
+
+			goal = level->levelMeshVector.at(i).translation.x * multi.x; 
 		}
 		else if (level->levelMeshVector.at(i).tag == "heart")
 		{
 			Heartdrop* drop = new Heartdrop;
 			
 			Mesh* model = new Mesh(DxHandler::devicePtr);
+			model->enemyCollIgnore = true;
 			model->vertexBuffer = masterHeart->vertexBuffer;
 			model->nrOfVertices = masterHeart->nrOfVertices;
 			model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 			model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 			model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-			model->setScaling(XMFLOAT3(5, 5, 5));
+			model->setScaling(XMFLOAT3(15, 15, 15));
 
 			drop->model = model; 
 			collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Heart);
@@ -292,17 +308,86 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 			model->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
 			model->rigidBody->setUserPointer(dropCollStruct);
 
-			sceneManager->addMesh(model);
+			sceneManager->addTransparentObject(model);
 			sceneManager->addHeart(drop);
 		}
+		else if (level->levelMeshVector.at(i).tag == "point")
+		{
+			Pointdrop* drop = new Pointdrop;
 
+			Mesh* model = new Mesh(DxHandler::devicePtr);
+			model->enemyCollIgnore = true;
+			model->vertexBuffer = masterPoint->vertexBuffer;
+			model->nrOfVertices = masterPoint->nrOfVertices;
+			model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			//model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			model->setRotation(XMFLOAT3(0, 3.14/2, 0));
+			model->setScaling(XMFLOAT3(4, 4, 4));
+
+			drop->model = model;
+			collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Pointdrop);
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(model->getScaling().x), btScalar(model->getScaling().y), btScalar(model->getScaling().z)));
+			model->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			model->rigidBody->setUserPointer(dropCollStruct);
+
+			sceneManager->addTransparentObject(model);
+			sceneManager->addPoint(drop);
+		}
+		else if (level->levelMeshVector.at(i).tag == "spike")
+		{
+			Spike* spike = new Spike();
+			Mesh* spikeObject = new Mesh(DxHandler::devicePtr);
+			spikeObject->enemyCollIgnore = true;
+			spikeObject->readMeshFromFile("./Models/spike.obj");
+			spikeObject->readTextureFromFile(L"./Textures/red.png");
+
+			spikeObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			spikeObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+			spikeObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+
+			spike->model = spikeObject;
+
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(spikeObject->getScaling().x), btScalar(spikeObject->getScaling().y), btScalar(spikeObject->getScaling().z)));
+			collisionStruct* spikeColl = new collisionStruct(spike, collisionEnums::Spike);
+			spikeObject->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			spikeObject->rigidBody->setUserPointer(spikeColl);
+			sceneManager->addMesh(spikeObject);
+		}
+		else if (level->levelMeshVector.at(i).tag == "movingPlatform")
+		{
+			MovingPlatform* platform = new MovingPlatform;
+			Mesh* platformMesh = new Mesh(DxHandler::devicePtr);
+			platformMesh->readMeshFromFile("./Models/GroundThree.Obj");
+			platformMesh->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+			platformMesh->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+			btBoxShape* box = new btBoxShape(btVector3(btScalar(platformMesh->getScaling().x * 3.2f), btScalar(platformMesh->getScaling().y * 0.1), btScalar(platformMesh->getScaling().z) + 6));
+			platformMesh->initRigidbody(dynamicsWorld, &collisionShapes, 0, box);
+			platformMesh->readNormalMapFromFile(L"./Textures/StoneNormal.png");
+			platform->startPos = platformMesh->getTranslation();
+			platform->platform = platformMesh;
+			platform->range = 250;//platformMesh->getScaling().x * 3.2f * 2;
+			sceneManager->addMesh(platformMesh);
+			sceneManager->addPlatform(platform);
+		}
+
+	}
+
+	for (int i = 0; i < sceneManager->enemies.size(); i++)
+	{
+		for (int j = 0; j < sceneManager->sceneMeshes.size(); j++)
+		{
+			if (sceneManager->sceneMeshes.at(j)->enemyCollIgnore)
+				sceneManager->enemies.at(i)->model->rigidBody->setIgnoreCollisionCheck(sceneManager->sceneMeshes.at(j)->rigidBody, true);
+		}
 	}
 }
 
 Level::Level()
 {
 	masterHeart = new Mesh(DxHandler::devicePtr);
-	masterHeart->readMeshFromFile("./Models/actualCube.obj");
+	masterHeart->readMeshFromFile("./Models/heart.obj");
 	
+	masterPoint = new Mesh(DxHandler::devicePtr);
+	masterPoint->readMeshFromFile("./Models/coin.obj");
 }
 

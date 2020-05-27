@@ -143,11 +143,79 @@ void SceneManager::removeHeart(Heartdrop* drop)
 	hearts.at(index)->vectorIndex = index; //Update its index.
 	drop->model->vertexBuffer = nullptr;
 
-	removeMesh(drop->model);
+	removeTransparentObject(drop->model);
 
 	//Swap completed.
 	delete this->hearts.at(hearts.size() - 1); //Delete the object
 	this->hearts.pop_back(); //Clear the pointer from vector
+}
+
+void SceneManager::addPoint(Pointdrop* drop)
+{
+	this->points.push_back(drop);
+	drop->vectorIndex = this->points.size() - 1;
+}
+
+void SceneManager::removePoint(Pointdrop* drop)
+{
+	Pointdrop* tempPtr = nullptr;
+
+	int index = drop->vectorIndex;
+	tempPtr = points.at(points.size() - 1); //Save the back one
+	points.at(points.size() - 1) = points.at(index); //Replace back with the one to be deleted.
+	points.at(index) = tempPtr; //Replace index with what was at the back.
+	points.at(index)->vectorIndex = index; //Update its index.
+	drop->model->vertexBuffer = nullptr;
+
+	removeTransparentObject(drop->model);
+
+	//Swap completed.
+	delete this->points.at(points.size() - 1); //Delete the object
+	this->points.pop_back(); //Clear the pointer from vector
+}
+
+void SceneManager::addPlatform(MovingPlatform* platform)
+{
+	this->movingPlatforms.push_back(platform);
+	platform->vectorIndex = this->sceneMeshes.size() - 1;
+}
+
+void SceneManager::removePlatform(MovingPlatform* platform)
+{
+	MovingPlatform* tempPtr = nullptr;
+
+	int index = platform->vectorIndex;
+	tempPtr = movingPlatforms.at(movingPlatforms.size() - 1); //Save the back one
+	movingPlatforms.at(movingPlatforms.size() - 1) = movingPlatforms.at(index); //Replace back with the one to be deleted.
+	movingPlatforms.at(index) = tempPtr; //Replace index with what was at the back.
+	movingPlatforms.at(index)->vectorIndex = index; //Update its index.
+	//Swap completed.
+	removeMesh(movingPlatforms.at(movingPlatforms.size() - 1)->platform);
+
+	delete movingPlatforms.at(movingPlatforms.size() - 1); //Delete the object
+	this->movingPlatforms.pop_back(); //Clear the pointer from vector
+}
+
+void SceneManager::addSpike(Spike* spike)
+{
+	this->spikes.push_back(spike);
+	spike->vectorIndex = this->sceneMeshes.size() - 1;
+}
+
+void SceneManager::removeSpike(Spike* spike)
+{
+	Spike* tempPtr = nullptr;
+
+	int index = spike->vectorIndex;
+	tempPtr = spikes.at(spikes.size() - 1); //Save the back one
+	spikes.at(spikes.size() - 1) = spikes.at(index); //Replace back with the one to be deleted.
+	spikes.at(index) = tempPtr; //Replace index with what was at the back.
+	spikes.at(index)->vectorIndex = index; //Update its index.
+	//Swap completed.
+	removeMesh(spikes.at(spikes.size() - 1)->model);
+
+	delete spikes.at(spikes.size() - 1); //Delete the object
+	this->spikes.pop_back(); //Clear the pointer from vector
 }
 
 SceneManager::SceneManager()
@@ -180,5 +248,13 @@ SceneManager::~SceneManager()
 	for (int i = 0; i < particles.size(); i++)
 		delete particles.at(i);
 	particles.clear();
+
+	for (int i = 0; i < hearts.size(); i++)
+		delete hearts.at(i);
+	hearts.clear();
+
+	for (int i = 0; i < points.size(); i++)
+		delete points.at(i);
+	points.clear();
 }
 

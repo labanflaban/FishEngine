@@ -1,4 +1,6 @@
 #pragma once
+const int FLOATS_PER_VERTEX = 15;
+
 struct Vertex
 {
 	float x, y, z = 0;

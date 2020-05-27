@@ -22,7 +22,9 @@ private:
 	XMFLOAT3 hookOffset = XMFLOAT3(0, 0, 0);
 public:
 	SimpleMath::Matrix rodMatrix;
+	double gameTime = 0.0;
 
+	bool pausedWalk = false;
 	int maxHealth = 5;
 	int health = maxHealth;
 	unsigned int points = 0;

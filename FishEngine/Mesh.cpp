@@ -7,7 +7,7 @@ void Mesh::updateWorldMatrix()
 }
 
 
-void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape)
+void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*>* collisionShapes, float mass, btCollisionShape* collShape, int collFlags)
 {
 	//rigidBody stuff
 	btTransform rigidBodyTransform;
@@ -40,6 +40,7 @@ void Mesh::initRigidbody(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObject
 	btRigidBody* rigidBodyBody = new btRigidBody(rbInfo2);
 	this->rigidBody = rigidBodyBody;
 
+	rigidBody->setCollisionFlags(collFlags);
 
 	//this->rigidBody->setUserPointer(collStruct);
 
@@ -66,7 +67,6 @@ void Mesh::setScaling(DirectX::XMFLOAT3 scaling)
 {
 	this->scaling = scaling;
 	this->scalingMatrix = DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z);
-
 	updateWorldMatrix();
 }
 
@@ -122,14 +122,19 @@ ID3D11Buffer* Mesh::createVertexBuffer()
 
 void Mesh::readMeshFromFID(std::string fileName)
 {
-	this->vertices = fidParser.readFromFID(fileName);
-	createVertexBuffer();
+	AssetReturnStruct* returnVal = AssetLoader::loadAssetFID(fileName);//fidParser.readFromFID(fileName);
+	this->nrOfVertices = returnVal->nrOfVerts;
+	this->vertexBuffer = returnVal->buffer;
+	//createVertexBuffer();
 }
 
 void Mesh::readMeshFromFile(std::string fileName)
 {
-	this->vertices = parser.readFromObj(fileName);
-	createVertexBuffer();
+	//this->vertices = //parser.readFromObj(fileName);
+	AssetReturnStruct* returnVal = AssetLoader::loadAssetObj(fileName);//fidParser.readFromFID(fileName);
+	this->nrOfVertices = returnVal->nrOfVerts;
+	this->vertexBuffer = returnVal->buffer;
+	//createVertexBuffer();
 }
 
 void Mesh::printTextureFromFile(std::string fileName)
@@ -218,7 +223,7 @@ Mesh::~Mesh()
 {
 	if (this->vertexBuffer)
 	{
-		this->vertexBuffer->Release();
+		//this->vertexBuffer->Release();
 	}
 	if (this->textureView)
 	{
