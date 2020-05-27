@@ -634,7 +634,10 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		player->resetPlayer();
 
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
+	{
 		player->resetPlayer();
+		gameOver = true;
+	}
 
 	guiHandler->currentHealth = player->health;
 }
@@ -939,6 +942,20 @@ void Engine::engineLoop()
 
 		directXHandler->spriteBatch->Begin();
 		
+		if (gameOver)
+		{
+			std::wstring string1 = L"Highscore:\n ";
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 300), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+
+			int space = 0;
+			for (int i = 1; i < scoreHandle.scores.size() && i <= scoreHandle.amountOfRowsToShow; i++)
+			{
+				space += 25.0f;
+				std::wstring string5 = std::to_wstring(i) + L": " + scoreHandle.scores.at(i) + L"\n";
+				directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string5.data(), DirectX::XMFLOAT2(0, 300 + space), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+			}
+		}
+
 		if (!pause)
 		{
 			player->gameTime += frameTime.count();
