@@ -83,14 +83,20 @@ void GUIhandler::initHUD()
 	fixHUD();
 }
 
-void GUIhandler::updateHUD()
+void GUIhandler::updateHUD(int health)
 {
-	if(currentHealth < nrOfHearts &&  currentHealth >= 0)
+	for (int i = 0; i < hearts.size(); i++)
 	{
-		hearts.at(nrOfHearts-1).active = false;
-		nrOfHearts-=1;
+		hearts.at(i).active = false;
 	}
+
+	for (int i = 0; i < health; i++)
+	{
+		hearts.at(i).active = true;
+	}
+	
 }
+
 
 int GUIhandler::checkButtons()
 {

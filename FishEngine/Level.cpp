@@ -138,7 +138,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		sceneManager->addMesh(background);
 
 	}
-	else if (tag == "enemyTwo")
+	else if (tag == "angler")
 	{
 
 		Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
