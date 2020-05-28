@@ -382,6 +382,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 
 		
 		sceneManager->addMesh(spikeObject);
+		sceneManager->addSpike(spike);
 	}
 	else if (tag == "movingPlatform")
 	{
@@ -424,6 +425,12 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		loadTag(level->levelMeshVector.at(i).tag, dynamicsWorld, collisionShapes, sceneManager, level, i);
 
 	}
+
+	//futures.at(futures.size() - 1).wait_for(std::chrono::seconds(1));
+	/*while ((!futures.at(futures.size() - 1)._Is_ready()))
+	{
+		Sleep(0.01);
+	}*/
 
 }
 

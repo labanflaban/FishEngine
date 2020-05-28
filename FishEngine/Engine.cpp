@@ -576,7 +576,7 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					spike = collision1->spike;
 				}
 
-				std::cout << spike->debounce << std::endl;
+				//std::cout << spike->debounce << std::endl;
 				if (spike->debounce >= spike->debounceLimit)
 				{
 					spike->debounce = 0;
@@ -994,7 +994,7 @@ void Engine::engineLoop()
 		
 		if (pause)
 		{
-			std::cout << scoreHandle.scores.size() << std::endl;
+
 			std::wstring string1 = L"Highscore:\n ";
 			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 300), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 
