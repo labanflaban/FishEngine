@@ -28,7 +28,8 @@ void Engine::initialSetup()
 	GameSoundtrack.create("./Sounds/SoundTrack.wav");
 	GameSoundtrack.setVolume(0.02f);
 	GameSoundtrack.play();
-	GameSoundtrack.isLooping();
+	//GameSoundtrack.isLooping();
+	GameSoundtrack.setLooping(true);
 	this->createWindow();
 	createDirectX();
 
@@ -288,7 +289,7 @@ void Engine::updateGUI()
 	if (inputHandler.windowClosed)
 		this->shutdown = true;
 
-	guiHandler->updateHUD();
+	guiHandler->updateHUD(player->health);
 }
 
 void Engine::resetEnemies()
@@ -449,11 +450,16 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 
 				if (myEnemy->damageDebounce >= myEnemy->maxDebounce)
 				{
-					if (myPlayer->model->getTranslation().y > myEnemy->model->getTranslation().y)
-						myEnemy->health = 0;
-					else
-						myPlayer->health -= 1;
+					//if (myPlayer->model->getTranslation().y > myEnemy->model->getTranslation().y)
+						//myEnemy->health = 0;
+					//else
+					//{
+						myPlayer->health--;
 						myEnemy->damageDebounce = 0;
+
+						//std::cout << "Health: " << myPlayer->health << std::endl;
+					//}
+						
 					//std::cout << "Enemy hit" << std::endl;
 				}
 

@@ -28,7 +28,7 @@ public :
 	void fixHUD();
 	void hideHUD();
 	void initHUD();
-	void updateHUD();
+	void updateHUD(int health);
 	int checkButtons();
 
 	void resetHealth(int healthPoints);
