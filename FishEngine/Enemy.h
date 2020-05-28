@@ -19,7 +19,7 @@ public:
 	int randomDirr = 0;
 	int maxHealth = 100;
 	int health = maxHealth;
-	bool active = false;
+	bool active = true;
 	DirectX::SimpleMath::Vector3 startPos;
 
 	float justHit = false;
@@ -38,4 +38,6 @@ public:
 
 	virtual void update(Player* plr);
 	void getHitMove();
+	void moveAway();
+	void resetEnemy();
 };

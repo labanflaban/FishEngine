@@ -12,6 +12,7 @@ private :
 
 	GUIButton* startButton = nullptr;
 	GUIButton* exitButton = nullptr;
+	GUIElement* healthBar = nullptr;
 	int heartCap = 5;
 	int nrOfHearts = 5;
 	std::vector<GUIElement> hearts;

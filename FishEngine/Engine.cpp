@@ -292,6 +292,27 @@ void Engine::updateGUI()
 	guiHandler->updateHUD();
 }
 
+void Engine::resetEnemies()
+{
+	for (int i = 0; i < sceneManager.enemies.size(); i++)
+	{
+		sceneManager.enemies.at(i)->resetEnemy();
+	}
+}
+
+void Engine::resetDrops()
+{
+	for (int i = 0; i < sceneManager.hearts.size(); i++)
+	{
+		sceneManager.hearts.at(i)->resetDrop();
+	}
+
+	for (int i = 0; i < sceneManager.points.size(); i++)
+	{
+		sceneManager.points.at(i)->resetDrop();
+	}
+}
+
 collisionStruct* getCollStruct(void* ptr)
 {
 	if (ptr != nullptr)
@@ -611,22 +632,27 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 	for (int i = 0; i < sceneManager.enemies.size(); i++)
 	{
-		Enemy* enemy = sceneManager.enemies.at(i);
-		if (enemy)
+		if (sceneManager.enemies.at(i)->active)
 		{
-			enemy->update(player);
-			//std::cout << "Health: " << enemy->health << std::endl;
-			if (enemy->health < 0)
+			Enemy* enemy = sceneManager.enemies.at(i);
+			if (enemy)
 			{
-				std::cout << "Died" << std::endl;
+				enemy->update(player);
+				//std::cout << "Health: " << enemy->health << std::endl;
+				if (enemy->health < 0)
+				{
+					
 
-				collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
-				delete collStruct;
+					//collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
+					//delete collStruct;
 
-				dynamicWorld->removeRigidBody(enemy->model->rigidBody);
+					//dynamicWorld->removeRigidBody(enemy->model->rigidBody);
 
-				sceneManager.removeEnemy(enemy);
-				this->player->points += 100;
+					//sceneManager.removeEnemy(enemy);
+					enemy->moveAway();
+					enemy->active = false;
+					this->player->points += 100;
+				}
 			}
 		}
 	}
@@ -635,24 +661,31 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 	{
 		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
 		player->resetPlayer();
+		resetDrops();
 		guiHandler->showMainMenu();
 		player->points = 0;
 
 		player->health = player->maxHealth;
 		guiHandler->resetHealth(player->health);
+		resetEnemies();
 	}
 
 	if (level != nullptr && player->model->getTranslation().y < level->respawn)
 	{
+		resetDrops();
 		player->resetPlayer();
 		player->points = 0;
+		resetEnemies();
 	}
 		
 
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
 	{
+		player->points = 0;
 		player->resetPlayer();
 		gameOver = true;
+		resetEnemies();
+		resetDrops();
 	}
 
 	guiHandler->currentHealth = player->health;
@@ -941,8 +974,9 @@ void Engine::engineLoop()
 			if (sceneManager.hearts.at(i)->usedUp)
 			{
 				guiHandler->resetHealth(player->health);
-				dynamicsWorld->removeRigidBody(sceneManager.hearts.at(i)->model->rigidBody);
-				sceneManager.removeHeart(sceneManager.hearts.at(i));
+				//dynamicsWorld->removeRigidBody(sceneManager.hearts.at(i)->model->rigidBody);
+				//sceneManager.removeHeart(sceneManager.hearts.at(i));
+				sceneManager.hearts.at(i)->moveAway();
 			}
 		}
 
@@ -950,8 +984,9 @@ void Engine::engineLoop()
 		{
 			if (sceneManager.points.at(i)->usedUp)
 			{
-				dynamicsWorld->removeRigidBody(sceneManager.points.at(i)->model->rigidBody);
-				sceneManager.removePoint(sceneManager.points.at(i));
+				//dynamicsWorld->removeRigidBody(sceneManager.points.at(i)->model->rigidBody);
+				//sceneManager.removePoint(sceneManager.points.at(i));
+				sceneManager.points.at(i)->moveAway();
 			}
 		}
 
@@ -989,7 +1024,7 @@ void Engine::engineLoop()
 		
 			std::wstring pointCounter;
 			pointCounter = std::to_wstring((int)this->player->points) + L" points";
-			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 75), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 120), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
 
 		}
 		
@@ -1201,8 +1236,9 @@ void Engine::renderLightVolumes()
 	float blendingFactor[4] = { 0.5f, 0.5f, 0.5f, 0.0f };
 	//DxHandler::contextPtr->OMSetBlendState(states->Additive(), blendingFactor, 0xFFFFFFFF);
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::additiveBlendState, blendingFactor, 0xFFFFFFFF);
-	for (auto model : sceneManager.lights) //Draw all lights
+	for (int i = 0; i < sceneManager.lights.size(); i++) //Draw all lights
 	{
+		Light* model = sceneManager.lights.at(i);
 		if (model != nullptr)
 			directXHandler->draw(model->lightVolume, primaryCamera, false, model);
 		else

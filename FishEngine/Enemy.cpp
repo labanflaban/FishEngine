@@ -10,6 +10,7 @@ Enemy::Enemy(ID3D11Device* device)
 	
 	//
 	GotHitSound.create("./Sounds/FishSplash.wav");
+	GotHitSound.setVolume(0.05);
 	this->light = new Light(device);
 	light->lightColor = DirectX::XMVectorSet(0, 0, 3, 0); //Blue
 }
@@ -58,8 +59,8 @@ void Enemy::update(Player* plr)
 	this->light->setPosition(this->model->getTranslation());
 
 
-	xVel = sin(angle) * 1.f;
-	yVel = cos(angle) * 1.f;
+	xVel = sin(angle) * 2.f;
+	yVel = cos(angle) * 2.f;
 
 	float baseHeight = plr->model->getTranslation().y;
 	float diveRange = 50.f;
@@ -73,7 +74,7 @@ void Enemy::update(Player* plr)
 		{
 			if (dX < diveRange)//If close enough to dive
 			{
-				model->rigidBody->setLinearVelocity(btVector3(-xVel * 3, -yVel * 3, 0));
+				model->rigidBody->setLinearVelocity(btVector3(-xVel * 2, -yVel * 3, 0));
 			}
 			else
 			{
@@ -108,10 +109,32 @@ void Enemy::getHitMove()
 {
 	if (randomDirr == 1)
 	{
-		model->rigidBody->setLinearVelocity(btVector3(2.0f, 1.0f, 0));
+		model->rigidBody->setLinearVelocity(btVector3(25.0f, 1.0f, 0));
 	}
 	else
 	{
-		model->rigidBody->setLinearVelocity(btVector3(-2.0f, 1.0f, 0));
+		model->rigidBody->setLinearVelocity(btVector3(-25.0f, 1.0f, 0));
 	}
+}
+
+void Enemy::moveAway()
+{
+	btTransform trans;
+	trans.setIdentity();
+	trans.setOrigin(btVector3(-3000, 0, 0));
+
+	this->model->rigidBody->setWorldTransform(trans);
+	this->health = maxHealth;
+}
+
+void Enemy::resetEnemy()
+{
+	this->active = true;
+	
+	btTransform trans;
+	trans.setIdentity();
+	trans.setOrigin(btVector3(startPos.x, startPos.y, startPos.z));
+
+	this->model->rigidBody->setWorldTransform(trans);
+	this->health = maxHealth;
 }
