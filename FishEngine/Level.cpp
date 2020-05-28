@@ -158,6 +158,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		enemy->model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 		enemy->model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 		enemy->model->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+		enemy->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
 
 		std::lock_guard<std::mutex> lock(vectorLock);
 		sceneManager->addAnimatedMesh(enemy->model);
@@ -183,6 +184,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/AnglerThree.obj");
 		std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/AnglerFour.obj");
 		enemy->model->readTextureFromFile(L"./Models/ANGLAColor.png");
+		enemy->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
 
 		std::lock_guard<std::mutex> lock(vectorLock);
 		std::vector<Vertex>* fishArr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
@@ -285,7 +287,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		std::cout << "MAKING LIGHT" << std::endl;
 		Light* lightObject = new Light(DxHandler::devicePtr);
 		lightObject->setPosition(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
-		lightObject->lightColor = XMVectorSet(5, 5, 5, 0);
+		lightObject->lightColor = XMVectorSet(4, 0, 2, 0);
 
 		std::lock_guard<std::mutex> lock(vectorLock);
 		sceneManager->addLight(lightObject);
@@ -320,6 +322,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 		model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
 		model->setScaling(XMFLOAT3(15, 15, 15));
+		drop->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
 
 		drop->model = model;
 		collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Heart);
@@ -345,6 +348,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		//model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 		model->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
 		model->setScaling(XMFLOAT3(4, 4, 4));
+		drop->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
 
 		drop->model = model;
 		collisionStruct* dropCollStruct = new collisionStruct(drop, collisionEnums::Pointdrop);
@@ -378,6 +382,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 
 		
 		sceneManager->addMesh(spikeObject);
+		sceneManager->addSpike(spike);
 	}
 	else if (tag == "movingPlatform")
 	{
@@ -398,19 +403,6 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		sceneManager->addMesh(platformMesh);
 		sceneManager->addPlatform(platform);
 	}
-}
-
-void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager)
-{
-	Level* level = new Level();
-	level->readFromeFile(level->levelMeshVector);
-
-	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
-	{
-		futures.push_back(std::async(std::launch::async, loadTag, level->levelMeshVector.at(i).tag, dynamicsWorld, collisionShapes, sceneManager, level, i));
-		
-
-	}
 
 	for (int i = 0; i < sceneManager->enemies.size(); i++)
 	{
@@ -420,6 +412,26 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 				sceneManager->enemies.at(i)->model->rigidBody->setIgnoreCollisionCheck(sceneManager->sceneMeshes.at(j)->rigidBody, true);
 		}
 	}
+}
+
+void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager)
+{
+	Level* level = new Level();
+	level->readFromeFile(level->levelMeshVector);
+
+	for (size_t i = 0; i < level->levelMeshVector.size(); i++)
+	{
+		//futures.push_back(std::async(std::launch::async, loadTag, level->levelMeshVector.at(i).tag, dynamicsWorld, collisionShapes, sceneManager, level, i));
+		loadTag(level->levelMeshVector.at(i).tag, dynamicsWorld, collisionShapes, sceneManager, level, i);
+
+	}
+
+	//futures.at(futures.size() - 1).wait_for(std::chrono::seconds(1));
+	/*while ((!futures.at(futures.size() - 1)._Is_ready()))
+	{
+		Sleep(0.01);
+	}*/
+
 }
 
 Level::Level()

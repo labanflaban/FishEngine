@@ -51,6 +51,8 @@ void GUIhandler::fixHUD()
 		hearts.at(i).mesh->setTranslation(DirectX::XMFLOAT3(-0.95f + offset , 0.9f, 0));
 		offset += 0.1f;
 	}
+
+	healthBar->mesh->setTranslation(DirectX::XMFLOAT3(-0.75f, 0.9f, 1));
 }
 
 void GUIhandler::hideHUD()
@@ -73,6 +75,10 @@ void GUIhandler::initHUD()
 		heart->active = true;
 		hearts.push_back(*heart);
 	}
+	healthBar = new GUIElement(dxHandler);
+	healthBar->mesh->setScaling(DirectX::XMFLOAT3(0.25f, 0.05f, 0));
+	healthBar->mesh->readTextureFromFile(L"./Textures/healthBar.png");
+	healthBar->active = true;
 
 	fixHUD();
 }
@@ -125,4 +131,6 @@ void GUIhandler::drawGuiElements(Camera& camera)
 			//std::cout << hearts.at(i).active << std::endl;
 		}
 	}
+
+	healthBar->draw(camera);
 }

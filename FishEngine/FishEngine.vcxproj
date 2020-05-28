@@ -229,6 +229,7 @@
     <ClCompile Include="GUIButton.cpp" />
     <ClCompile Include="GUIElement.cpp" />
     <ClCompile Include="GUIhandler.cpp" />
+    <ClCompile Include="Heartdrop.cpp" />
     <ClCompile Include="InputHandler.cpp" />
     <ClCompile Include="Keyframes.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -239,6 +240,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Pointdrop.cpp" />
     <ClCompile Include="RenderWindow.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="ScoreHandler.cpp" />

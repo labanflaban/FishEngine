@@ -71,6 +71,8 @@ public:
 	void updatePlayerMovement(double deltaTime);
 	void updateParticles();
 	void updateGUI();
+	void resetEnemies();
+	void resetDrops();
 
 	void createWindow();
 	void createDirectX();
