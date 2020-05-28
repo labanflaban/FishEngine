@@ -2,7 +2,8 @@
 
 void ScoreHandler::readFromFile(std::string fileName)
 {
-	
+	scores.clear();
+
 	std::wifstream scoreFile;
 	scoreFile.open(fileName); 
 	std::wstring line;
@@ -24,8 +25,8 @@ void ScoreHandler::writeToFile(std::string fileName, int score, int time)
 	std::ofstream scoreFile;
 	scoreFile.open(fileName,std::ios::app);
 	
-	finalScore = scoreMultiplier(score, time);
-	scoreFile << finalScore << std::endl;;
+	finalScore = score;//scoreMultiplier(score, time);
+	scoreFile << finalScore << std::endl;
 	//scoreFile << std::endl;
 	
 	scoreFile.close();

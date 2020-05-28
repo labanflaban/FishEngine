@@ -636,15 +636,18 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
 		player->resetPlayer();
 		guiHandler->showMainMenu();
+		player->points = 0;
 
 		player->health = player->maxHealth;
 		guiHandler->resetHealth(player->health);
-
-		std::cout << "Resetting" << std::endl;
 	}
 
 	if (level != nullptr && player->model->getTranslation().y < level->respawn)
+	{
 		player->resetPlayer();
+		player->points = 0;
+	}
+		
 
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
 	{
@@ -965,7 +968,7 @@ void Engine::engineLoop()
 			{
 				space += 25.0f;
 				std::wstring string5 = std::to_wstring(i) + L": " + scoreHandle.scores.at(i) + L"\n";
-				directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string5.data(), DirectX::XMFLOAT2(0, 300 + space), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
+				directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string5.data(), DirectX::XMFLOAT2(0, 300 + space), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
 			}
 		}
 
@@ -1200,7 +1203,10 @@ void Engine::renderLightVolumes()
 	DxHandler::contextPtr->OMSetBlendState(DxHandler::additiveBlendState, blendingFactor, 0xFFFFFFFF);
 	for (auto model : sceneManager.lights) //Draw all lights
 	{
-		directXHandler->draw(model->lightVolume, primaryCamera, false, model);
+		if (model != nullptr)
+			directXHandler->draw(model->lightVolume, primaryCamera, false, model);
+		else
+			std::cout << "Light was nullptr" << std::endl;
 	}
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
 

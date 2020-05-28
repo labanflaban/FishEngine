@@ -11,6 +11,7 @@
 #include "SceneManager.h"
 #include "CollisionStruct.h"
 #include "AssetLoader.h"
+#include <future>
 
 #define BT_NO_SIMD_OPERATOR_OVERLOADS
 #include "btBulletDynamicsCommon.h"
@@ -39,6 +40,8 @@ struct LevelMesh
 
 struct Level
 {
+	static std::mutex vectorLock;
+
 	vector<LevelMesh> levelMeshVector;
 	void readFromeFile(vector<LevelMesh>& levelMeshVector);
 	void printVector(vector<LevelMesh>& levelMeshVector);
@@ -47,10 +50,14 @@ struct Level
 
 	void createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager);
 
-	Mesh* masterHeart = new Mesh(DxHandler::devicePtr);
-	Mesh* masterPoint = new Mesh(DxHandler::devicePtr);
+	static Mesh* masterHeart;// = new Mesh(DxHandler::devicePtr);
+	static Mesh* masterPoint;// = new Mesh(DxHandler::devicePtr);
+
+	static void loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectArray<btCollisionShape*> collisionShapes, SceneManager* sceneManager, Level* level, int i);
 	Level();
 
-	float respawn;
-	float goal;
+	vector<std::future<void>> futures;
+
+	static float respawn;
+	static float goal;
 };
