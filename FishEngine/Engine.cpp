@@ -668,6 +668,7 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		player->health = player->maxHealth;
 		guiHandler->resetHealth(player->health);
 		resetEnemies();
+		pause = true;
 	}
 
 	if (level != nullptr && player->model->getTranslation().y < level->respawn)

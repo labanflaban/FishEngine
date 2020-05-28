@@ -425,7 +425,9 @@ void Level::createLevel(btDiscreteDynamicsWorld* dynamicsWorld, btAlignedObjectA
 		loadTag(level->levelMeshVector.at(i).tag, dynamicsWorld, collisionShapes, sceneManager, level, i);
 
 	}
+	//std::cout << " f " << std::endl;
 
+	//auto val = futures.at(futures.size() - 1).wait_for(std::chrono::seconds(17));
 	//futures.at(futures.size() - 1).wait_for(std::chrono::seconds(1));
 	/*while ((!futures.at(futures.size() - 1)._Is_ready()))
 	{
