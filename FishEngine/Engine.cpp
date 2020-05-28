@@ -289,7 +289,10 @@ void Engine::updateGUI()
 	if (inputHandler.windowClosed)
 		this->shutdown = true;
 
-	guiHandler->updateHUD(player->health);
+	if(!pause)
+	{
+		guiHandler->updateHUD(player->health);
+	}
 }
 
 void Engine::resetEnemies()
@@ -998,6 +1001,13 @@ void Engine::engineLoop()
 			}
 		}
 
+		if(pause)
+		{
+			primaryCamera.cameraPosition = DirectX::XMVectorSet(0, -500, 0, 0);
+			primaryCamera.cameraTarget = DirectX::XMVectorSet(0, -500, 10, 0);
+			guiHandler->hideHUD();
+		}
+
 		directXHandler->spriteBatch->Begin();
 
 		if (gameOver)
@@ -1051,7 +1061,6 @@ void Engine::engineLoop()
 
 
 		updateParticles();
-
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		if (!pause)

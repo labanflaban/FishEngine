@@ -21,18 +21,27 @@ void GUIhandler::initMainMenu()
 	this->exitButton->mesh->readTextureFromFile(L"./Textures/ButtonQuit.png");
 	this->exitButton->active = true;
 	guiElements.push_back(this->exitButton);
+
+	this->title = new GUIElement(dxHandler);
+	this->title->mesh->setScaling(DirectX::XMFLOAT3(0.4f, 0.1f, 0));
+	this->title->mesh->setTranslation(DirectX::XMFLOAT3(0.0f, 0.5f, 0));
+	this->title->mesh->readTextureFromFile(L"./Textures/GameTitle.png");
+	this->title->active = true;
+	guiElements.push_back(this->title);
 }
 
 void GUIhandler::showMainMenu()
 {
 	this->startButton->active = true;
 	this->exitButton->active = true;
+	this->title->active = true;
 }
 
 void GUIhandler::hideMainMenu()
 {
 	this->startButton->active = false;
 	this->exitButton->active = false;
+	this->title->active = false;
 }
 
 void GUIhandler::showHUD()
@@ -41,6 +50,7 @@ void GUIhandler::showHUD()
 	{
 		hearts.at(i).active = true;
 	}
+	healthBar->active = true;
 }
 
 void GUIhandler::fixHUD()
@@ -61,6 +71,8 @@ void GUIhandler::hideHUD()
 	{
 		hearts.at(i).active = false;
 	}
+
+	healthBar->active = false;
 }
 
 void GUIhandler::initHUD()
@@ -95,6 +107,7 @@ void GUIhandler::updateHUD(int health)
 		hearts.at(i).active = true;
 	}
 	
+	this->healthBar->active = true;
 }
 
 
@@ -138,5 +151,8 @@ void GUIhandler::drawGuiElements(Camera& camera)
 		}
 	}
 
-	healthBar->draw(camera);
+	if(healthBar->active)
+	{
+		healthBar->draw(camera);
+	}
 }
