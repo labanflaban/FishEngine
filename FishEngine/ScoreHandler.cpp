@@ -7,44 +7,54 @@ void ScoreHandler::readFromFile(std::string fileName)
 	std::wifstream scoreFile;
 	scoreFile.open(fileName); 
 	std::wstring line;
-	int amountOfLinesToRead = 1;
 	if (scoreFile.is_open())
 	{
-		while (getline(scoreFile, line) && amountOfLinesToRead <= 10)
+		while (getline(scoreFile, line))
 		{
-			amountOfLinesToRead++;
 			std::wstring wsTmp(line.begin(), line.end());
-			scores.push_back(line);
+			scores.push_back(stoi(line));
 		}
 	}
 	sortScore();
 }
 
+
+
 void ScoreHandler::writeToFile(std::string fileName, int score, int time)
 {
 	std::ofstream scoreFile;
-	scoreFile.open(fileName,std::ios::app);
-	
+	scoreFile.open(fileName);
+
 	finalScore = scoreMultiplier(score, time);
-	scoreFile << finalScore << std::endl;
+	scores.push_back(finalScore);
+	sortScore();
+
+	for (int i = std::min(10, (int)scores.size() - 1); i > 0; i--)
+	{
+		std::cout << i << std::endl;
+		scoreFile << scores.at(i) << std::endl;
+	}
+
 	
 	scoreFile.close();
 }
 
 void ScoreHandler::sortScore()
 {
-	for (int i = 1; i < scores.size(); i++)
-	{
+	//for (int i = 0; i < scores.size(); i++)
+	//{
 		std::sort(scores.begin(), scores.end());
-	}
+	//}
 }
 
 
 int ScoreHandler::scoreMultiplier(int score, int time)
 {
 	
-		
-	finalScore = (score / time) * multiplier;
+	if (time == 0)
+		finalScore = 0;
+	else
+		finalScore = (score / time) * multiplier;
 	return finalScore;
 }
 

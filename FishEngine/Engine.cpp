@@ -657,13 +657,13 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 	if (player->health <= 0)
 	{
-		player->resetPlayer();
 		resetDrops();
 		guiHandler->showMainMenu();
 		player->points = 0;
 
 		player->health = player->maxHealth;
 		guiHandler->resetHealth(player->health);
+		player->resetPlayer();
 		resetEnemies();
 		pause = true;
 	}
@@ -679,16 +679,13 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
 	{
-		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
-		gameOver = true;
 		guiHandler->showMainMenu();
 		scoreHandle.readFromFile("score.txt");
+		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
+		gameOver = true;
 		pause = true;
 		player->resetPlayer();
-
 		player->points = 0;
-		player->resetPlayer();
-		gameOver = true;
 		resetEnemies();
 		resetDrops();
 	}
@@ -1001,14 +998,14 @@ void Engine::engineLoop()
 		{
 
 			std::wstring string1 = L"Highscore:\n ";
-			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 300), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 300), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+			int amountOfLinesToRead = 10;
 			int space = 0;
 			int placement = 1;
-			for (int i = scoreHandle.scores.size() -1; i >= 0; i--)//&& i <= scoreHandle.amountOfRowsToShow; i++)
+			for (int i = scoreHandle.scores.size() - 1; i > 0; i--)
 			{
-				space += 25.0f;
-				std::wstring placeScore = std::to_wstring(placement++) + L": " + scoreHandle.scores.at(i) + L"\n";
+				space += 50.0f;
+				std::wstring placeScore = std::to_wstring(placement++) + L": " + std::to_wstring(scoreHandle.scores.at(i)) + L"\n";
 				directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), placeScore.data(), DirectX::XMFLOAT2(0, 300 + space), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
 			}
 
@@ -1028,10 +1025,10 @@ void Engine::engineLoop()
 				timerText = std::to_wstring(minutes) + L":0" + std::to_wstring(seconds) + L"\n";// + std::to_wstring((int)this->player->points) + L" points";
 
 			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), timerText.data(), DirectX::XMFLOAT2((WIDTH/2)-50, 5), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-
+		
 			std::wstring pointCounter;
-			pointCounter = std::to_wstring((int)this->player->points) + L" points";
-			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 75), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+			pointCounter = std::to_wstring((int)scoreHandle.scoreMultiplier(this->player->points, player->gameTime)) + L" points";
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 150), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
 
 
 		}

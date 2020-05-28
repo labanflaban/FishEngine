@@ -14,7 +14,7 @@ private:
 public:
 
 	int amountOfRowsToShow = 10;
-	std::vector<std::wstring> scores;
+	std::vector<int> scores;
 	void readFromFile(std::string fileName);
 	void writeToFile(std::string fileName, int score, int time);
 	void sortScore();
