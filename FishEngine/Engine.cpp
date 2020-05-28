@@ -86,7 +86,7 @@ void Engine::initialSetup()
 	directXHandler->createGSConstBuffer();
 	directXHandler->createPSGuiBuffer(ps_gui_buff);
 	directXHandler->initAdditiveBlendState();
-	
+
 	this->primaryCamera = Camera(WIDTH, HEIGHT);
 
 	states = std::make_unique<DirectX::CommonStates>(DxHandler::devicePtr);
@@ -154,14 +154,13 @@ void Engine::createInputHandler()
 
 void Engine::updatePlayerMovement(double deltaTime)
 {
-	
+
 	player->model->rigidBody->setActivationState(ACTIVE_TAG);
 	fishingRod->model->rigidBody->setActivationState(ACTIVE_TAG);
 
 	btVector3 movementVector(0,0,0);
 	if (inputHandler.isKeyDown(VK_ESCAPE))
 	{
-		scoreHandle.readFromFile("score.txt");
 		guiHandler->showMainMenu();
 		pause = true;
 	}
@@ -231,7 +230,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		player->model->remaining = 0;
 		player->model->t = 0;
 	}
-		
+
 
 	player->stepAnim(deltaTime);
 	player->updatePlayer(fishingRod, hook, rope, movementVector.x());
@@ -253,7 +252,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 
 
-	
+
 
 void Engine::updateParticles()
 {
@@ -582,8 +581,8 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					spike->debounce = 0;
 					myPlayer->health = 0;
 				}
-					
-				
+
+
 			}
 		}
 	}
@@ -641,14 +640,13 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 				//std::cout << "Health: " << enemy->health << std::endl;
 				if (enemy->health < 0)
 				{
-					
+
 
 					//collisionStruct* collStruct = getCollStruct(enemy->model->rigidBody->getUserPointer());
 					//delete collStruct;
 
 					//dynamicWorld->removeRigidBody(enemy->model->rigidBody);
 
-					//sceneManager.removeEnemy(enemy);
 					enemy->moveAway();
 					enemy->active = false;
 					this->player->points += 100;
@@ -659,7 +657,6 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 	if (player->health <= 0)
 	{
-		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
 		player->resetPlayer();
 		resetDrops();
 		guiHandler->showMainMenu();
@@ -678,10 +675,17 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		player->points = 0;
 		resetEnemies();
 	}
-		
+
 
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
 	{
+		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
+		gameOver = true;
+		guiHandler->showMainMenu();
+		scoreHandle.readFromFile("score.txt");
+		pause = true;
+		player->resetPlayer();
+
 		player->points = 0;
 		player->resetPlayer();
 		gameOver = true;
@@ -694,7 +698,7 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 void Engine::engineLoop()
 {
-	//--------------------------------------------------------------------------------------------------- physics 
+	//--------------------------------------------------------------------------------------------------- physics
 	btDefaultCollisionConfiguration* collisionConfiguration = new btDefaultCollisionConfiguration();
 	btCollisionDispatcher* dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	btBroadphaseInterface* overlappingPairCache = new btDbvtBroadphase();
@@ -704,7 +708,7 @@ void Engine::engineLoop()
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 	dynamicsWorld->setInternalTickCallback(myTickCallback);
 	dynamicsWorld->setGravity(btVector3(0, -9.82f, 0));
-	//--------------------------------------------------------------------------------------------------- physics 
+	//--------------------------------------------------------------------------------------------------- physics
 
 	RECT viewportRect;
 	GetClientRect(primaryWindow, &viewportRect);
@@ -717,7 +721,7 @@ void Engine::engineLoop()
 	port.MinDepth = 0.0f; //Closest possible to screen Z depth
 	port.MaxDepth = 1.0f; //Furthest possible
 	DxHandler::contextPtr->OMSetRenderTargets(1, &DxHandler::renderTargetPtr, NULL);
-	//--------------------------------------------------------------------------// 
+	//--------------------------------------------------------------------------//
 	AnimatedMesh* debugObject = new AnimatedMesh(DxHandler::devicePtr); //Body
 	std::vector<Vertex> vertVectorPlr = ObjParser::readFromObj("./Models/characterStart.obj");//readFromFile("./Models/characterStart.FID");
 	std::vector<Vertex> vertVectorPlr1 = ObjParser::readFromObj("./Models/characterMiddle1.obj");
@@ -730,7 +734,7 @@ void Engine::engineLoop()
 	std::vector<Vertex> vertVectorPlr7 = ObjParser::readFromObj("./Models/characterFishingMiddle.obj");
 	std::vector<Vertex> vertVectorPlr8 = ObjParser::readFromObj("./Models/characterFishingStart.obj");
 	//std::vector<Vertex> vertVectorPlr4 = ObjParser::readFromObj("./Models/characterEnd.obj");
-	
+
 	//std::vector<Vertex> vertVectorPlr3 = FIDParser::readFromFID("./Models/characterEmd.FID");
 
 	std::vector<Vertex>* plrArr[] = { &vertVectorPlr, &vertVectorPlr1, &vertVectorPlr2, &vertVectorPlr3, &vertVectorPlr4, &vertVectorPlr5, &vertVectorPlr6, &vertVectorPlr7, &vertVectorPlr8};
@@ -815,7 +819,7 @@ void Engine::engineLoop()
 	block->readMeshFromFile("./Models/actualCube.obj");
 	block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
 	sceneManager.addMesh(block);
-	
+
 
 	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
 	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
@@ -864,7 +868,7 @@ void Engine::engineLoop()
 	guiHandler->initMainMenu();
 	guiHandler->initHUD();
 
-	//--------------------------------------------------------------------------------------------------- 
+	//---------------------------------------------------------------------------------------------------
 	std::chrono::high_resolution_clock::time_point newTime = std::chrono::high_resolution_clock::now(); //Set new time
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 
@@ -884,7 +888,7 @@ void Engine::engineLoop()
 	animMesh->setRotation(XMFLOAT3(0, -3.14/2, 0));
 	animMesh->targetPoseIndex = 1;
 	sceneManager.addAnimatedMesh(animMesh);
-	
+
 	startedGameTimer = std::chrono::high_resolution_clock::now();
 	while (!shutdown)
 	{
@@ -898,7 +902,7 @@ void Engine::engineLoop()
 		primaryCamera.updateCamera();
 
 		renderFirstPass(&sceneManager.sceneMeshes);
-		
+
 
 		renderSecondPass();
 		renderLightVolumes();
@@ -942,7 +946,7 @@ void Engine::engineLoop()
 				}
 			}
 		}
-		
+
 
 		for (int i = 0; i < sceneManager.sceneMeshes.size(); i++) //Update according to rigid body
 		{
@@ -967,9 +971,9 @@ void Engine::engineLoop()
 				XMFLOAT3 pos = DirectX::XMFLOAT3(sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().x(), sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().getY(), sceneManager.animatedMeshes.at(i)->rigidBody->getWorldTransform().getOrigin().z());
 			}
 		}
-        		                				
+
 		YSE::System().update();
-		
+
 		for (int i = 0; i < sceneManager.hearts.size(); i++)
 		{
 			if (sceneManager.hearts.at(i)->usedUp)
@@ -992,20 +996,22 @@ void Engine::engineLoop()
 		}
 
 		directXHandler->spriteBatch->Begin();
-		
-		if (pause)
+
+		if (gameOver)
 		{
 
 			std::wstring string1 = L"Highscore:\n ";
 			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string1.data(), DirectX::XMFLOAT2(0, 300), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
 
 			int space = 0;
-			for (int i = scoreHandle.scores.size() - 1; i > 1; i--)//&& i <= scoreHandle.amountOfRowsToShow; i++)
+			int placement = 1;
+			for (int i = scoreHandle.scores.size() -1; i >= 0; i--)//&& i <= scoreHandle.amountOfRowsToShow; i++)
 			{
 				space += 25.0f;
-				std::wstring string5 = std::to_wstring(i) + L": " + scoreHandle.scores.at(i) + L"\n";
-				directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), string5.data(), DirectX::XMFLOAT2(0, 300 + space), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+				std::wstring placeScore = std::to_wstring(placement++) + L": " + scoreHandle.scores.at(i) + L"\n";
+				directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), placeScore.data(), DirectX::XMFLOAT2(0, 300 + space), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
 			}
+
 		}
 
 		if (!pause)
@@ -1022,26 +1028,27 @@ void Engine::engineLoop()
 				timerText = std::to_wstring(minutes) + L":0" + std::to_wstring(seconds) + L"\n";// + std::to_wstring((int)this->player->points) + L" points";
 
 			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), timerText.data(), DirectX::XMFLOAT2((WIDTH/2)-50, 5), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.0f, 1.0f));
-		
+
 			std::wstring pointCounter;
 			pointCounter = std::to_wstring((int)this->player->points) + L" points";
-			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 120), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 75), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+
 
 		}
-		
+
 		directXHandler->spriteBatch->End();
 
-		DxHandler::swapChainPtr->Present(1, 0); 
+		DxHandler::swapChainPtr->Present(1, 0);
 		DxHandler::contextPtr->ClearState();
 
 		directXHandler->setDefaultState();
-		
+
 		//block->setTranslation(XMFLOAT3(platformMesh->rigidBody->getWorldTransform().getOrigin().x(), platformMesh->rigidBody->getWorldTransform().getOrigin().y(), platformMesh->rigidBody->getWorldTransform().getOrigin().z()));
 		//block->setTranslation(XMFLOAT3(platformMesh->rigidBody->getWorldTransform().getOrigin().x(), platformMesh->rigidBody->getWorldTransform().getOrigin().y(), platformMesh->rigidBody->getWorldTransform().getOrigin().z()));
 
 
 		updateParticles();
-		 
+
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		if (!pause)
@@ -1099,7 +1106,7 @@ void Engine::createGUIHandler()
 
 void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 {
-	
+
 	DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 
 	float background_color[4] = { 0.f, 0.f, 0.f, 1.f };
@@ -1120,12 +1127,12 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	};
 	directXHandler->contextPtr->OMSetRenderTargets(3, arr, DxHandler::depthStencil); //DEPTH
 
-	
+
 
 	DxHandler::firstPassPixel->useThis(DxHandler::contextPtr);
 	DxHandler::firstPassVertex->useThis(DxHandler::contextPtr);
 
-	for (auto model : *scene) //Draw all meshes 
+	for (auto model : *scene) //Draw all meshes
 	{
 		//if (abs(model->getTranslation().x - player->model->getTranslation().x) < 100)
 			directXHandler->draw(model, primaryCamera);
@@ -1134,7 +1141,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 	DxHandler::contextPtr->GSSetShader(NULL, NULL, NULL);
 	//animatedMeshes.at(0)->setRotation(rot);
 	directXHandler->animVertex->useThis(DxHandler::contextPtr); //Animation vertex shader
-	//for (auto animMesh : sceneManager.animatedMeshes) //Draw all meshes 
+	//for (auto animMesh : sceneManager.animatedMeshes) //Draw all meshes
 	for (int i = 0; i < sceneManager.animatedMeshes.size(); i++)
 	{
 		AnimatedMesh* animMesh = sceneManager.animatedMeshes.at(i);
@@ -1153,7 +1160,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 					//std::cout << "Anim " << animMesh->t << std::endl;
 				}
 			}
-			
+
 			directXHandler->draw(animMesh, primaryCamera);
 		}
 	}
@@ -1164,7 +1171,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 		nullRTV
 	};
 	directXHandler->contextPtr->OMSetRenderTargets(1, arrNull, NULL); //DEPTH
-	// 
+	//
 
 	directXHandler->contextPtr->ClearRenderTargetView(DxHandler::renderTargetPtr, background_color);
 
@@ -1173,7 +1180,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 
 void Engine::renderSecondPass()
 {
-	
+
 	//directXHandler->setDefaultState();
 	//--------------------------------------------------------
 
@@ -1187,11 +1194,11 @@ void Engine::renderSecondPass()
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &deferredBufferHandler.buffers[GBufferType::Normal].shaderResourceView); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &deferredBufferHandler.buffers[GBufferType::Position].shaderResourceView); //Position
 
-	
+
 	directXHandler->drawFullscreenQuad(this->primaryCamera);
-	
-	
-	
+
+
+
 	float background_color[4] = { 0.f, 0.f, 0.f, 0.f };
 	//directXHandler->contextPtr->OMSetRenderTargets(1, &nullRTV, NULL); //Application screen
 
@@ -1259,13 +1266,13 @@ void Engine::renderLightVolumes()
 	}
 	//DxHandler::backfaceCullShader->useThis(DxHandler::contextPtr);
 	DxHandler::contextPtr->OMSetBlendState(NULL, NULL, NULL);
-	//End of transparency 
+	//End of transparency
 
 	DxHandler::contextPtr->PSSetShaderResources(0, 1, &nullSRV); //Color
 	DxHandler::contextPtr->PSSetShaderResources(1, 1, &nullSRV); //Normal
 	DxHandler::contextPtr->PSSetShaderResources(2, 1, &nullSRV); //Position
 
-	
+
 }
 
 void Engine::renderParticles()

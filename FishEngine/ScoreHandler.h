@@ -18,7 +18,6 @@ public:
 	void readFromFile(std::string fileName);
 	void writeToFile(std::string fileName, int score, int time);
 	void sortScore();
-	void printScore();
 	int scoreMultiplier(int score, int time);
 };
 
