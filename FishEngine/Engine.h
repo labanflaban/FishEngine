@@ -63,6 +63,8 @@ private:
 	GUIhandler* guiHandler;
 	bool shutdown = false;
 	bool pause = true;
+
+	float timer = 0.0f;
 public:
 	float bubbleDebounceLimit = 5;
 	float bubbleDebounce = bubbleDebounceLimit;

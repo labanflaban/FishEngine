@@ -28,6 +28,13 @@ void GUIhandler::initMainMenu()
 	this->title->mesh->readTextureFromFile(L"./Textures/GameTitle.png");
 	this->title->active = true;
 	guiElements.push_back(this->title);
+
+	this->resumeButton = new GUIButton(dxHandler, inputHandler);
+	this->resumeButton->mesh->setScaling(DirectX::XMFLOAT3(0.3f, 0.1f, 0));
+	this->resumeButton->mesh->setTranslation(DirectX::XMFLOAT3(0.0f, 0.0f, 0));
+	this->resumeButton->mesh->readTextureFromFile(L"./Textures/ButtonResume.png");
+	this->resumeButton->active = false;
+	guiElements.push_back(this->resumeButton);
 }
 
 void GUIhandler::showMainMenu()
@@ -35,6 +42,7 @@ void GUIhandler::showMainMenu()
 	this->startButton->active = true;
 	this->exitButton->active = true;
 	this->title->active = true;
+	this->gameOver->active = false;
 }
 
 void GUIhandler::hideMainMenu()
@@ -42,6 +50,18 @@ void GUIhandler::hideMainMenu()
 	this->startButton->active = false;
 	this->exitButton->active = false;
 	this->title->active = false;
+}
+
+void GUIhandler::showPauseMenu()
+{
+	this->resumeButton->active = true;
+	this->exitButton->active = true;
+}
+
+void GUIhandler::hidePauseMenu()
+{
+	this->resumeButton->active = false;
+	this->exitButton->active = false;
 }
 
 void GUIhandler::showHUD()
@@ -63,6 +83,8 @@ void GUIhandler::fixHUD()
 	}
 
 	healthBar->mesh->setTranslation(DirectX::XMFLOAT3(-0.75f, 0.9f, 1));
+
+	gameOver->mesh->setTranslation(DirectX::XMFLOAT3(0.0f, 0.5f, 0));
 }
 
 void GUIhandler::hideHUD()
@@ -92,6 +114,11 @@ void GUIhandler::initHUD()
 	healthBar->mesh->readTextureFromFile(L"./Textures/healthBar.png");
 	healthBar->active = true;
 
+	gameOver = new GUIElement(dxHandler);
+	gameOver->mesh->setScaling(DirectX::XMFLOAT3(0.4f, 0.3f, 0));
+	gameOver->mesh->readTextureFromFile(L"./Textures/GameOver.png");
+	gameOver->active = false;
+
 	fixHUD();
 }
 
@@ -110,10 +137,19 @@ void GUIhandler::updateHUD(int health)
 	this->healthBar->active = true;
 }
 
+void GUIhandler::showGameOver()
+{
+	this->gameOver->active = true;
+}
+
+void GUIhandler::hideGameOver()
+{
+	this->gameOver->active = false;
+}
 
 int GUIhandler::checkButtons()
 {
-	if(startButton->active && startButton->checkIfPressed())
+	if(startButton->active && startButton->checkIfPressed() || resumeButton->active && resumeButton->checkIfPressed())
 	{
 		return 1;
 	}
@@ -154,5 +190,10 @@ void GUIhandler::drawGuiElements(Camera& camera)
 	if(healthBar->active)
 	{
 		healthBar->draw(camera);
+	}
+
+	if(gameOver->active)
+	{
+		gameOver->draw(camera);
 	}
 }

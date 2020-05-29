@@ -12,8 +12,10 @@ private :
 
 	GUIButton* startButton = nullptr;
 	GUIButton* exitButton = nullptr;
+	GUIButton* resumeButton = nullptr;
 	GUIElement* healthBar = nullptr;
 	GUIElement* title = nullptr;
+	GUIElement* gameOver = nullptr;
 	int heartCap = 5;
 	int nrOfHearts = 5;
 	std::vector<GUIElement> hearts;
@@ -25,11 +27,15 @@ public :
 	void initMainMenu();
 	void showMainMenu();
 	void hideMainMenu();
+	void showPauseMenu();
+	void hidePauseMenu();
 	void showHUD();
 	void fixHUD();
 	void hideHUD();
 	void initHUD();
 	void updateHUD(int health);
+	void showGameOver();
+	void hideGameOver();
 	int checkButtons();
 
 	void resetHealth(int healthPoints);
