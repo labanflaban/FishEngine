@@ -21,10 +21,10 @@ public:
 	int health = maxHealth;
 	bool active = true;
 	DirectX::SimpleMath::Vector3 startPos;
-	float damageIndicatorDebounce = 5.0f;
 
 	float justHit = false;
 
+	float damageIndicatorDebounce = 5.0f;
 	float enemyHitMove = 5.f;
 	float AmountOfTimeToMove = 5.0f;
 
