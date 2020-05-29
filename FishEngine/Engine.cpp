@@ -391,9 +391,9 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->health -= 100;
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
+					//std::cout << "Enemy hit" << std::endl;
 					myEnemy->damageIndicatorDebounce = 0;
 
-					//std::cout << "Enemy hit" << std::endl;
 					myEnemy->justHit = true;
 
 				}
@@ -429,9 +429,9 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->health -= 100;
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
+					//std::cout << "Enemy hit" << std::endl;
 					myEnemy->damageIndicatorDebounce = 0;
 
-					//std::cout << "Enemy hit" << std::endl;
 					myEnemy->justHit = true;
 				}
 
@@ -661,10 +661,7 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 	if (player->boostReserve < 10.f)
 		player->boostReserve += 0.1f;
 
-	if (player->boostReserve <= 0.2f)
-	{
 
-	}
 
 	for (int i = 0; i < sceneManager.enemies.size(); i++)
 	{
@@ -683,10 +680,10 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 					//delete collStruct;
 
 					//dynamicWorld->removeRigidBody(enemy->model->rigidBody);
+					enemy->model->rigidBody->setLinearVelocity(btVector3(0.0f, -100.0f, 0));
 
 					enemy->active = false;
 					//enemy->moveAway();
-					enemy->model->rigidBody->setLinearVelocity(btVector3(0, -100.f, 0));
 					this->player->points += 100;
 				}
 			}
