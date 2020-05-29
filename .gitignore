@@ -412,3 +412,8 @@ FodyWeavers.xsd
 FishEngine/YSElog.txt
 FishEngine/YSElog.txt
 FishEngine/score.txt
+<<<<<<< Updated upstream
+=======
+FishEngine/YSElog.txt
+FishEngine/YSElog.txt
+>>>>>>> Stashed changes
