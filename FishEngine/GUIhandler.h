@@ -16,6 +16,7 @@ private :
 	GUIElement* healthBar = nullptr;
 	GUIElement* title = nullptr;
 	GUIElement* gameOver = nullptr;
+	GUIElement* pointsFrame = nullptr;
 	int heartCap = 5;
 	int nrOfHearts = 5;
 	std::vector<GUIElement> hearts;

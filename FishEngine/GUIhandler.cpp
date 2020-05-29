@@ -35,6 +35,8 @@ void GUIhandler::initMainMenu()
 	this->resumeButton->mesh->readTextureFromFile(L"./Textures/ButtonResume.png");
 	this->resumeButton->active = false;
 	guiElements.push_back(this->resumeButton);
+
+	
 }
 
 void GUIhandler::showMainMenu()
@@ -71,6 +73,7 @@ void GUIhandler::showHUD()
 		hearts.at(i).active = true;
 	}
 	healthBar->active = true;
+	pointsFrame->active = true;
 }
 
 void GUIhandler::fixHUD()
@@ -85,6 +88,8 @@ void GUIhandler::fixHUD()
 	healthBar->mesh->setTranslation(DirectX::XMFLOAT3(-0.75f, 0.9f, 1));
 
 	gameOver->mesh->setTranslation(DirectX::XMFLOAT3(0.0f, 0.5f, 0));
+
+	pointsFrame->mesh->setTranslation(DirectX::XMFLOAT3(1 - pointsFrame->mesh->getScaling().x, 0.9f, 0)); //1 - pointsFrame->mesh->getScaling().x
 }
 
 void GUIhandler::hideHUD()
@@ -95,6 +100,7 @@ void GUIhandler::hideHUD()
 	}
 
 	healthBar->active = false;
+	pointsFrame->active = false;
 }
 
 void GUIhandler::initHUD()
@@ -118,6 +124,12 @@ void GUIhandler::initHUD()
 	gameOver->mesh->setScaling(DirectX::XMFLOAT3(0.4f, 0.3f, 0));
 	gameOver->mesh->readTextureFromFile(L"./Textures/GameOver.png");
 	gameOver->active = false;
+
+	this->pointsFrame = new GUIElement(dxHandler);
+	this->pointsFrame->mesh->setScaling(DirectX::XMFLOAT3(0.15f, 0.05f, 0));
+	this->pointsFrame->mesh->readTextureFromFile(L"./Textures/pointsbar.png");
+	this->pointsFrame->active = true;
+	guiElements.push_back(this->pointsFrame);
 
 	fixHUD();
 }
@@ -186,6 +198,9 @@ void GUIhandler::drawGuiElements(Camera& camera)
 			//std::cout << hearts.at(i).active << std::endl;
 		}
 	}
+
+	if (pointsFrame->active)
+		pointsFrame->draw(camera);
 
 	if(healthBar->active)
 	{
