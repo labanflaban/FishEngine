@@ -27,6 +27,8 @@ void Enemy::update(Player* plr)
 		enemyHitMove += 0.1f;
 	if (AmountOfTimeToMove < 5.f)
 		AmountOfTimeToMove += 0.1f;
+	if (damageIndicatorDebounce < 5.f)
+		damageIndicatorDebounce += 0.1f;
 
 	if (enemyHitMove >= 5.0f)
 	{
@@ -34,6 +36,14 @@ void Enemy::update(Player* plr)
 		randomDirr = rand() % 2 + 1;
 	}
 
+	if (damageIndicatorDebounce < 5.0f)
+	{
+		light->lightColor = XMVectorSet(3.f, 0, 0, 0.f);
+	}
+	if (damageIndicatorDebounce >= 5.0f)
+	{
+		light->lightColor = XMVectorSet(0.f, 0, 1, 0.f);
+	}
 	//Notice that enemy is hit and moves with getHitMove function
 	if (justHit == true && AmountOfTimeToMove >= 5.0f)
 	{

@@ -390,6 +390,8 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->health -= 100;
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
+					myEnemy->damageIndicatorDebounce = 0;
+
 					//std::cout << "Enemy hit" << std::endl;
 					myEnemy->justHit = true;
 
@@ -426,6 +428,8 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->health -= 100;
 					myEnemy->damageDebounce = 0;
 					myEnemy->model->rigidBody->setLinearVelocity(btVector3(10, 0, 0));
+					myEnemy->damageIndicatorDebounce = 0;
+
 					//std::cout << "Enemy hit" << std::endl;
 					myEnemy->justHit = true;
 				}

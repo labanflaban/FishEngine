@@ -21,6 +21,7 @@ public:
 	int health = maxHealth;
 	bool active = true;
 	DirectX::SimpleMath::Vector3 startPos;
+	float damageIndicatorDebounce = 5.0f;
 
 	float justHit = false;
 
