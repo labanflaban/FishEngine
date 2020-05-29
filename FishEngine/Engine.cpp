@@ -1155,7 +1155,7 @@ void Engine::engineLoop()
 	delete collisionConfiguration;
 	// physics clean up complete
 
-	std::cout << "Shutdown complete" << std::endl;
+	//std::cout << "Shutdown complete" << std::endl;
 }
 
 void Engine::generateRandomBubbles()
