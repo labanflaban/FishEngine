@@ -138,7 +138,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		sceneManager->addMesh(background);
 
 	}
-	else if (tag == "angler")
+	else if (tag == "enemyTwo")
 	{
 
 		Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
@@ -321,7 +321,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 		model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 		model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-		model->setScaling(XMFLOAT3(15, 15, 15));
+		model->setScaling(XMFLOAT3(2, 2, 2));
 		drop->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
 
 		drop->model = model;

@@ -163,6 +163,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 	if (inputHandler.isKeyDown(VK_ESCAPE))
 	{
 		guiHandler->showMainMenu();
+		scoreHandle.readFromFile("score.txt");
 		pause = true;
 	}
 
@@ -601,6 +602,18 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 {
 	//game logic here thanks
 
+	if (bubbleDebounce < bubbleDebounceLimit)
+		bubbleDebounce += 0.1;
+
+	if (bubbleDebounce >= bubbleDebounceLimit)
+	{
+		generateRandomBubbles();
+		bubbleDebounce = 0;
+	}
+
+		
+
+
 	updatePlayerMovement(deltaTime);
 	player->updatePlayerTools(fishingRod, hook, rope, deltaTime);
 	if (fishingRod->pullback < 10.f)
@@ -697,6 +710,24 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		player->points = 0;
 		resetEnemies();
 		resetDrops();
+	}
+
+	for (int i = 0; i < sceneManager.spikes.size(); i++)
+	{
+		XMFLOAT3 rot = sceneManager.spikes.at(i)->model->getRotation();
+		sceneManager.spikes.at(i)->model->setRotation(XMFLOAT3(rot.x + 0.7 * deltaTime, rot.y + 0.7 * deltaTime, rot.z + 0.7 * deltaTime));
+	}
+
+	for (int i = 0; i < sceneManager.points.size(); i++)
+	{
+		XMFLOAT3 rot = sceneManager.points.at(i)->model->getRotation();
+		sceneManager.points.at(i)->model->setRotation(XMFLOAT3(0, rot.y + 0.7 * deltaTime, 0));
+	}
+
+	for (int i = 0; i < sceneManager.hearts.size(); i++)
+	{
+		XMFLOAT3 rot = sceneManager.hearts.at(i)->model->getRotation();
+		sceneManager.hearts.at(i)->model->setRotation(XMFLOAT3(0, rot.y + 0.7 * deltaTime, 0));
 	}
 
 	guiHandler->currentHealth = player->health;
@@ -894,6 +925,8 @@ void Engine::engineLoop()
 	animMesh->setRotation(XMFLOAT3(0, -3.14/2, 0));
 	animMesh->targetPoseIndex = 1;
 	sceneManager.addAnimatedMesh(animMesh);
+
+	scoreHandle.readFromFile("score.txt");
 
 	startedGameTimer = std::chrono::high_resolution_clock::now();
 	while (!shutdown)
@@ -1107,6 +1140,39 @@ void Engine::engineLoop()
 	delete dispatcher;
 	delete collisionConfiguration;
 	// physics clean up complete
+}
+
+void Engine::generateRandomBubbles()
+{
+	std::random_device randomSeed;
+	std::mt19937 numberGenerator(randomSeed());
+	std::uniform_real_distribution<> randomNum(-0.5f, 0.5f); //Between -1 - 1
+	std::uniform_real_distribution<> randomNumPlus(0.2f, 1.f); //Between 0.8 - 1
+	std::uniform_real_distribution<> randomNumPlacement(-100.f, 100.f); //Between 0.8 - 1
+
+	//int gameTime = (int)(player->gameTime);
+	//if ((gameTime % 5) == 0)
+	//{
+		//for (int i = 0; i < 5; i++)
+		//{
+			Particle* particlePtr = new Particle(DxHandler::devicePtr);
+			//particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+			particlePtr->vertexBuffer = particleMesh->vertexBuffer;
+			particlePtr->textureView = particleMesh->textureView;
+			particlePtr->hasTexture = particleMesh->hasTexture;
+			particlePtr->nrOfVertices = particleMesh->nrOfVertices;
+			particlePtr->ticksLeft = 400.f;
+
+
+			float randomNumber = (float)((rand() % 30) + 5) / 10;
+			particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
+			particlePtr->orgSize = particlePtr->getScaling();
+			particlePtr->setTranslation(DirectX::XMFLOAT3(player->model->getTranslation().x + randomNumPlacement(numberGenerator), player->model->getTranslation().y - 120, (randomNum(numberGenerator)* randomNum(numberGenerator))*10.f));
+
+			particlePtr->velocity = XMFLOAT3(0, randomNumPlus(numberGenerator) * 0.7, 0);
+			sceneManager.addParticle(particlePtr);
+		//}
+	//}
 }
 
 void Engine::createGUIHandler()

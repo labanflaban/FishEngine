@@ -64,6 +64,9 @@ private:
 	bool shutdown = false;
 	bool pause = true;
 public:
+	float bubbleDebounceLimit = 5;
+	float bubbleDebounce = bubbleDebounceLimit;
+
 	Engine();
 	~Engine();
 	void initialSetup();
@@ -78,6 +81,7 @@ public:
 	void createDirectX();
 	void createInputHandler();
 	void engineLoop();
+	void generateRandomBubbles();
 
 	void createGUIHandler();
 
