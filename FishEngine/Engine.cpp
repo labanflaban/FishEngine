@@ -615,7 +615,13 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		bubbleDebounce = 0;
 	}
 
-		
+	for (int i = 0; i < backgroundFishVec.size(); i++)
+	{
+		backgroundFishVec.at(i).model->move(backgroundFishVec.at(i).velocity);
+
+		if (abs(backgroundFishVec.at(i).model->getTranslation().x - player->model->getTranslation().x) > 2500)
+			backgroundFishVec.at(i).model->setTranslation(XMFLOAT3(player->model->getTranslation().x - 2500, backgroundFishVec.at(i).model->getTranslation().y, backgroundFishVec.at(i).model->getTranslation().z));
+	}
 
 
 	updatePlayerMovement(deltaTime);
@@ -673,8 +679,8 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 					//dynamicWorld->removeRigidBody(enemy->model->rigidBody);
 
-					enemy->moveAway();
 					enemy->active = false;
+					enemy->moveAway();
 					this->player->points += 100;
 				}
 			}
@@ -863,28 +869,17 @@ void Engine::engineLoop()
 	this->sceneManager.addMesh(fishingRodObject);
 
 
-	Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
-	//fishingRodObject->readMeshFromFile("./Models/rod.obj");
-	block->readMeshFromFile("./Models/actualCube.obj");
-	block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
-	sceneManager.addMesh(block);
-
-
-	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
-	//groundObject4->readNormalMapFromFile(L"./Models/TegelNormMap.png");
-	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
-	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	sceneManager.addTransparentObject(groundObject4);
+	//Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
+	////fishingRodObject->readMeshFromFile("./Models/rod.obj");
+	//block->readMeshFromFile("./Models/actualCube.obj");
+	//block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+	//sceneManager.addMesh(block);
 
 	AnimatedMesh* groundObject5= new AnimatedMesh(DxHandler::devicePtr); //Ground
-	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
 	//groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject5->setTranslation(DirectX::XMFLOAT3(20, 15, 75));
 	groundObject5->setScaling(DirectX::XMFLOAT3(30, 30, 30));
 	groundObject5->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
-
 	std::vector<Vertex> jellyFish0 = ObjParser::readFromObj("./Models/JellyAnimPartOne.obj");
 	std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
 	std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
@@ -895,12 +890,6 @@ void Engine::engineLoop()
 	groundObject5->targetPoseIndex = 1;
 	groundObject5->animationSpeed = 0.3;
 	sceneManager.addAnimatedMesh(groundObject5);
-
-	Mesh* groundObject6 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject6->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject6->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
-	groundObject6->setScaling(DirectX::XMFLOAT3(60, 60, 60));
-	sceneManager.addTransparentObject(groundObject6);
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
@@ -937,7 +926,29 @@ void Engine::engineLoop()
 	animMesh->setRotation(XMFLOAT3(0, -3.14/2, 0));
 	animMesh->targetPoseIndex = 1;
 	sceneManager.addAnimatedMesh(animMesh);
-	
+
+	std::uniform_real_distribution<> randomNumPlacement(-1.f, 1.f);
+	std::uniform_real_distribution<> randomNumVelocity(0.1f, 2.f);
+	std::random_device randomSeed;
+	std::mt19937 numberGenerator(randomSeed());
+
+	for (int i = 0; i < 10; i++)
+	{
+		Mesh* backgroundFish1 = new Mesh(DxHandler::devicePtr);
+		backgroundFish1->readMeshFromFile("./Models/FishRight.obj");
+		backgroundFish1->setScaling(XMFLOAT3(16, 16, 16));
+		backgroundFish1->setTranslation(XMFLOAT3(randomNumPlacement(numberGenerator)*1000, backgroundFishVec.size() * 50, 1200* randomNumVelocity(numberGenerator)));
+		backgroundFish1->setRotation(XMFLOAT3(0, 3.14 / 2.f, 0));
+
+		backgroundItems backgroundFishStruct;
+		backgroundFishStruct.model = backgroundFish1;
+		backgroundFishStruct.velocity = XMFLOAT3(randomNumVelocity(numberGenerator), 0, 0);
+		
+		backgroundFishVec.push_back(backgroundFishStruct);
+		sceneManager.addMesh(backgroundFish1);
+	}
+
+
 	scoreHandle.readFromFile("score.txt");
 
 	startedGameTimer = std::chrono::high_resolution_clock::now();
