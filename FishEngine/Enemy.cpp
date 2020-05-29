@@ -123,6 +123,7 @@ void Enemy::moveAway()
 	trans.setIdentity();
 	trans.setOrigin(btVector3(-3000, 0, 0));
 
+	this->model->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
 	this->model->rigidBody->setWorldTransform(trans);
 	this->health = maxHealth;
 }
