@@ -280,6 +280,7 @@ void Engine::updateGUI()
 		gameOver = false;
 		guiHandler->hidePauseMenu();
 		guiHandler->hideMainMenu();
+		guiHandler->showHUD();
 		cout << "STARTING GAME!" << endl;
 		pause = false;
 	}
@@ -1089,7 +1090,7 @@ void Engine::engineLoop()
 		
 			std::wstring pointCounter;
 			pointCounter = std::to_wstring((int)scoreHandle.scoreMultiplier(this->player->points, player->gameTime)) + L" points";
-			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(5, 150), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(0.5f, 0.5f));
+			directXHandler->spriteFont->DrawString(directXHandler->spriteBatch.get(), pointCounter.data(), DirectX::XMFLOAT2(WIDTH-280, 39), DirectX::Colors::LightSteelBlue, 0.0f, DirectX::XMFLOAT2(0, 0), DirectX::XMFLOAT2(1.f, 1.f));
 
 
 		}
