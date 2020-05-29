@@ -138,7 +138,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		sceneManager->addMesh(background);
 
 	}
-	else if (tag == "angler")
+	else if (tag == "enemyTwo")
 	{
 
 		Enemy* enemy = new Enemy(DxHandler::devicePtr); //Instantiate enemy
@@ -166,7 +166,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		sceneManager->addEnemy(enemy);
 
 		collisionStruct* enemy1CollStruct = new collisionStruct(enemy, collisionEnums::Enemy);
-		enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 5), btScalar(enemy->model->getScaling().y + 5), btScalar(enemy->model->getScaling().z) + 5)));
+		enemy->model->initRigidbody(dynamicsWorld, &collisionShapes, 20, new btBoxShape(btVector3(btScalar(enemy->model->getScaling().x + 8), btScalar(enemy->model->getScaling().y + 8), btScalar(enemy->model->getScaling().z) + 8)));
 		enemy->model->targetPoseIndex = 1;
 		enemy->model->rigidBody->setUserPointer(enemy1CollStruct);
 		enemy->model->rigidBody->setActivationState(ACTIVE_TAG);
@@ -321,7 +321,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		model->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
 		model->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
 		model->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
-		model->setScaling(XMFLOAT3(15, 15, 15));
+		model->setScaling(XMFLOAT3(2, 2, 2));
 		drop->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
 
 		drop->model = model;
@@ -402,6 +402,20 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 
 		sceneManager->addMesh(platformMesh);
 		sceneManager->addPlatform(platform);
+	}
+	else if (tag == "plant")
+	{
+		Mesh* plantObject = new Mesh(DxHandler::devicePtr);
+		plantObject->enemyCollIgnore = true;
+		plantObject->readMeshFromFile("./Models/plant.Obj");
+
+		plantObject->setTranslation(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi));
+		plantObject->setRotation(level->degreesToRadians(level->levelMeshVector.at(i).getRotation()));
+		plantObject->setScaling(level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getScale(), multi));
+		plantObject->readTextureFromFile(L"./Textures/green.png");
+
+		std::lock_guard<std::mutex> lock(vectorLock);
+		sceneManager->addMesh(plantObject);
 	}
 
 	for (int i = 0; i < sceneManager->enemies.size(); i++)

@@ -160,95 +160,99 @@ void Engine::updatePlayerMovement(double deltaTime)
 	fishingRod->model->rigidBody->setActivationState(ACTIVE_TAG);
 
 	btVector3 movementVector(0,0,0);
-	if (inputHandler.isKeyDown(VK_ESCAPE))
+	if (player->health > 0)
 	{
-		guiHandler->showMainMenu();
-		pause = true;
-	}
-
-	if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 5.f)
-	{
-
-		//std::cout << "Space" << std::endl;
-		movementVector += btVector3(0, 40.f, 0);
-
-		player->boostReserve -= 10.f;
-		player->jumpSound.play();
-
-		for (int i = 0; i < 100; i++)
+		if (inputHandler.isKeyDown(VK_ESCAPE))
 		{
-			Particle* particlePtr = new Particle(DxHandler::devicePtr);
-			//particlePtr->readTextureFromFile(L"./Textures/bubble.png");
-			particlePtr->vertexBuffer = particleMesh->vertexBuffer;
-			particlePtr->textureView = particleMesh->textureView;
-			particlePtr->hasTexture = particleMesh->hasTexture;
-			particlePtr->nrOfVertices = particleMesh->nrOfVertices;
-
-			float randomNumber = (float)((rand() % 30) + 5) / 10;
-			particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
-			particlePtr->orgSize = particlePtr->getScaling();
-			particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
-
-			std::random_device randomSeed;
-			std::mt19937 numberGenerator(randomSeed());
-			std::uniform_real_distribution<> randomNum(-0.5f, 0.5f); //Between -1 - 1
-			std::uniform_real_distribution<> randomNumPlus(0.2f, 1.f); //Between 0.8 - 1
-			std::uniform_real_distribution<> randomNumAngle(-3.14/2, 3.14f/2); //Between 0.8 - 1
-			float angle = randomNumAngle(numberGenerator);
-			float xVel = cos(angle+3.14/2);
-			float yVel = sin(angle+3.14 / 2);
-
-
-			particlePtr->setTranslation(player->model->getTranslation());
-			//particlePtr->velocity = DirectX::XMFLOAT3(rNum * 0.5 + randomNum(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, 0.5 * rNumY + 1 * rNumY + player->model->rigidBody->getLinearVelocity().y() * 0.1, 0);
-			particlePtr->velocity = XMFLOAT3(xVel*randomNumPlus(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.001, yVel * randomNumPlus(numberGenerator), randomNum(numberGenerator));
-			sceneManager.addParticle(particlePtr);
+			guiHandler->showPauseMenu();
+			scoreHandle.readFromFile("score.txt");
+			pause = true;
 		}
+
+		if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 5.f)
+		{
+
+			//std::cout << "Space" << std::endl;
+			movementVector += btVector3(0, 40.f, 0);
+
+			player->boostReserve -= 10.f;
+			player->jumpSound.play();
+
+			for (int i = 0; i < 100; i++)
+			{
+				Particle* particlePtr = new Particle(DxHandler::devicePtr);
+				//particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+				particlePtr->vertexBuffer = particleMesh->vertexBuffer;
+				particlePtr->textureView = particleMesh->textureView;
+				particlePtr->hasTexture = particleMesh->hasTexture;
+				particlePtr->nrOfVertices = particleMesh->nrOfVertices;
+
+				float randomNumber = (float)((rand() % 30) + 5) / 10;
+				particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
+				particlePtr->orgSize = particlePtr->getScaling();
+				particlePtr->setTranslation(DirectX::XMFLOAT3(-30, 25, 0));
+
+				std::random_device randomSeed;
+				std::mt19937 numberGenerator(randomSeed());
+				std::uniform_real_distribution<> randomNum(-0.5f, 0.5f); //Between -1 - 1
+				std::uniform_real_distribution<> randomNumPlus(0.2f, 1.f); //Between 0.8 - 1
+				std::uniform_real_distribution<> randomNumAngle(-3.14 / 2, 3.14f / 2); //Between 0.8 - 1
+				float angle = randomNumAngle(numberGenerator);
+				float xVel = cos(angle + 3.14 / 2);
+				float yVel = sin(angle + 3.14 / 2);
+
+
+				particlePtr->setTranslation(player->model->getTranslation());
+				//particlePtr->velocity = DirectX::XMFLOAT3(rNum * 0.5 + randomNum(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.1, 0.5 * rNumY + 1 * rNumY + player->model->rigidBody->getLinearVelocity().y() * 0.1, 0);
+				particlePtr->velocity = XMFLOAT3(xVel * randomNumPlus(numberGenerator) + player->model->rigidBody->getLinearVelocity().x() * 0.001, yVel * randomNumPlus(numberGenerator), randomNum(numberGenerator));
+				sceneManager.addParticle(particlePtr);
+			}
+		}
+		if (GetAsyncKeyState(0x41)) //A-key
+		{
+
+			//std::cout << GetAsyncKeyState(0x41) << std::endl;
+			//std::cout << "A" << std::endl;
+			movementVector += btVector3(-130 / 5 * deltaTime * 40, 0, 0);
+		}
+		if (GetAsyncKeyState(0x44)) // D-key
+		{
+			movementVector += btVector3(130 / 5 * deltaTime * 40, 0, 0);
+
+		}
+
+		btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
+		player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
+		if (!movementVector.isZero() || player->attacking)
+		{
+
+		}
+		else
+		{
+			player->model->fromIndex = 0;
+			player->model->targetPoseIndex = 0;
+			player->model->remaining = 0;
+			player->model->t = 0;
+		}
+
+
+		player->stepAnim(deltaTime);
+		player->updatePlayer(fishingRod, hook, rope, movementVector.x());
+
+		if (movementVector.x() > 0)
+			this->player->model->setRotation(XMFLOAT3(0, 3.14 / 2, 0));
+		else
+			if ((movementVector.x() < 0))
+				this->player->model->setRotation(XMFLOAT3(0, -3.14 / 2, 0));
+
+		XMFLOAT3 playerPos = player->model->getTranslation();
+		primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y + 30, playerPos.z - 150, 0);
+		primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
+
+		Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
+		player->playerLight->setPosition(XMFLOAT3(playerPos.x, playerPos.y + 25, playerPos.z));
+		hook->hookLight->setPosition(DirectX::XMFLOAT3(hook->model->getTranslation().x, hook->model->getTranslation().y, hook->model->getTranslation().z));
 	}
-	if (GetAsyncKeyState(0x41)) //A-key
-	{
-
-		//std::cout << GetAsyncKeyState(0x41) << std::endl;
-		//std::cout << "A" << std::endl;
-		movementVector += btVector3(-130/5 * deltaTime * 40, 0, 0);
-	}
-	if(GetAsyncKeyState(0x44)) // D-key
-	{
-		movementVector += btVector3(130/5 * deltaTime * 40, 0, 0);
-
-	}
-
-	btVector3 orgVel = player->model->rigidBody->getLinearVelocity();
-	player->model->rigidBody->setLinearVelocity(btVector3(0, orgVel.y(), 0) + movementVector);
-	if (!movementVector.isZero() || player->attacking)
-	{
-
-	}
-	else
-	{
-		player->model->fromIndex = 0;
-		player->model->targetPoseIndex = 0;
-		player->model->remaining = 0;
-		player->model->t = 0;
-	}
-
-
-	player->stepAnim(deltaTime);
-	player->updatePlayer(fishingRod, hook, rope, movementVector.x());
-
-	if (movementVector.x() > 0)
-		this->player->model->setRotation(XMFLOAT3(0, 3.14/2, 0));
-	else
-		if ((movementVector.x() < 0))
-		this->player->model->setRotation(XMFLOAT3(0, -3.14/2, 0));
-
-	XMFLOAT3 playerPos = player->model->getTranslation();
-	primaryCamera.cameraPosition = XMVectorSet(playerPos.x, playerPos.y+30, playerPos.z - 150, 0);
-	primaryCamera.cameraTarget = XMVectorSet(playerPos.x, playerPos.y, playerPos.z, 0);
-
-	Skybox::sphereModel->setTranslation(DirectX::XMFLOAT3(DirectX::XMVectorGetX(primaryCamera.cameraPosition), DirectX::XMVectorGetY(primaryCamera.cameraPosition), DirectX::XMVectorGetZ(primaryCamera.cameraPosition)));
-	player->playerLight->setPosition(XMFLOAT3(playerPos.x, playerPos.y + 25, playerPos.z));
-	hook->hookLight->setPosition(DirectX::XMFLOAT3(hook->model->getTranslation().x, hook->model->getTranslation().y, hook->model->getTranslation().z));
 }
 
 
@@ -274,6 +278,7 @@ void Engine::updateGUI()
 	if(guiHandler->checkButtons() == 1)
 	{
 		gameOver = false;
+		guiHandler->hidePauseMenu();
 		guiHandler->hideMainMenu();
 		cout << "STARTING GAME!" << endl;
 		pause = false;
@@ -289,7 +294,10 @@ void Engine::updateGUI()
 	if (inputHandler.windowClosed)
 		this->shutdown = true;
 
-	guiHandler->updateHUD(player->health);
+	if(!pause)
+	{
+		guiHandler->updateHUD(player->health);
+	}
 }
 
 void Engine::resetEnemies()
@@ -598,6 +606,24 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 {
 	//game logic here thanks
 
+	if (bubbleDebounce < bubbleDebounceLimit)
+		bubbleDebounce += 0.1;
+
+	if (bubbleDebounce >= bubbleDebounceLimit)
+	{
+		generateRandomBubbles();
+		bubbleDebounce = 0;
+	}
+
+	for (int i = 0; i < backgroundFishVec.size(); i++)
+	{
+		backgroundFishVec.at(i).model->move(backgroundFishVec.at(i).velocity);
+
+		if (abs(backgroundFishVec.at(i).model->getTranslation().x - player->model->getTranslation().x) > 2500)
+			backgroundFishVec.at(i).model->setTranslation(XMFLOAT3(player->model->getTranslation().x - 2500, backgroundFishVec.at(i).model->getTranslation().y, backgroundFishVec.at(i).model->getTranslation().z));
+	}
+
+
 	updatePlayerMovement(deltaTime);
 	player->updatePlayerTools(fishingRod, hook, rope, deltaTime);
 	if (fishingRod->pullback < 10.f)
@@ -653,8 +679,8 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 					//dynamicWorld->removeRigidBody(enemy->model->rigidBody);
 
-					enemy->moveAway();
 					enemy->active = false;
+					enemy->moveAway();
 					this->player->points += 100;
 				}
 			}
@@ -663,15 +689,23 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 
 	if (player->health <= 0)
 	{
-		resetDrops();
-		guiHandler->showMainMenu();
-		player->points = 0;
+		guiHandler->showGameOver();
+		timer += 0.3f * deltaTime;
 
-		player->health = player->maxHealth;
-		guiHandler->resetHealth(player->health);
-		player->resetPlayer();
-		resetEnemies();
-		pause = true;
+		if(timer >= 1)
+		{
+			guiHandler->hideGameOver();
+			resetDrops();
+			guiHandler->showMainMenu();
+			player->points = 0;
+
+			player->health = player->maxHealth;
+			guiHandler->resetHealth(player->health);
+			player->resetPlayer();
+			resetEnemies();
+			timer = 0.f;
+			pause = true;
+		}
 	}
 
 	if (level != nullptr && player->model->getTranslation().y < level->respawn)
@@ -694,6 +728,24 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 		player->points = 0;
 		resetEnemies();
 		resetDrops();
+	}
+
+	for (int i = 0; i < sceneManager.spikes.size(); i++)
+	{
+		XMFLOAT3 rot = sceneManager.spikes.at(i)->model->getRotation();
+		sceneManager.spikes.at(i)->model->setRotation(XMFLOAT3(rot.x + 0.7 * deltaTime, rot.y + 0.7 * deltaTime, rot.z + 0.7 * deltaTime));
+	}
+
+	for (int i = 0; i < sceneManager.points.size(); i++)
+	{
+		XMFLOAT3 rot = sceneManager.points.at(i)->model->getRotation();
+		sceneManager.points.at(i)->model->setRotation(XMFLOAT3(0, rot.y + 0.7 * deltaTime, 0));
+	}
+
+	for (int i = 0; i < sceneManager.hearts.size(); i++)
+	{
+		XMFLOAT3 rot = sceneManager.hearts.at(i)->model->getRotation();
+		sceneManager.hearts.at(i)->model->setRotation(XMFLOAT3(0, rot.y + 0.7 * deltaTime, 0));
 	}
 
 	guiHandler->currentHealth = player->health;
@@ -817,28 +869,17 @@ void Engine::engineLoop()
 	this->sceneManager.addMesh(fishingRodObject);
 
 
-	Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
-	//fishingRodObject->readMeshFromFile("./Models/rod.obj");
-	block->readMeshFromFile("./Models/actualCube.obj");
-	block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
-	sceneManager.addMesh(block);
-
-
-	Mesh* groundObject4 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject4->readMeshFromFile("./Models/JellyFishObj.obj");
-	//groundObject4->readNormalMapFromFile(L"./Models/TegelNormMap.png");
-	groundObject4->setTranslation(DirectX::XMFLOAT3(130, 15, 25));
-	groundObject4->setScaling(DirectX::XMFLOAT3(10, 10, 10));
-	//groundObject4->initRigidbody(dynamicsWorld, &collisionShapes, 0);
-	sceneManager.addTransparentObject(groundObject4);
+	//Mesh* block = new Mesh(DxHandler::devicePtr); // fishing rod
+	////fishingRodObject->readMeshFromFile("./Models/rod.obj");
+	//block->readMeshFromFile("./Models/actualCube.obj");
+	//block->setScaling(DirectX::XMFLOAT3(5, 5, 5));
+	//sceneManager.addMesh(block);
 
 	AnimatedMesh* groundObject5= new AnimatedMesh(DxHandler::devicePtr); //Ground
-	groundObject5->readMeshFromFile("./Models/JellyFishObj.obj");
 	//groundObject5->readNormalMapFromFile(L"./Models/TegelNormMap.png");
 	groundObject5->setTranslation(DirectX::XMFLOAT3(20, 15, 75));
 	groundObject5->setScaling(DirectX::XMFLOAT3(30, 30, 30));
 	groundObject5->setRotation(DirectX::XMFLOAT3(0, 3.14/2, 0));
-
 	std::vector<Vertex> jellyFish0 = ObjParser::readFromObj("./Models/JellyAnimPartOne.obj");
 	std::vector<Vertex> jellyFish1 = ObjParser::readFromObj("./Models/JellyAnimPartTwo.obj");
 	std::vector<Vertex> jellyFish2 = ObjParser::readFromObj("./Models/JellyAnimPartThree.obj");
@@ -849,12 +890,6 @@ void Engine::engineLoop()
 	groundObject5->targetPoseIndex = 1;
 	groundObject5->animationSpeed = 0.3;
 	sceneManager.addAnimatedMesh(groundObject5);
-
-	Mesh* groundObject6 = new Mesh(DxHandler::devicePtr); //Ground
-	groundObject6->readMeshFromFile("./Models/JellyFishObj.obj");
-	groundObject6->setTranslation(DirectX::XMFLOAT3(130, 15, 75));
-	groundObject6->setScaling(DirectX::XMFLOAT3(60, 60, 60));
-	sceneManager.addTransparentObject(groundObject6);
 
 	Skybox::loadSkybox(DxHandler::devicePtr);
 	Skybox::sphereModel->setTranslation(XMFLOAT3(1, 50, 4));
@@ -876,21 +911,30 @@ void Engine::engineLoop()
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 
 	MSG msg;
-	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/AnglerOne.obj");
-	std::vector<Vertex> vertVector1 = ObjParser::readFromObj("./Models/AnglerTwo.obj");
-	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/AnglerThree.obj");
-	std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/AnglerFour.obj");
-	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
-	animMesh->readTextureFromFile(L"./Models/ANGLAColor.png");
 
-	std::vector<Vertex>* arr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
-	animMesh->appendStructuredBuffer(arr, 4);
-	animMesh->createStructuredBuffer(DxHandler::devicePtr);
-	animMesh->setTranslation(XMFLOAT3(-25, -20, 10));
-	animMesh->setScaling(XMFLOAT3(10, 10, 10));
-	animMesh->setRotation(XMFLOAT3(0, -3.14/2, 0));
-	animMesh->targetPoseIndex = 1;
-	sceneManager.addAnimatedMesh(animMesh);
+	std::uniform_real_distribution<> randomNumPlacement(-1.f, 1.f);
+	std::uniform_real_distribution<> randomNumVelocity(0.1f, 2.f);
+	std::random_device randomSeed;
+	std::mt19937 numberGenerator(randomSeed());
+
+	for (int i = 0; i < 10; i++)
+	{
+		Mesh* backgroundFish1 = new Mesh(DxHandler::devicePtr);
+		backgroundFish1->readMeshFromFile("./Models/FishRight.obj");
+		backgroundFish1->setScaling(XMFLOAT3(16, 16, 16));
+		backgroundFish1->setTranslation(XMFLOAT3(randomNumPlacement(numberGenerator)*1000, backgroundFishVec.size() * 50, 1200* randomNumVelocity(numberGenerator)));
+		backgroundFish1->setRotation(XMFLOAT3(0, 3.14 / 2.f, 0));
+
+		backgroundItems backgroundFishStruct;
+		backgroundFishStruct.model = backgroundFish1;
+		backgroundFishStruct.velocity = XMFLOAT3(randomNumVelocity(numberGenerator), 0, 0);
+		
+		backgroundFishVec.push_back(backgroundFishStruct);
+		sceneManager.addMesh(backgroundFish1);
+	}
+
+
+	scoreHandle.readFromFile("score.txt");
 
 	startedGameTimer = std::chrono::high_resolution_clock::now();
 	while (!shutdown)
@@ -998,6 +1042,13 @@ void Engine::engineLoop()
 			}
 		}
 
+		if(pause)
+		{
+			primaryCamera.cameraPosition = DirectX::XMVectorSet(0, -500, 0, 0);
+			primaryCamera.cameraTarget = DirectX::XMVectorSet(0, -500, 10, 0);
+			guiHandler->hideHUD();
+		}
+
 		directXHandler->spriteBatch->Begin();
 
 		if (gameOver)
@@ -1051,7 +1102,6 @@ void Engine::engineLoop()
 
 
 		updateParticles();
-
 		newTime = std::chrono::high_resolution_clock::now(); //Set new time
 		frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 		if (!pause)
@@ -1098,6 +1148,39 @@ void Engine::engineLoop()
 	delete dispatcher;
 	delete collisionConfiguration;
 	// physics clean up complete
+}
+
+void Engine::generateRandomBubbles()
+{
+	std::random_device randomSeed;
+	std::mt19937 numberGenerator(randomSeed());
+	std::uniform_real_distribution<> randomNum(-0.5f, 0.5f); //Between -1 - 1
+	std::uniform_real_distribution<> randomNumPlus(0.2f, 1.f); //Between 0.8 - 1
+	std::uniform_real_distribution<> randomNumPlacement(-100.f, 100.f); //Between 0.8 - 1
+
+	//int gameTime = (int)(player->gameTime);
+	//if ((gameTime % 5) == 0)
+	//{
+		//for (int i = 0; i < 5; i++)
+		//{
+			Particle* particlePtr = new Particle(DxHandler::devicePtr);
+			//particlePtr->readTextureFromFile(L"./Textures/bubble.png");
+			particlePtr->vertexBuffer = particleMesh->vertexBuffer;
+			particlePtr->textureView = particleMesh->textureView;
+			particlePtr->hasTexture = particleMesh->hasTexture;
+			particlePtr->nrOfVertices = particleMesh->nrOfVertices;
+			particlePtr->ticksLeft = 400.f;
+
+
+			float randomNumber = (float)((rand() % 30) + 5) / 10;
+			particlePtr->setScaling(DirectX::XMFLOAT3(randomNumber, randomNumber, randomNumber));
+			particlePtr->orgSize = particlePtr->getScaling();
+			particlePtr->setTranslation(DirectX::XMFLOAT3(player->model->getTranslation().x + randomNumPlacement(numberGenerator), player->model->getTranslation().y - 120, (randomNum(numberGenerator)* randomNum(numberGenerator))*10.f));
+
+			particlePtr->velocity = XMFLOAT3(0, randomNumPlus(numberGenerator) * 0.7, 0);
+			sceneManager.addParticle(particlePtr);
+		//}
+	//}
 }
 
 void Engine::createGUIHandler()

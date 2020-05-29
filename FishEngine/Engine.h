@@ -41,6 +41,12 @@ const int HEIGHT = 1280;
 
 class Light;
 
+struct backgroundItems
+{
+	Mesh* model;
+	XMFLOAT3 velocity;
+};
+
 class Engine
 {
 private:
@@ -63,7 +69,14 @@ private:
 	GUIhandler* guiHandler;
 	bool shutdown = false;
 	bool pause = true;
+
+	float timer = 0.0f;
+
+	std::vector<backgroundItems> backgroundFishVec;
 public:
+	float bubbleDebounceLimit = 2;
+	float bubbleDebounce = bubbleDebounceLimit;
+
 	Engine();
 	~Engine();
 	void initialSetup();
@@ -78,6 +91,7 @@ public:
 	void createDirectX();
 	void createInputHandler();
 	void engineLoop();
+	void generateRandomBubbles();
 
 	void createGUIHandler();
 
