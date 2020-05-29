@@ -685,7 +685,8 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 					//dynamicWorld->removeRigidBody(enemy->model->rigidBody);
 
 					enemy->active = false;
-					enemy->moveAway();
+					//enemy->moveAway();
+					enemy->model->rigidBody->setLinearVelocity(btVector3(0, -100.f, 0));
 					this->player->points += 100;
 				}
 			}
