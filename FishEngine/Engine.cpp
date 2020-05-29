@@ -911,21 +911,6 @@ void Engine::engineLoop()
 	std::chrono::duration<double> frameTime = std::chrono::duration_cast<std::chrono::duration<double>>(newTime - currentTime); //Get deltaTime for frame
 
 	MSG msg;
-	std::vector<Vertex> vertVector = ObjParser::readFromObj("./Models/AnglerOne.obj");
-	std::vector<Vertex> vertVector1 = ObjParser::readFromObj("./Models/AnglerTwo.obj");
-	std::vector<Vertex> vertVector2 = ObjParser::readFromObj("./Models/AnglerThree.obj");
-	std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/AnglerFour.obj");
-	AnimatedMesh* animMesh = new AnimatedMesh(DxHandler::devicePtr);
-	animMesh->readTextureFromFile(L"./Models/ANGLAColor.png");
-
-	std::vector<Vertex>* arr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
-	animMesh->appendStructuredBuffer(arr, 4);
-	animMesh->createStructuredBuffer(DxHandler::devicePtr);
-	animMesh->setTranslation(XMFLOAT3(-25, -20, 10));
-	animMesh->setScaling(XMFLOAT3(10, 10, 10));
-	animMesh->setRotation(XMFLOAT3(0, -3.14/2, 0));
-	animMesh->targetPoseIndex = 1;
-	sceneManager.addAnimatedMesh(animMesh);
 
 	std::uniform_real_distribution<> randomNumPlacement(-1.f, 1.f);
 	std::uniform_real_distribution<> randomNumVelocity(0.1f, 2.f);

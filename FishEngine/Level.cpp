@@ -415,7 +415,6 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		plantObject->readTextureFromFile(L"./Textures/green.png");
 
 		std::lock_guard<std::mutex> lock(vectorLock);
-		sceneManager->addLight(light);
 		sceneManager->addMesh(plantObject);
 	}
 
