@@ -168,6 +168,7 @@ void Player::updatePlayerTools(Tool* rod, Tool* hook, Tool* rope, double deltaTi
 	if (GetAsyncKeyState(0x01) && !this->attacking) //Left mouse btn
 	{
 		attacking = true;
+		this->model->fromIndex = this->model->targetPoseIndex;
 		this->model->targetPoseIndex = 5;
 		this->model->animationSpeed = 7;
 		rod->isActive = true;

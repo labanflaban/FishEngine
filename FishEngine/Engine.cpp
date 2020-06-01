@@ -1245,7 +1245,7 @@ void Engine::renderFirstPass(std::vector<Mesh*>* scene)
 
 			if (!pause)
 			{
-				if (!animMesh->manualUpdate && abs(animMesh->getTranslation().x - player->model->getTranslation().x) < 300)
+				if (!animMesh->manualUpdate && abs(animMesh->getTranslation().x - player->model->getTranslation().x) < 150)
 				{
 					animMesh->stepAnim(1 / 60.00);
 					//std::cout << "Anim " << animMesh->t << std::endl;
