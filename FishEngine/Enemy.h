@@ -3,6 +3,8 @@
 #include "yse.hpp"
 #include "Mesh.h"
 #include <math.h>
+#include <algorithm>
+#include <random>
 #include "Light.h"
 #define _USE_MATH_DEFINES
 

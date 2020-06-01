@@ -418,12 +418,21 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		sceneManager->addMesh(plantObject);
 	}
 
-	for (int i = 0; i < sceneManager->enemies.size(); i++)
+	for (int i = 0; i < sceneManager->enemies.size(); i++) //Ignore platform collisions
 	{
 		for (int j = 0; j < sceneManager->sceneMeshes.size(); j++)
 		{
 			if (sceneManager->sceneMeshes.at(j)->enemyCollIgnore)
 				sceneManager->enemies.at(i)->model->rigidBody->setIgnoreCollisionCheck(sceneManager->sceneMeshes.at(j)->rigidBody, true);
+		}
+	}
+
+	for (int i = 0; i < sceneManager->enemies.size(); i++) //Ignore enemy -> enemy coll
+	{
+		for (int j = 0; j < sceneManager->enemies.size(); j++)
+		{
+			if (sceneManager->sceneMeshes.at(j)->enemyCollIgnore)
+				sceneManager->enemies.at(i)->model->rigidBody->setIgnoreCollisionCheck(sceneManager->enemies.at(j)->model->rigidBody, true);
 		}
 	}
 }

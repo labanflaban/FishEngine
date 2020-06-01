@@ -58,7 +58,7 @@ void Enemy::update(Player* plr)
 		}
 	}
 	model->rigidBody->setActivationState(ACTIVE_TAG);
-	model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
+	//model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
 	model->rigidBody->clearGravity();
 
 
@@ -110,8 +110,6 @@ void Enemy::update(Player* plr)
 	else
 		model->setRotation(DirectX::XMFLOAT3(0, -3.14 / 2.f, 0));
 
-	model->rigidBody->clearGravity();
-
 }
 
 
@@ -131,15 +129,22 @@ void Enemy::moveAway()
 {
 	btTransform trans;
 	trans.setIdentity();
-	trans.setOrigin(btVector3(-3000, 0, 0));
+
+	std::uniform_real_distribution<> randomNumPlacement(-1000.f, 1000.f);
+	std::random_device randomSeed;
+	std::mt19937 numberGenerator(randomSeed());
+
+	trans.setOrigin(btVector3(randomNumPlacement(numberGenerator), 100, randomNumPlacement(numberGenerator)));
 
 	this->model->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
 	this->model->rigidBody->setWorldTransform(trans);
 	this->health = maxHealth;
+	this->model->rigidBody->setActivationState(ISLAND_SLEEPING);
 }
 
 void Enemy::resetEnemy()
 {
+	this->model->rigidBody->setActivationState(ACTIVE_TAG);
 	this->active = true;
 	
 	btTransform trans;

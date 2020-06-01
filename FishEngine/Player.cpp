@@ -217,7 +217,8 @@ void Player::resetPlayer()
 {
 	model->rigidBody->setActivationState(DISABLE_DEACTIVATION);
 	btTransform transform;
-	transform.setOrigin(btVector3(100, 50, 0));
+	//transform.setOrigin(btVector3(3500, 100, 0));
+	transform.setOrigin(btVector3(150, 100, 0));
 	this->model->rigidBody->setWorldTransform(transform);
 
 	gameTime = 0.0;

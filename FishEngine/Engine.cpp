@@ -169,6 +169,8 @@ void Engine::updatePlayerMovement(double deltaTime)
 			pause = true;
 		}
 
+		
+
 		if (inputHandler.isKeyDown(VK_SPACE) && player->boostReserve >= 5.f)
 		{
 
@@ -213,11 +215,11 @@ void Engine::updatePlayerMovement(double deltaTime)
 
 			//std::cout << GetAsyncKeyState(0x41) << std::endl;
 			//std::cout << "A" << std::endl;
-			movementVector += btVector3(-130 / 5 * deltaTime * 40, 0, 0);
+			movementVector += btVector3(-180 / 5 * deltaTime * 40, 0, 0);
 		}
 		if (GetAsyncKeyState(0x44)) // D-key
 		{
-			movementVector += btVector3(130 / 5 * deltaTime * 40, 0, 0);
+			movementVector += btVector3(180 / 5 * deltaTime * 40, 0, 0);
 
 		}
 
@@ -344,7 +346,6 @@ bool isValidStruct(void* ptr)
 
 void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 	int manifoldCount = myWorld->getDispatcher()->getNumManifolds(); //Manifolds cache all contact points between objects
-	//printf("numManifolds = %d\n", manifoldCount);
 
 	for (int i = 0; i < manifoldCount; i++)
 	{
@@ -940,8 +941,18 @@ void Engine::engineLoop()
 	scoreHandle.readFromFile("score.txt");
 
 	startedGameTimer = std::chrono::high_resolution_clock::now();
+	player->resetPlayer();
 	while (!shutdown)
 	{
+		if (inputHandler.isKeyDown(0x50)) //P
+		{
+			resetEnemies();
+		}
+		if (inputHandler.isKeyDown(0x4F)) //O
+		{
+			pause = false;
+		}
+
 		//platform.updatePlatform();
 		for (int i = 0; i < sceneManager.movingPlatforms.size(); i++)
 			sceneManager.movingPlatforms.at(i)->updatePlatform();
@@ -975,16 +986,22 @@ void Engine::engineLoop()
 		///-----stepsimulation_start-----
 		if (!pause)
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				dynamicsWorld->stepSimulation(1 / 60.f);
+				std::chrono::high_resolution_clock::time_point before = std::chrono::high_resolution_clock::now();
+
+				dynamicsWorld->stepSimulation(1 / 60.f, 1);
+				std::chrono::high_resolution_clock::time_point after = std::chrono::high_resolution_clock::now();
+				std::cout << std::chrono::duration_cast<std::chrono::duration<double>>(after - before).count() << " : " << dynamicsWorld->getNumCollisionObjects() << std::endl; //Get deltaTime for loop
+
 				for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--)
 				{
 					//std::cout << "Looping" << j << std::endl;
 					btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
 					btRigidBody* body = btRigidBody::upcast(obj);
 
-					btTransform trans;
+
+					/*btTransform trans;
 					if (body && body->getMotionState())
 					{
 						body->getMotionState()->getWorldTransform(trans);
@@ -992,9 +1009,12 @@ void Engine::engineLoop()
 					else
 					{
 						trans = obj->getWorldTransform();
-					}
+					}*/
 				}
+				
 			}
+
+
 		}
 
 
