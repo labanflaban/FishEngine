@@ -29,9 +29,8 @@ void ScoreHandler::writeToFile(std::string fileName, int score, int time)
 	scores.push_back(finalScore);
 	sortScore();
 
-	for (int i = std::min(10, (int)scores.size() - 1); i > 0; i--)
+	for (int i = std::min(10, (int)scores.size() - 1); i >= 0; i--)
 	{
-		std::cout << i << std::endl;
 		scoreFile << scores.at(i) << std::endl;
 	}
 

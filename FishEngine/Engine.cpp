@@ -165,7 +165,7 @@ void Engine::updatePlayerMovement(double deltaTime)
 		if (inputHandler.isKeyDown(VK_ESCAPE))
 		{
 			guiHandler->showPauseMenu();
-			scoreHandle.readFromFile("score.txt");
+			//scoreHandle.readFromFile("score.txt");
 			pause = true;
 		}
 
@@ -422,9 +422,6 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy = collision1->enemy;
 				}
 
-				//std::cout << myEnemy->damageDebounce << std::endl;
-				//std::cout << "Health: " << myEnemy->health << std::endl;
-				//std::cout << "Debounce " << myEnemy->damageDebounce << std::endl;
 				if (myEnemy->damageDebounce >= myEnemy->maxDebounce && rod->isActive)
 				{
 					myEnemy->health -= 100;
@@ -436,8 +433,6 @@ void myTickCallback(btDynamicsWorld* myWorld, btScalar timeStep) {
 					myEnemy->justHit = true;
 				}
 
-				//if (myEnemy->health < 0)
-					//std::cout << "Should be dead" << std::endl;
 			}
 
 			if (((collision->type == collisionEnums::Player) && (collision1->type == collisionEnums::Enemy)) || ((collision1->type == collisionEnums::Player) && (collision->type == collisionEnums::Enemy)))
@@ -703,6 +698,8 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 			guiHandler->showMainMenu();
 			player->points = 0;
 
+			scoreHandle.readFromFile("score.txt");
+			gameOver = true;
 			player->health = player->maxHealth;
 			guiHandler->resetHealth(player->health);
 			player->resetPlayer();
@@ -724,7 +721,7 @@ void Engine::fixedUpdate(double deltaTime, btDiscreteDynamicsWorld* dynamicWorld
 	if (level != nullptr && player->model->getTranslation().x > level->goal)
 	{
 		guiHandler->showMainMenu();
-		scoreHandle.readFromFile("score.txt");
+		//scoreHandle.readFromFile("score.txt");
 		scoreHandle.writeToFile("score.txt", (int)this->player->points, player->gameTime);
 		gameOver = true;
 		pause = true;
@@ -938,10 +935,9 @@ void Engine::engineLoop()
 	}
 
 
-	scoreHandle.readFromFile("score.txt");
-
 	startedGameTimer = std::chrono::high_resolution_clock::now();
 	player->resetPlayer();
+	scoreHandle.readFromFile("score.txt");
 	while (!shutdown)
 	{
 		if (inputHandler.isKeyDown(0x50)) //P
@@ -950,7 +946,10 @@ void Engine::engineLoop()
 		}
 		if (inputHandler.isKeyDown(0x4F)) //O
 		{
-			pause = false;
+			btTransform pTransform;
+			pTransform.setIdentity();
+			pTransform.setOrigin(btVector3(level->goal-5, 200, 0));
+			this->player->model->rigidBody->setWorldTransform(pTransform);
 		}
 
 		//platform.updatePlatform();
@@ -1082,7 +1081,7 @@ void Engine::engineLoop()
 			int amountOfLinesToRead = 10;
 			int space = 0;
 			int placement = 1;
-			for (int i = scoreHandle.scores.size() - 1; i > 0; i--)
+			for (int i = scoreHandle.scores.size() - 1; i >= 0; i--)
 			{
 				space += 50.0f;
 				std::wstring placeScore = std::to_wstring(placement++) + L": " + std::to_wstring(scoreHandle.scores.at(i)) + L"\n";
