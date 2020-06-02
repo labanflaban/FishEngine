@@ -185,6 +185,7 @@ void Level::loadTag(string tag, btDiscreteDynamicsWorld* dynamicsWorld, btAligne
 		std::vector<Vertex> vertVector3 = ObjParser::readFromObj("./Models/AnglerFour.obj");
 		enemy->model->readTextureFromFile(L"./Models/ANGLAColor.png");
 		enemy->startPos = level->multiplyFloat3XYZ(level->levelMeshVector.at(i).getTranslation(), multi);
+		enemy->health = 200;
 
 		std::lock_guard<std::mutex> lock(vectorLock);
 		std::vector<Vertex>* fishArr[] = { &vertVector, &vertVector1, &vertVector2, &vertVector3 };
